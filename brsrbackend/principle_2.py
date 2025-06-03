@@ -12,6 +12,7 @@ import re
 def Percentage_of_R_and_D(pdf_path):
     with pdfplumber.open(pdf_path) as pdf:
         #("file opend")\
+        print("PRINCIPLE 2")
         question="Percentage of R&D and capital expenditure (capex) investments in specific"
         question_2="Percentage of R&D and capital "
         question_3="Percentage of R&D"
@@ -249,67 +250,6 @@ def  Describe_the_processes_in_place(pdf_path,):
                 return finallist                       
 
 #@print(Describe_the_processes_in_place("C:/Users/coda/Documents/praxis.pdf"))
-#@print("************")
-
-
-def place_to_safely_reclaim_your_products(pdf_path):
-    with pdfplumber.open(pdf_path) as pdf:
-        #("file opend")
-        question="Describe the processes in place to safely reclaim your products for reusing"
-        question_2="Describe the processes in place to safely"
-        question_3="Describe the processes in place to safely"
-        for i, page in enumerate(pdf.pages[7:16]):
-            text = page.extract_text()
-            if text and question in text or question_2 in text  or question_3 in text:
-                #(f"Question found on page {i}")
-                image = page.to_image(resolution=300).original  #
-
-                 #
-                custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
-                ocr_text = pytesseract.image_to_string(image, config=custom_config)
-                  #(ocr_text)
-                lines = ocr_text.splitlines()
-                sec_quest=" Whether Extended Producer Responsibility (EPR) is applicable to the entity’s activities (Yes / No). If yes, whether the waste collection"
-                sec_quest_2=" Whether Extended Producer Responsibility (EPR) is applicable to the entity’s activities (Yes / No)" 
-                sec_quest_3=" Whether Extended Producer Responsibility (EPR)"
-                list=[]     
-                for i, line in enumerate(lines):
-                     #(i,line)
-                    if question.lower() in line.lower():
-                        #("***q1")
-                        list=lines[i:]
-                        break
-                    elif question_2.lower() in line.lower():
-                        #("***q2")
-                        list=lines[i:]
-                        break
-                    elif question_3.lower() in line.lower():
-                        #("****q3")
-                        list=lines[i:]
-                        break
-                 #("405 **",list)
-                finallist=[]
-                
-                for i,selist in enumerate(list):
-                     #("*",i,selist)
-                    if sec_quest.lower() in selist.lower():
-                                      #("",i,selist)
-                        finallist=list[:i]
-                        break
-                    elif sec_quest_2.lower() in selist.lower():
-                        #(" sec_2")
-                        finallist=list[:i]
-                        break
-                    elif sec_quest_3.lower() in selist.lower():
-                        #("&& sec3")
-                        finallist=list[:i]
-                        break
-                    else :
-                        finallist=list
-                 #("finallist",finallist)
-                return finallist              
-                     
-#@print(place_to_safely_reclaim_your_products("C:/Users/coda/Documents/praxis.pdf"))
 #@print("************")
 
 def Whether_Extended_Producer_Responsibility_EPR(pdf_path):

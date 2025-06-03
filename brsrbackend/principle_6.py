@@ -9,6 +9,7 @@ import re
 
 
 def  Details_of_total_energy(pdf_file):
+    print("PRINCIPLE 6")
     start_found = False
     end_found = False
     lines_between = []
@@ -109,8 +110,8 @@ def  Details_of_total_energy(pdf_file):
 
     return myout
 
-print(Details_of_total_energy("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(Details_of_total_energy("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 def Does_the_entity_have_any_sites(pdf_path):
@@ -170,8 +171,8 @@ def Does_the_entity_have_any_sites(pdf_path):
                 # ### print("finallist",finallist)
                 return finallist                       
 
-print(Does_the_entity_have_any_sites("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(Does_the_entity_have_any_sites("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 def  Provide_details_of_the_following(pdf_file):
     start_found = False
@@ -275,8 +276,8 @@ def  Provide_details_of_the_following(pdf_file):
 
     return myout
 
-print(Provide_details_of_the_following("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(Provide_details_of_the_following("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 def  Provide_the_following_details(pdf_file):
@@ -381,8 +382,8 @@ def  Provide_the_following_details(pdf_file):
 
     return myout
 
-print(Provide_the_following_details("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(Provide_the_following_details("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 
@@ -444,8 +445,8 @@ def Has_the_entity_implemented(pdf_path,):
                 # ### print("finallist",finallist)
                 return finallist                       
 
-print(Has_the_entity_implemented("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(Has_the_entity_implemented("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 def  Please_provide_details(pdf_file):
@@ -552,8 +553,8 @@ def  Please_provide_details(pdf_file):
 
     return myout
 
-print(Please_provide_details("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(Please_provide_details("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 def  Provide_details_of_greenhouse(pdf_file):
@@ -659,8 +660,8 @@ def  Provide_details_of_greenhouse(pdf_file):
 
     return myout
 
-print(Provide_details_of_greenhouse("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(Provide_details_of_greenhouse("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 def  Does_the_entity_have_any_project(pdf_file):
@@ -718,8 +719,8 @@ def  Does_the_entity_have_any_project(pdf_file):
         return lines_between
     else:
         None
-print(Does_the_entity_have_any_project("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(Does_the_entity_have_any_project("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 
@@ -826,8 +827,8 @@ def  Provide_details_related(pdf_file):
 
     return myout
 
-print(Provide_details_related("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(Provide_details_related("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 
@@ -888,8 +889,8 @@ def  Briefly_describe_the_waste(pdf_path):
                 # ### print("finallist",finallist)
                 return finallist                       
 
-print(Briefly_describe_the_waste("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(Briefly_describe_the_waste("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 def  If_the_entity_has_operations(pdf_file):
     start_found = False
@@ -994,8 +995,8 @@ def  If_the_entity_has_operations(pdf_file):
 
     return myout
 
-print(If_the_entity_has_operations("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(If_the_entity_has_operations("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 
@@ -1108,8 +1109,8 @@ def  Details_of_environmental(pdf_file):
 
     return myout
 
-print(Details_of_environmental("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(Details_of_environmental("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 
@@ -1220,8 +1221,8 @@ def  Is_the_entity_compliant(pdf_file):
 
     return myout
 
-print(Is_the_entity_compliant("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(Is_the_entity_compliant("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 
@@ -1331,8 +1332,8 @@ def  Water_withdrawal(pdf_file):
 
     return myout
 
-print(Water_withdrawal("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(Water_withdrawal("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 
@@ -1444,8 +1445,8 @@ def  Please_provide_details(pdf_file):
 
     return myout
 
-print(Please_provide_details("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(Please_provide_details("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 
@@ -1509,8 +1510,8 @@ def  With_respect_to_the_ecologically(pdf_file):
         return lines_between
     else:
         None
-print(With_respect_to_the_ecologically("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(With_respect_to_the_ecologically("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 
@@ -1620,8 +1621,8 @@ def  If_the_entity_has_undertaken(pdf_file):
 
     return myout
 
-print(If_the_entity_has_undertaken("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(If_the_entity_has_undertaken("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 
@@ -1683,8 +1684,8 @@ def  Does_the_entity_have_a_business(pdf_file):
     else:
         None
 
-print(Does_the_entity_have_a_business("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(Does_the_entity_have_a_business("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 
@@ -1745,8 +1746,8 @@ def  Disclose_any_significant(pdf_file):
     else:
         None
 
-print(Disclose_any_significant("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(Disclose_any_significant("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 def  Percentage_of_value_chain(pdf_file):
@@ -1806,6 +1807,6 @@ def  Percentage_of_value_chain(pdf_file):
     else:
         None
 
-print(Percentage_of_value_chain("C:/Users/coda/Documents/ncc.pdf"))
-print("************")
+#@ print(Percentage_of_value_chain("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 

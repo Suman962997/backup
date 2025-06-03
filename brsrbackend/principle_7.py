@@ -10,6 +10,7 @@ import re
                                 
 def Number_of_affiliations(pdf_path):
     with pdfplumber.open(pdf_path) as pdf:
+        print("PRINCIPLE 7")
         ## # print("file opend")
         question="Number of affiliations with trade and industry chambers/ associations"
         question_2="Number of affiliations"

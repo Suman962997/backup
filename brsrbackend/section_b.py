@@ -9,7 +9,7 @@ import re
 
 def Whether_your_entity(pdf_path):
     found = False
-    
+    print("PART A")
     with pdfplumber.open(pdf_path) as pdf:
         # #@print("file opend")
         for i, page in enumerate(pdf.pages[3:16]):
@@ -105,7 +105,7 @@ def Whether_your_entity(pdf_path):
     if not found:
         return None
 
-#@print(Whether_your_entity("C:/Users/coda/Documents/narendra.pdf"))
+#@print(Whether_your_entity("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 def Has_the_policy(pdf_path,):
@@ -203,7 +203,7 @@ def Has_the_policy(pdf_path,):
     if not found:
         return None
 
-#@print(Has_the_policy("C:/Users/coda/Documents/narendra.pdf"))
+#@print(Has_the_policy("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 
@@ -286,7 +286,7 @@ def Web_Link_of_Policies(pdf_path):
     if not found:
         return None
 
-#@print(Web_Link_of_Policies("C:/Users/coda/Documents/narendra.pdf"))
+#@print(Web_Link_of_Policies("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 def Whether_entity_translated(pdf_path):
@@ -382,7 +382,7 @@ def Whether_entity_translated(pdf_path):
     if not found:
         return None
 
-#@print(Whether_entity_translated("C:/Users/coda/Documents/narendra.pdf"))
+#@print(Whether_entity_translated("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 
@@ -493,7 +493,7 @@ def Do_the_enlisted(pdf_path,):
     if not found:
         return None
 
-#@print(Do_the_enlisted("C:/Users/coda/Documents/narendra.pdf"))
+#@print(Do_the_enlisted("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 
@@ -588,7 +588,7 @@ def Name_of_the_national(pdf_path):
     if not found:
         return None
 
-#@print(Name_of_the_national("C:/Users/coda/Documents/narendra.pdf"))
+#@print(Name_of_the_national("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 def Specific_commitments(pdf_path):
@@ -698,7 +698,7 @@ def Specific_commitments(pdf_path):
     if not found:
         return None
 
-#@print(Specific_commitments("C:/Users/coda/Documents/narendra.pdf"))
+#@print(Specific_commitments("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 
@@ -808,7 +808,7 @@ def Performance_of_the_entity(pdf_path):
     if not found:
         return None
 
-#@print(Performance_of_the_entity("C:/Users/coda/Documents/narendra.pdf"))
+#@print(Performance_of_the_entity("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
                                     ###### second part #####
@@ -816,6 +816,7 @@ def Performance_of_the_entity(pdf_path):
  
  
 def Statement_by_director(pdf_path):
+    print("PART B")
     found = False
     
     with pdfplumber.open(pdf_path) as pdf:
@@ -909,7 +910,7 @@ def Statement_by_director(pdf_path):
     if not found:
         return None
 
-#@print(Statement_by_director("C:/Users/coda/Documents/narendra.pdf"))
+#@print(Statement_by_director("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 
@@ -1009,7 +1010,7 @@ def Details_of_the_highest(pdf_path):
     if not found:
         return None
 
-#@print(Details_of_the_highest("C:/Users/coda/Documents/narendra.pdf"))
+#@print(Details_of_the_highest("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 
@@ -1121,7 +1122,7 @@ def Does_the_entity(pdf_path):
     if not found:
         return None
 
-#@print(Does_the_entity("C:/Users/coda/Documents/narendra.pdf"))
+#@print(Does_the_entity("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 
@@ -1235,7 +1236,7 @@ def Indicate_whether_review(pdf_path):
     if not found:
         return None
 
-#@print(Indicate_whether_review("C:/Users/coda/Documents/narendra.pdf"))
+#@print(Indicate_whether_review("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 
@@ -1350,7 +1351,7 @@ def Frequency_Annually(pdf_path,):
     if not found:
         return None
 
-#@print(Frequency_Annually("C:/Users/coda/Documents/narendra.pdf"))
+#@print(Frequency_Annually("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 
@@ -1451,7 +1452,7 @@ def Has_the_entity_carried(pdf_path):
     if not found:
         return None
 
-#@print(Has_the_entity_carried("C:/Users/coda/Documents/narendra.pdf"))
+#@print(Has_the_entity_carried("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 
@@ -1564,7 +1565,7 @@ def If_answer_to_question(pdf_path):
     if not found:
         return None
 
-#@print(If_answer_to_question("C:/Users/coda/Documents/narendra.pdf"))
+#@print(If_answer_to_question("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 
@@ -1687,7 +1688,7 @@ def consider_the_Principles(pdf_path):
     if not found:
         return None
 
-#@print( consider_the_Principles("C:/Users/coda/Documents/narendra.pdf"))
+#@print( consider_the_Principles("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 
@@ -1804,7 +1805,7 @@ def formulate_and_implement(pdf_path):
     if not found:
         return None
 
-#@print( formulate_and_implement("C:/Users/coda/Documents/narendra.pdf"))
+#@print( formulate_and_implement("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 
@@ -1919,7 +1920,7 @@ def human_and_technical(pdf_path):
     if not found:
         return None
 
-#@print(human_and_technical("C:/Users/coda/Documents/narendra.pdf"))
+#@print(human_and_technical("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 
@@ -2035,7 +2036,7 @@ def It_is_planned_to_be_done(pdf_path):
     if not found:
         return None
 
-#@print(It_is_planned_to_be_done("C:/Users/coda/Documents/narendra.pdf"))
+#@print(It_is_planned_to_be_done("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 def Any_other_reason(pdf_path):
@@ -2151,7 +2152,7 @@ def Any_other_reason(pdf_path):
     if not found:
         return None
 
-#@print(Any_other_reason("C:/Users/coda/Documents/narendra.pdf"))
+#@print(Any_other_reason("C:/Users/coda/Documents/ncc.pdf"))
 #@print("************")
 
 

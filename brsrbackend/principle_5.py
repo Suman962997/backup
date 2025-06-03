@@ -12,6 +12,8 @@ import re
 
 
 def  Employees_and_workers(pdf_file):
+    print("PRINCIPLE 5")
+
     start_found = False
     end_found = False
     lines_between = []

@@ -8,6 +8,7 @@ import re
                             #  PRINCIPLE I 
 
 def  Percentage_coverage_by_training(pdf_file):
+    print("PRINCIPLE 1")
     start_found = False
     end_found = False
     lines_between = []

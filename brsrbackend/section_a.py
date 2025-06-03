@@ -8,6 +8,8 @@ import pandas as pd
                                         ######## PART II #########
 
 def  Details_of_business(pdf_file):
+    print("PART II")
+
     start_found = False
     end_found = False
     lines_between = []
@@ -213,6 +215,7 @@ def  Products_Services(pdf_file):
 
                                         ######## PART III #########
 def  Number_of_locations_where(pdf_file):
+    print("PART III")
     start_found = False
     end_found = False
     lines_between = []
@@ -278,16 +281,16 @@ def  Number_of_locations_where(pdf_file):
 
     keys = [
         "Location",
-        "Number of Stores1",
-        "Number of offices",
+        "No. of plants",
+        "No. of offices",
         "Total"
     ]
 
     keys_3 = [
         "S.No",
         "Location",
-        "Number of Stores1",
-        "Number of offices",
+        "No. of plants",
+        "No. of offices",
         "Total"
     ]
     
@@ -543,6 +546,7 @@ def  A_brief_on_types(pdf_file):
 
 
 def  Employees_and_workers(pdf_file):
+    print("PART IV")
     start_found = False
     end_found = False
     lines_between = []
@@ -876,6 +880,7 @@ def  Participation_Inclusion(pdf_file):
 
 
 def  Turnover_rate(pdf_file):
+    print("PART V")
     start_found = False
     end_found = False
     lines_between = []
@@ -1171,6 +1176,7 @@ def  Do_any_other_entity(pdf_file):
 
 def Whether_CSR(pdf_path):    
     with pdfplumber.open(pdf_path) as pdf:
+        print("PART VI")
         ## #@ print("file opend")
         question="Whether CSR is applicable as per section 135 of Companies Act, 2013: (Yes/No)"
         question_2="Whether CSR is applicable as per section 135 of Companies Act, 2013"
@@ -1344,6 +1350,7 @@ def Net_worth(pdf_path):
 
 
 def   Complaints_Grievances(pdf_file):
+    print("PART VII")
     start_found = False
     end_found = False
     lines_between = []
@@ -1461,7 +1468,7 @@ def   Complaints_Grievances(pdf_file):
 #@ print("************")
 
 
-def  Overview_of_the_entity(pdf_file):
+def  Please_indicate_material(pdf_file):
     start_found = False
     end_found = False
     lines_between = []
@@ -1568,5 +1575,5 @@ def  Overview_of_the_entity(pdf_file):
 
     return myout
 
-#@ print(Overview_of_the_entity("C:/Users/coda/Documents/narendra.pdf"))
+#@ print(Please_indicate_material("C:/Users/coda/Documents/narendra.pdf"))
 #@ print("************")

@@ -7,6 +7,7 @@ import re
                                 ###### PRINCIPLE VIII #######
 
 def  Details_of_Social_Impact(pdf_file):
+    print("PRINCIPLE 8")
     start_found = False
     end_found = False
     lines_between = []
@@ -25,7 +26,7 @@ def  Details_of_Social_Impact(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[15:]:
+        for page in pdf.pages[15:-4]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -77,6 +78,16 @@ def  Details_of_Social_Impact(pdf_file):
         "Results communicated in public domain (Yes / No)",
         "Relevant Web link"
     ]
+    keys_3 = [
+        "S.No",
+        "Name and brief details of project",
+        "SIA Notification No.",
+        "Date of notification",
+        "Whether conducted by independent external agency (Yes / No)",
+        "Results communicated in public domain (Yes / No)",
+        "Relevant Web link"
+    ]
+
 
     myout = []
     # for row in final_5:
@@ -89,7 +100,7 @@ def  Details_of_Social_Impact(pdf_file):
             myout.append(data)
     else:
         for row in output_rows:
-            data = dict(zip(keys, row))
+            data = dict(zip(keys_3, row))
             myout.append(data)
 
 
@@ -99,8 +110,8 @@ def  Details_of_Social_Impact(pdf_file):
 
     return myout
 
-# print(Details_of_Social_Impact("C:/Users/coda/Documents/bse.pdf"))
-# print("************")
+#@ print(Details_of_Social_Impact("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 def  Provide_information_on_project(pdf_file):
@@ -122,7 +133,7 @@ def  Provide_information_on_project(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[15:]:
+        for page in pdf.pages[15:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -167,7 +178,6 @@ def  Provide_information_on_project(pdf_file):
             final_7.append(f)
 
     keys = [
-        "S.No.",
         "Name of Project for which R&R is ongoing",
         "State",
         "District",
@@ -175,198 +185,42 @@ def  Provide_information_on_project(pdf_file):
         "% of PAFs covered by R&R",
         "Amounts paid to PAFs in the FY (In INR)",
     ]
-
-    myout = []
-    for row in output_rows:
-        data = dict(zip(keys, row))
-        myout.append(data)
-
-    # if len(final_7) > len(final_6):
-    #     for row in final_7:
-    #         data = dict(zip(keys, row))
-    #         myout.append(data)
-    # else:
-    #     for row in final_6:
-    #         data = dict(zip(keys, row))
-    #         myout.append(data)
-
-
-    if not myout:
-        return None
-
-
-    return myout
-
-# print(Provide_information_on_project("C:/Users/coda/Documents/bse.pdf"))
-# print("************")
-
-
-
-def Describe_the_mechanisms(pdf_path):
-    with pdfplumber.open(pdf_path) as pdf:
-        #("file opend")
-        question="Describe the mechanisms to receive and redress grievances of the community"
-        question_2="Describe the mechanisms"
-        question_3="grievances of the community"
-        for i, page in enumerate(pdf.pages[15:]):
-            text = page.extract_text()
-            if text and question in text or question_2 in text  or question_3 in text:
-                #(f"Question found on page {i}")
-                image = page.to_image(resolution=300).original  #
-
-                 #
-                custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
-                ocr_text = pytesseract.image_to_string(image, config=custom_config)
-                  #(ocr_text)
-                lines = ocr_text.splitlines()
-                sec_quest="Percentage of input material (inputs to total inputs by value) sourced from suppliers"
-                sec_quest_2="Percentage of input material" 
-                sec_quest_3="sourced from suppliers"
-                list=[]     
-                for i, line in enumerate(lines):
-                     #(i,line)
-                    if question.lower() in line.lower():
-                        #("***q1")
-                        list=lines[i:]
-                        break
-                    elif question_2.lower() in line.lower():
-                        #("***q2")
-                        list=lines[i:]
-                        break
-                    elif question_3.lower() in line.lower():
-                        list=lines[i:]
-                        break
-                 #("405 **",list)
-                finallist=[]
-                
-                for i,selist in enumerate(list):
-                     #("*",i,selist)
-                    if sec_quest.lower() in selist.lower():
-                                      #("",i,selist)
-                        finallist=list[:i]
-                        break
-                    elif sec_quest_2.lower() in selist.lower():
-                        #(" sec_2")
-                        finallist=list[:i]
-                        break
-                    elif sec_quest_3.lower() in selist.lower():
-                        #("&& sec3")
-                        finallist=list[:i]
-                        break
-                    else :
-                        finallist=list
-                 #("finallist",finallist)
-                return finallist                       
-
-# print(Describe_the_mechanisms("C:/Users/coda/Documents/bse.pdf"))
-# print("************")
-
-
-
-def  Provide_information_on_project(pdf_file):
-    start_found = False
-    end_found = False
-    lines_between = []
-    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
-
-    # Define multiple possible start and end strings
-    q_starts = [
-        "Percentage of input material (inputs to total inputs by value) sourced from suppliers",
-        "Percentage of input material",
-        " sourced from suppliers"
-    ]
-    q_ends = [
-        "PRINCIPLE 9",
-        "Businesses should engage with and provide value to their consumers in a responsible manner",
-        "Describe the mechanisms"
-    ]
-
-    with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[15:]:
-            pil_image = page.to_image(resolution=300).original
-            text = pytesseract.image_to_string(pil_image, config=custom_config)
-
-            if not text:
-                continue
-
-            for line in text.splitlines():
-                # Check if line matches any start phrase
-                if not start_found and any(start.lower() in line.lower() for start in q_starts):
-                    start_found = True
-                    continue  # skip the line containing start phrase
-
-                # Check if line matches any end phrase
-                if start_found and any(end.lower() in line.lower() for end in q_ends):
-                    end_found = True
-                    break
-
-                if start_found:
-                    lines_between.append(line)
-
-            if end_found:
-                break
-
-    if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
-    if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
-    if not lines_between:
-        return {"error": "No content found between start and end questions."}
-
-    # # print("#######",lines_between)
-    output_rows = []
-    for line in lines_between:
-        output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
-
-    final_3 = []
-    final_4 = []
-    for f in output_rows:
-        if len(f) == 3:
-            final_3.append(f)
-        elif len(f) == 4:
-            final_4.append(f)
-
-    keys = [
-        "Category",
-        "FY 2024-25 Current Financial Year",
-        "FY 2023-24 Previous Financial Year"
-    ]
-
-    keys_2 = [
+    keys_3=[
         "S.No.",
-        "Category",
-        "FY 2024-25 Current Financial Year",
-        "FY 2023-24 Previous Financial Year"
+        "Name of Project for which R&R is ongoing",
+        "State",
+        "District",
+        "No. of Project Affected Families (PAFs)",
+        "% of PAFs covered by R&R",
+        "Amounts paid to PAFs in the FY (In INR)",
+        
     ]
-    
-    
 
     myout = []
-    for row in output_rows:
-        data = dict(zip(keys, row))
-        myout.append(data)
+    # for row in output_rows:
+    #     data = dict(zip(keys, row))
+    #     myout.append(data)
 
-    if len(final_3) > len(final_4):
-        for row in final_3:
+    if len(final_6) > len(final_7):
+        for row in final_6:
             data = dict(zip(keys, row))
             myout.append(data)
-    elif len(final_4) > len(final_3):
-        for row in final_4:
-            data = dict(zip(keys_2, row))
+    elif len(final_7) > len(final_6):
+        for row in final_7:
+            data = dict(zip(keys_3, row))
             myout.append(data)
     else:
         return lines_between
 
-
-
     if not myout:
         return None
 
 
     return myout
 
-# print(Provide_information_on_project("C:/Users/coda/Documents/bse.pdf"))
-# print("************")
+#@ print(Provide_information_on_project("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
+
 
 def  Describe_the_mechanisms_to_receive(pdf_file):
     start_found = False
@@ -425,10 +279,8 @@ def  Describe_the_mechanisms_to_receive(pdf_file):
     else :
         return None
 
-# print(Describe_the_mechanisms_to_receive("C:/Users/coda/Documents/bse.pdf"))
-# print("************")
-
-
+#@ print(Describe_the_mechanisms_to_receive("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 def  Percentage_of_input_material(pdf_file):
@@ -494,7 +346,7 @@ def  Percentage_of_input_material(pdf_file):
         elif len(f) == 4:
             final_4.append(f)
 
-    key = [
+    keys = [
         "Particulars",
         "FY 2023-24 (Current Financial Year)",
         "FY 2022-23 (Previous Financial year)"
@@ -502,7 +354,7 @@ def  Percentage_of_input_material(pdf_file):
     ]
 
 
-    keys = [
+    keys_3 = [
         "S.No.",
         "Particulars",
         "FY 2023-24 (Current Financial Year)",
@@ -510,18 +362,18 @@ def  Percentage_of_input_material(pdf_file):
     ]
 
     myout = []
-    for row in output_rows:
-        data = dict(zip(keys, row))
-        myout.append(data)
+    # for row in output_rows:
+    #     data = dict(zip(keys, row))
+    #     myout.append(data)
 
     if len(final_3) > len(final_4):
         for row in final_3:
-            data = dict(zip(key, row))
+            data = dict(zip(keys, row))
             myout.append(data)
 
     elif len(final_4) > len(final_3):
         for row in final_4:
-            data = dict(zip(keys, row))
+            data = dict(zip(keys_3, row))
             myout.append(data)
 
 
@@ -531,8 +383,8 @@ def  Percentage_of_input_material(pdf_file):
 
     return myout
 
-# print(Percentage_of_input_material("C:/Users/coda/Documents/bse.pdf"))
-# print("************")
+#@ print(Percentage_of_input_material("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 def  Job_creation_in_smaller_towns(pdf_file):
     start_found = False
@@ -611,9 +463,9 @@ def  Job_creation_in_smaller_towns(pdf_file):
     
 
     myout = []
-    for row in output_rows:
-        data = dict(zip(keys, row))
-        myout.append(data)
+    # for row in output_rows:
+    #     data = dict(zip(keys, row))
+    #     myout.append(data)
 
     if len(final_2) > len(final_3):
         for row in final_2:
@@ -633,8 +485,8 @@ def  Job_creation_in_smaller_towns(pdf_file):
 
 
     return myout
-# print(Job_creation_in_smaller_towns("C:/Users/coda/Documents/bse.pdf"))
-# print("************")
+#@ print(Job_creation_in_smaller_towns("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
 
@@ -694,25 +546,23 @@ def  Provide_details_of_actions_taken(pdf_file):
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
 
+    final_2 = []
     final_3 = []
-    final_4 = []
     for f in output_rows:
-        if len(f) == 3:
+        if len(f) == 2:
             final_3.append(f)
-        elif len(f) == 4:
-            final_4.append(f)
+        elif len(f) == 3:
+            final_3.append(f)
 
     keys = [
-        "State",
-        "Aspirational District",
-        "Amount spent (In INR)"
+        "Details of negative social impact identified",
+        "Corrective action taken"
     ]
 
     keys_4 = [
         "Sl.No",
-        "State",
-        "Aspirational District",
-        "Amount spent (In INR)"
+        "Details of negative social impact identified",
+        "Corrective action taken"
 
         
     ]
@@ -720,15 +570,15 @@ def  Provide_details_of_actions_taken(pdf_file):
     
 
     myout = []
-    for row in output_rows:
-        data = dict(zip(keys, row))
-        myout.append(data)
+    # for row in output_rows:
+    #     data = dict(zip(keys, row))
+    #     myout.append(data)
 
-    if len(final_3) > len(final_4):
-        for row in final_3:
+    if len(final_2) > len(final_3):
+        for row in final_2:
             data = dict(zip(keys, row))
             myout.append(data)
-    elif len(final_4) > len(final_3):
+    elif len(final_3) > len(final_2):
         for row in final_3:
             data = dict(zip(keys_4, row))
             myout.append(data)
@@ -742,7 +592,638 @@ def  Provide_details_of_actions_taken(pdf_file):
 
 
     return myout
-# print(Provide_details_of_actions_taken("C:/Users/coda/Documents/bse.pdf"))
-# print("************")
+#@ print(Provide_details_of_actions_taken("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
 
 
+
+def  Provide_the_following_information(pdf_file):
+    start_found = False
+    end_found = False
+    lines_between = []
+    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
+
+    # Define multiple possible start and end strings
+    q_starts = [
+        "Provide the following information on CSR projects undertaken by your entity in designated",
+        "Provide the following information on CSR projects",
+        "identified by government bodies"
+
+    ]
+    q_ends = [
+        "Do you have a preferential procurement policy where you give preference",
+        "Do you have a preferential procurement policy",
+        "vulnerable groups"
+    ]
+
+    with pdfplumber.open(pdf_file) as pdf:
+        for page in pdf.pages[10:]:
+            pil_image = page.to_image(resolution=300).original
+            text = pytesseract.image_to_string(pil_image, config=custom_config)
+
+            if not text:
+                continue
+
+            for line in text.splitlines():
+                # Check if line matches any start phrase
+                if not start_found and any(start.lower() in line.lower() for start in q_starts):
+                    start_found = True
+                    continue  # skip the line containing start phrase
+
+                # Check if line matches any end phrase
+                if start_found and any(end.lower() in line.lower() for end in q_ends):
+                    end_found = True
+                    break
+
+                if start_found:
+                    lines_between.append(line)
+
+            if end_found:
+                break
+
+    if not start_found:
+        return {"error": f"Start question not found. Tried: {q_starts}"}
+    if not end_found:
+        return {"error": f"End question not found. Tried: {q_ends}"}
+    if not lines_between:
+        return {"error": "No content found between start and end questions."}
+
+    # print("#######",lines_between)
+    output_rows = []
+    for line in lines_between:
+        output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
+
+    final_3 = []
+    final_4 = []
+    for f in output_rows:
+        if len(f) == 3:
+            final_3.append(f)
+        elif len(f) == 4:
+            final_4.append(f)
+
+    keys = [
+        "State",
+        "Aspirational District",
+        "Amount Spent in INR"   
+    ]
+    keys_3 = [
+        "S.no",
+        "State",
+        "Aspirational District",
+        "Amount Spent in INR"
+    ]
+    
+    myout = []
+    # for row in output_rows:
+    #     data = dict(zip(keys, row))
+    #     myout.append(data)
+
+    if len(final_3) > len(final_4):
+        for row in final_3:
+            data = dict(zip(keys, row))
+            myout.append(data)
+    elif len(final_4) > len(final_3):
+        for row in final_4:
+            data = dict(zip(keys_3, row))
+            myout.append(data)
+    else:
+        return lines_between
+
+
+
+    if not myout:
+        return None
+
+
+    return myout
+
+#@ print(Provide_the_following_information("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
+
+def  Do_you_have_a_preferential(pdf_file):
+    start_found = False
+    end_found = False
+    lines_between = []
+    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
+
+    # Define multiple possible start and end strings
+    q_starts = [
+        "Do you have a preferential procurement policy where you give preference",
+        "Do you have a preferential procurement policy",
+        "vulnerable groups"
+    ]
+    q_ends = [
+        "Which marginalized /vulnerable groups do you procure",
+        "Which marginalized",
+        "vulnerable groups"
+
+    ]
+
+    with pdfplumber.open(pdf_file) as pdf:
+        for page in pdf.pages[10:]:
+            pil_image = page.to_image(resolution=300).original
+            text = pytesseract.image_to_string(pil_image, config=custom_config)
+
+            if not text:
+                continue
+
+            for line in text.splitlines():
+                # Check if line matches any start phrase
+                if not start_found and any(start.lower() in line.lower() for start in q_starts):
+                    start_found = True
+                    continue  # skip the line containing start phrase
+
+                # Check if line matches any end phrase
+                if start_found and any(end.lower() in line.lower() for end in q_ends):
+                    end_found = True
+                    break
+
+                if start_found:
+                    lines_between.append(line)
+
+            if end_found:
+                break
+
+    if not start_found:
+        return {"error": f"Start question not found. Tried: {q_starts}"}
+    if not end_found:
+        return {"error": f"End question not found. Tried: {q_ends}"}
+    if not lines_between:
+        return {"error": "No content found between start and end questions."}
+
+    # print("#######",lines_between)
+    if lines_between:
+        return lines_between
+    else:
+        return None
+#@ print(Do_you_have_a_preferential("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
+
+
+def  From_which_marginalized(pdf_file):
+    start_found = False
+    end_found = False
+    lines_between = []
+    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
+
+    # Define multiple possible start and end strings
+    q_starts = [
+        "Which marginalized /vulnerable groups do you procure",
+        "Which marginalized",
+        "vulnerable groups"
+
+    ]
+    q_ends = [
+        "What percentage of total procurement (by value) does it constitute",
+        "What percentage of total procurement",
+        "(by value) does it constitute"
+
+    ]
+
+    with pdfplumber.open(pdf_file) as pdf:
+        for page in pdf.pages[10:]:
+            pil_image = page.to_image(resolution=300).original
+            text = pytesseract.image_to_string(pil_image, config=custom_config)
+
+            if not text:
+                continue
+
+            for line in text.splitlines():
+                # Check if line matches any start phrase
+                if not start_found and any(start.lower() in line.lower() for start in q_starts):
+                    start_found = True
+                    continue  # skip the line containing start phrase
+
+                # Check if line matches any end phrase
+                if start_found and any(end.lower() in line.lower() for end in q_ends):
+                    end_found = True
+                    break
+
+                if start_found:
+                    lines_between.append(line)
+
+            if end_found:
+                break
+
+    if not start_found:
+        return {"error": f"Start question not found. Tried: {q_starts}"}
+    if not end_found:
+        return {"error": f"End question not found. Tried: {q_ends}"}
+    if not lines_between:
+        return {"error": "No content found between start and end questions."}
+
+    # print("#######",lines_between)
+    if lines_between:
+        return lines_between
+    else:
+        return None
+
+#@ print(From_which_marginalized("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
+
+
+def  What_percentage_of_total_procurement(pdf_file):
+    start_found = False
+    end_found = False
+    lines_between = []
+    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
+
+    # Define multiple possible start and end strings
+    q_starts = [
+        "What percentage of total procurement (by value) does it constitute",
+        "What percentage of total procurement",
+        "(by value) does it constitute"
+
+    ]
+    q_ends = [
+        "Details of the benefits derived ",
+        "properties owned or acquired",
+        "based on traditional knowledge"
+    ]
+
+    with pdfplumber.open(pdf_file) as pdf:
+        for page in pdf.pages[10:]:
+            pil_image = page.to_image(resolution=300).original
+            text = pytesseract.image_to_string(pil_image, config=custom_config)
+
+            if not text:
+                continue
+
+            for line in text.splitlines():
+                # Check if line matches any start phrase
+                if not start_found and any(start.lower() in line.lower() for start in q_starts):
+                    start_found = True
+                    continue  # skip the line containing start phrase
+
+                # Check if line matches any end phrase
+                if start_found and any(end.lower() in line.lower() for end in q_ends):
+                    end_found = True
+                    break
+
+                if start_found:
+                    lines_between.append(line)
+
+            if end_found:
+                break
+
+    if not start_found:
+        return {"error": f"Start question not found. Tried: {q_starts}"}
+    if not end_found:
+        return {"error": f"End question not found. Tried: {q_ends}"}
+    if not lines_between:
+        return {"error": "No content found between start and end questions."}
+
+    # print("#######",lines_between)
+    output_rows = []
+    for line in lines_between:
+        output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
+
+    final_3 = []
+    final_4 = []
+    for f in output_rows:
+        if len(f) == 3:
+            final_3.append(f)
+        elif len(f) == 4:
+            final_4.append(f)
+
+    keys = [
+        "Particulars",
+        "FY 2023-24 (Current Financial Year)",
+        "FY 2022-23 (Previous Financial year)"
+    ]
+    keys_3 = [
+        "S.no",
+        "Particulars",
+        "FY 2023-24 (Current Financial Year)",
+        "FY 2022-23 (Previous Financial year)"
+    ]
+    
+    myout = []
+    if len(final_3) > len(final_4):
+        for row in final_3:
+            data = dict(zip(keys, row))
+            myout.append(data)
+    elif len(final_4) > len(final_3):
+        for row in final_4:
+            data = dict(zip(keys_3, row))
+            myout.append(data)
+    else:
+        return lines_between
+
+
+
+    if not myout:
+        return None
+
+
+    return myout
+
+#@ print(What_percentage_of_total_procurement("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
+
+
+def  Details_of_the_benefits_derived(pdf_file):
+    start_found = False
+    end_found = False
+    lines_between = []
+    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
+
+    # Define multiple possible start and end strings
+    q_starts = [
+        "Details of the benefits derived ",
+        "properties owned or acquired",
+        "based on traditional knowledge"
+
+    ]
+    q_ends = [
+        "Details of corrective actions taken or underway",
+        "adverse order in intellectual property related",
+        "usage of traditional knowledge is involved"
+        
+    ]
+
+    with pdfplumber.open(pdf_file) as pdf:
+        for page in pdf.pages[10:]:
+            pil_image = page.to_image(resolution=300).original
+            text = pytesseract.image_to_string(pil_image, config=custom_config)
+
+            if not text:
+                continue
+
+            for line in text.splitlines():
+                # Check if line matches any start phrase
+                if not start_found and any(start.lower() in line.lower() for start in q_starts):
+                    start_found = True
+                    continue  # skip the line containing start phrase
+
+                # Check if line matches any end phrase
+                if start_found and any(end.lower() in line.lower() for end in q_ends):
+                    end_found = True
+                    break
+
+                if start_found:
+                    lines_between.append(line)
+
+            if end_found:
+                break
+
+    if not start_found:
+        return {"error": f"Start question not found. Tried: {q_starts}"}
+    if not end_found:
+        return {"error": f"End question not found. Tried: {q_ends}"}
+    if not lines_between:
+        return {"error": "No content found between start and end questions."}
+
+    # print("#######",lines_between)
+    output_rows = []
+    for line in lines_between:
+        output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
+
+    final_4 = []
+    final_5 = []
+    for f in output_rows:
+        if len(f) == 4:
+            final_4.append(f)
+        elif len(f) == 5:
+            final_5.append(f)
+
+    keys = [
+        "Intellectual Property based on traditional knowledge",
+        "Owned/Acquired (Yes/No)",
+        "Benefit shared (Yes / No)",
+        "Basis of calculating benefit share"
+    ]
+    keys_3 = [
+        "S.no",
+        "Intellectual Property based on traditional knowledge",
+        "Owned/Acquired (Yes/No)",
+        "Benefit shared (Yes / No)",
+        "Basis of calculating benefit share"
+    ]
+    
+    myout = []
+    if len(final_4) > len(final_5):
+        for row in final_4:
+            data = dict(zip(keys, row))
+            myout.append(data)
+    elif len(final_5) > len(final_4):
+        for row in final_4:
+            data = dict(zip(keys_3, row))
+            myout.append(data)
+    else:
+        return lines_between
+
+
+
+    if not myout:
+        return None
+
+
+    return myout
+
+#@ print(Details_of_the_benefits_derived("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
+
+
+def  Details_of_corrective_actions_taken(pdf_file):
+    start_found = False
+    end_found = False
+    lines_between = []
+    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
+
+    # Define multiple possible start and end strings
+    q_starts = [
+        "Details of corrective actions taken or underway",
+        "adverse order in intellectual property related",
+        "usage of traditional knowledge is involved"
+
+    ]
+    q_ends = [
+        "Details of beneficiaries of CSR Projects",
+        "Details of beneficiaries",
+        "CSR Projects"
+        
+        
+    ]
+
+    with pdfplumber.open(pdf_file) as pdf:
+        for page in pdf.pages[10:]:
+            pil_image = page.to_image(resolution=300).original
+            text = pytesseract.image_to_string(pil_image, config=custom_config)
+
+            if not text:
+                continue
+
+            for line in text.splitlines():
+                # Check if line matches any start phrase
+                if not start_found and any(start.lower() in line.lower() for start in q_starts):
+                    start_found = True
+                    continue  # skip the line containing start phrase
+
+                # Check if line matches any end phrase
+                if start_found and any(end.lower() in line.lower() for end in q_ends):
+                    end_found = True
+                    break
+
+                if start_found:
+                    lines_between.append(line)
+
+            if end_found:
+                break
+
+    if not start_found:
+        return {"error": f"Start question not found. Tried: {q_starts}"}
+    if not end_found:
+        return {"error": f"End question not found. Tried: {q_ends}"}
+    if not lines_between:
+        return {"error": "No content found between start and end questions."}
+
+    # print("#######",lines_between)
+    output_rows = []
+    for line in lines_between:
+        output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
+
+    final_3 = []
+    final_4 = []
+    for f in output_rows:
+        if len(f) == 3:
+            final_3.append(f)
+        elif len(f) == 4:
+            final_4.append(f)
+
+    keys = [
+        "Name of authority",
+        "Brief of the Case",
+        "Corrective action taken"
+    ]
+    keys_3 = [
+        "S.no",
+        "Name of authority",
+        "Brief of the Case",
+        "Corrective action taken"
+        
+    ]
+    
+    myout = []
+    if len(final_3) > len(final_4):
+        for row in final_3:
+            data = dict(zip(keys, row))
+            myout.append(data)
+    elif len(final_4) > len(final_3):
+        for row in final_4:
+            data = dict(zip(keys_3, row))
+            myout.append(data)
+    else:
+        return lines_between
+
+
+
+    if not myout:
+        return None
+
+
+    return myout
+
+#@ print(Details_of_corrective_actions_taken("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
+
+
+
+def  Details_of_beneficiaries(pdf_file):
+    start_found = False
+    end_found = False
+    lines_between = []
+    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
+
+    # Define multiple possible start and end strings
+    q_starts = [
+        "Details of beneficiaries of CSR Projects",
+        "Details of beneficiaries",
+        "CSR Projects"
+
+    ]
+    q_ends = [
+        "PRINCIPLE 9",
+        "Businesses should engage",
+        "consumers in a responsible manner"
+    ]
+
+    with pdfplumber.open(pdf_file) as pdf:
+        for page in pdf.pages[10:-2]:
+            pil_image = page.to_image(resolution=300).original
+            text = pytesseract.image_to_string(pil_image, config=custom_config)
+
+            if not text:
+                continue
+
+            for line in text.splitlines():
+                # Check if line matches any start phrase
+                if not start_found and any(start.lower() in line.lower() for start in q_starts):
+                    start_found = True
+                    continue  # skip the line containing start phrase
+
+                # Check if line matches any end phrase
+                if start_found and any(end.lower() in line.lower() for end in q_ends):
+                    end_found = True
+                    break
+
+                if start_found:
+                    lines_between.append(line)
+
+            if end_found:
+                break
+
+    if not start_found:
+        return {"error": f"Start question not found. Tried: {q_starts}"}
+    if not end_found:
+        return {"error": f"End question not found. Tried: {q_ends}"}
+    if not lines_between:
+        return {"error": "No content found between start and end questions."}
+
+    # print("#######",lines_between)
+    output_rows = []
+    for line in lines_between:
+        output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
+
+    final_3 = []
+    final_4 = []
+    for f in output_rows:
+        if len(f) == 3:
+            final_3.append(f)
+        elif len(f) == 4:
+            final_4.append(f)
+
+    keys = [
+        "CSR Project",
+        "No. of persons benefited from CSR Projects",
+        "% of beneficiaries from vulnerable and marginalized groups"
+    ]
+    keys_3 = [
+        "S.no",
+        "CSR Project",
+        "No. of persons benefited from CSR Projects",
+        "% of beneficiaries from vulnerable and marginalized groups"
+    ]
+    
+    myout = []
+    if len(final_3) > len(final_4):
+        for row in final_3:
+            data = dict(zip(keys, row))
+            myout.append(data)
+    elif len(final_4) > len(final_3):
+        for row in final_4:
+            data = dict(zip(keys_3, row))
+            myout.append(data)
+    else:
+        return lines_between
+
+
+
+    if not myout:
+        return None
+
+
+    return myout
+
+#@ print(Details_of_beneficiaries("C:/Users/coda/Documents/deigeo.pdf"))
+#@ print("************")
