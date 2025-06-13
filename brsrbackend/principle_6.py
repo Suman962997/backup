@@ -3,13 +3,13 @@ import pytesseract
 from PIL import Image
 import io
 import re
+import fun
 
                                 ###### PRINCIPLE VI #######
                                 
 
-
 def  Details_of_total_energy(pdf_file):
-    print("PRINCIPLE 6")
+    #@ print("PRINCIPLE 6")
     start_found = False
     end_found = False
     lines_between = []
@@ -27,7 +27,19 @@ def  Details_of_total_energy(pdf_file):
         "facilities identified as designated consumers",
         "PAT scheme have been achieved"
     ]
+    keys = [
+        "Parameter",
+        "FY 2024-25(Current Financial Year)",
+        "FY 2023-24(Previous Financial Year)"
+    ]
 
+    keys_3 = [
+        "S.no",
+        "Parameter",
+        "FY 2024-25(Current Financial Year)",
+        "FY 2023-24(Previous Financial Year)"
+    ]
+    
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[12:-4-4]:
             pil_image = page.to_image(resolution=300).original
@@ -60,7 +72,7 @@ def  Details_of_total_energy(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## print("#######",lines_between)
+    ## #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -73,19 +85,7 @@ def  Details_of_total_energy(pdf_file):
         elif len(f) == 4:
             final_4.append(f)
 
-    keys = [
-        "Parameter",
-        "FY 2024-25(Current Financial Year)",
-        "FY 2023-24(Previous Financial Year)"
-    ]
 
-    keys_3 = [
-        "S.no",
-        "Parameter",
-        "FY 2024-25(Current Financial Year)",
-        "FY 2023-24(Previous Financial Year)"
-    ]
-    
     myout = []
     # for row in output_rows:
     #     data = dict(zip(keys, row))
@@ -110,68 +110,68 @@ def  Details_of_total_energy(pdf_file):
 
     return myout
 
-#@ print(Details_of_total_energy("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Details_of_total_energy("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
 def Does_the_entity_have_any_sites(pdf_path):
     with pdfplumber.open(pdf_path) as pdf:
-        ### print("file opend")
+        ### #@ print("file opend")
         question="Does the entity have any sites / facilities identified as designated"
         question_2="Does the entity have any sites"
         question_3="Scheme of the Government of India"
         for i, page in enumerate(pdf.pages[10:-2]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
-                ### print(f"Question found on page {i}")
+                ### #@ print(f"Question found on page {i}")
                 image = page.to_image(resolution=300).original  # 300 DPI is usually enough
 
                 # Run Tesseract with config to preserve whitespaces
                 custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
                 ocr_text = pytesseract.image_to_string(image, config=custom_config)
-                # # ### print(ocr_text)
+                # # ### #@ print(ocr_text)
                 lines = ocr_text.splitlines()
                 sec_quest=" Provide details of the following disclosures related to water, in the following format"
                 sec_quest_2="Provide details of the following disclosures" 
                 sec_quest_3="related to water, in the following format"
                 list=[]     
                 for i, line in enumerate(lines):
-                    # ### print(i,line)
+                    # ### #@ print(i,line)
                     if question.lower() in line.lower():
-                        ### print("***q1")
+                        ### #@ print("***q1")
                         list=lines[i:]
                         break
                     elif question_2.lower() in line.lower():
-                        ### print("***q2")
+                        ### #@ print("***q2")
                         list=lines[i:]
                         break
                     elif question_3.lower() in line.lower():
-                        ### print("****q3")
+                        ### #@ print("****q3")
                         list=lines[i:]
                         break
-                # ### print("405 **",list)
+                # ### #@ print("405 **",list)
                 finallist=[]
                 
                 for i,selist in enumerate(list):
-                    # ### print("*",i,selist)
+                    # ### #@ print("*",i,selist)
                     if sec_quest.lower() in selist.lower():
-                        ### print("#########",i,selist)
+                        ### #@ print("#########",i,selist)
                         finallist=list[:i]
                         break
                     elif sec_quest_2.lower() in selist.lower():
-                        ### print("### sec_2")
+                        ### #@ print("### sec_2")
                         finallist=list[:i]
                         break
                     elif sec_quest_3.lower() in selist.lower():
-                        ### print("&& sec3")
+                        ### #@ print("&& sec3")
                         finallist=list[:i]
                         break
                     else :
                         finallist=list
-                # ### print("finallist",finallist)
+                # ### #@ print("finallist",finallist)
                 return finallist                       
 
-#@ print(Does_the_entity_have_any_sites("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Does_the_entity_have_any_sites("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 def  Provide_details_of_the_following(pdf_file):
@@ -190,9 +190,23 @@ def  Provide_details_of_the_following(pdf_file):
     q_ends = [
         "Provide the following details related to water discharged",
         "Provide the following details related",
-        "related to water discharged"
-        
+        "related to water discharged"        
     ]
+
+    keys = [
+        "Parameter",
+        "FY 2023-2024",
+        "FY 2022-2023"
+    ]
+
+    keys_3 = [
+        "S.no",
+        "Parameter",
+        "FY 2023-2024",
+        "FY 2022-2023"
+    ]
+    
+
 
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[12:-4]:
@@ -226,7 +240,7 @@ def  Provide_details_of_the_following(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## print("#######",lines_between)
+    ## #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -239,19 +253,6 @@ def  Provide_details_of_the_following(pdf_file):
         elif len(f) == 4:
             final_4.append(f)
 
-    keys = [
-        "Parameter",
-        "FY 2023-2024",
-        "FY 2022-2023"
-    ]
-
-    keys_3 = [
-        "S.no",
-        "Parameter",
-        "FY 2023-2024",
-        "FY 2022-2023"
-    ]
-    
     myout = []
     # for row in output_rows:
     #     data = dict(zip(keys, row))
@@ -276,7 +277,7 @@ def  Provide_details_of_the_following(pdf_file):
 
     return myout
 
-#@ print(Provide_details_of_the_following("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Provide_details_of_the_following("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -299,6 +300,18 @@ def  Provide_the_following_details(pdf_file):
         "coverage and implementation"
         
     ]
+    keys = [
+        "Parameter",
+        "FY 2023-2024",
+        "FY 2022-2023"
+    ]
+
+    keys_3 = [
+        "S.no",
+        "Parameter",
+        "FY 2023-2024",
+        "FY 2022-2023"
+    ]
 
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[12:-4]:
@@ -332,7 +345,7 @@ def  Provide_the_following_details(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## print("#######",lines_between)
+    ## #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -345,18 +358,6 @@ def  Provide_the_following_details(pdf_file):
         elif len(f) == 4:
             final_4.append(f)
 
-    keys = [
-        "Parameter",
-        "FY 2023-2024",
-        "FY 2022-2023"
-    ]
-
-    keys_3 = [
-        "S.no",
-        "Parameter",
-        "FY 2023-2024",
-        "FY 2022-2023"
-    ]
     
     myout = []
     # for row in output_rows:
@@ -382,7 +383,7 @@ def  Provide_the_following_details(pdf_file):
 
     return myout
 
-#@ print(Provide_the_following_details("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Provide_the_following_details("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -390,62 +391,62 @@ def  Provide_the_following_details(pdf_file):
 
 def Has_the_entity_implemented(pdf_path,):
     with pdfplumber.open(pdf_path) as pdf:
-        ### print("file opend")
+        ### #@ print("file opend")
         question="Has the entity implemented a mechanism for Zero Liquid Discharge"
         question_2="Zero Liquid Discharge"
         question_3="coverage and implementation"
         for i, page in enumerate(pdf.pages[10:-2]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
-                ### print(f"Question found on page {i}")
+                ### #@ print(f"Question found on page {i}")
                 image = page.to_image(resolution=300).original  # 300 DPI is usually enough
 
                 # Run Tesseract with config to preserve whitespaces
                 custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
                 ocr_text = pytesseract.image_to_string(image, config=custom_config)
-                # # ### print(ocr_text)
+                # # ### #@ print(ocr_text)
                 lines = ocr_text.splitlines()
                 sec_quest="Please provide details of air emissions (other than GHG emissions) by the entity, in the following format"
                 sec_quest_2="Please provide details of air emissions" 
                 sec_quest_3="other than GHG emissions"
                 list=[]     
                 for i, line in enumerate(lines):
-                    # ### print(i,line)
+                    # ### #@ print(i,line)
                     if question.lower() in line.lower():
-                        ### print("***q1")
+                        ### #@ print("***q1")
                         list=lines[i:]
                         break
                     elif question_2.lower() in line.lower():
-                        ### print("***q2")
+                        ### #@ print("***q2")
                         list=lines[i:]
                         break
                     elif question_3.lower() in line.lower():
-                        ### print("****q3")
+                        ### #@ print("****q3")
                         list=lines[i:]
                         break
-                # ### print("405 **",list)
+                # ### #@ print("405 **",list)
                 finallist=[]
                 
                 for i,selist in enumerate(list):
-                    # ### print("*",i,selist)
+                    # ### #@ print("*",i,selist)
                     if sec_quest.lower() in selist.lower():
-                        ### print("#########",i,selist)
+                        ### #@ print("#########",i,selist)
                         finallist=list[:i]
                         break
                     elif sec_quest_2.lower() in selist.lower():
-                        ### print("### sec_2")
+                        ### #@ print("### sec_2")
                         finallist=list[:i]
                         break
                     elif sec_quest_3.lower() in selist.lower():
-                        ### print("&& sec3")
+                        ### #@ print("&& sec3")
                         finallist=list[:i]
                         break
                     else :
                         finallist=list
-                # ### print("finallist",finallist)
+                # ### #@ print("finallist",finallist)
                 return finallist                       
 
-#@ print(Has_the_entity_implemented("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Has_the_entity_implemented("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -501,7 +502,7 @@ def  Please_provide_details(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## print("#######",lines_between)
+    ## #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -553,7 +554,7 @@ def  Please_provide_details(pdf_file):
 
     return myout
 
-#@ print(Please_provide_details("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Please_provide_details("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -608,7 +609,7 @@ def  Provide_details_of_greenhouse(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## print("#######",lines_between)
+    ## #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -660,7 +661,7 @@ def  Provide_details_of_greenhouse(pdf_file):
 
     return myout
 
-#@ print(Provide_details_of_greenhouse("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Provide_details_of_greenhouse("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -714,12 +715,12 @@ def  Does_the_entity_have_any_project(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## print("#######",lines_between)
+    ## #@ print("#######",lines_between)
     if lines_between:
         return lines_between
     else:
         None
-#@ print(Does_the_entity_have_any_project("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Does_the_entity_have_any_project("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -740,8 +741,20 @@ def  Provide_details_related(pdf_file):
     q_ends = [
         "Briefly describe the waste management practices adopted in your establishments",
         "Briefly describe the waste management practices",
-        "practices adopted to manage such wastes"
-        
+        "practices adopted to manage such wastes"        
+    ]
+
+    keys = [
+        "Total Waste generated (in metric tonnes)",
+        "FY 2023 - 2024",
+        "FY 2022 – 2023"
+    ]
+
+    keys_3 = [
+        "S.no",
+        "Total Waste generated (in metric tonnes)",
+        "FY 2023 - 2024",
+        "FY 2022 – 2023"   
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
@@ -776,7 +789,7 @@ def  Provide_details_related(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## print("#######",lines_between)
+    ## #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -789,19 +802,6 @@ def  Provide_details_related(pdf_file):
         elif len(f) ==4:
             final_4.append(f)
 
-    keys = [
-        "Total Waste generated (in metric tonnes)",
-        "FY 2023 - 2024",
-        "FY 2022 – 2023"
-    ]
-
-    keys_3 = [
-        "S.no",
-        "Total Waste generated (in metric tonnes)",
-        "FY 2023 - 2024",
-        "FY 2022 – 2023"
-        
-    ]
     
     myout = []
     # for row in output_rows:
@@ -827,69 +827,69 @@ def  Provide_details_related(pdf_file):
 
     return myout
 
-#@ print(Provide_details_related("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Provide_details_related("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
 
 def  Briefly_describe_the_waste(pdf_path):
     with pdfplumber.open(pdf_path) as pdf:
-        ### print("file opend")
+        ### #@ print("file opend")
         question="Briefly describe the waste management practices adopted in your establishments"
         question_2="Briefly describe the waste management practices adopted"
         question_3="products and processes and the practices"
         for i, page in enumerate(pdf.pages[10:-2]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
-                ### print(f"Question found on page {i}")
+                ### #@ print(f"Question found on page {i}")
                 image = page.to_image(resolution=300).original  # 300 DPI is usually enough
 
                 # Run Tesseract with config to preserve whitespaces
                 custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
                 ocr_text = pytesseract.image_to_string(image, config=custom_config)
-                # # ### print(ocr_text)
+                # # ### #@ print(ocr_text)
                 lines = ocr_text.splitlines()
                 sec_quest="If the entity has operations/offices in/around ecologically sensitive areas (such as national parks, wildlife sanctuaries,"
                 sec_quest_2="If the entity has operations/offices in/around ecologically sensitive areas" 
                 sec_quest_3="required, please specify details in the following"
                 list=[]     
                 for i, line in enumerate(lines):
-                    # ### print(i,line)
+                    # ### #@ print(i,line)
                     if question.lower() in line.lower():
-                        ### print("***q1")
+                        ### #@ print("***q1")
                         list=lines[i:]
                         break
                     elif question_2.lower() in line.lower():
-                        ### print("***q2")
+                        ### #@ print("***q2")
                         list=lines[i:]
                         break
                     elif question_3.lower() in line.lower():
-                        ### print("****q3")
+                        ### #@ print("****q3")
                         list=lines[i:]
                         break
-                # ### print("405 **",list)
+                # ### #@ print("405 **",list)
                 finallist=[]
                 
                 for i,selist in enumerate(list):
-                    # ### print("*",i,selist)
+                    # ### #@ print("*",i,selist)
                     if sec_quest.lower() in selist.lower():
-                        ### print("#########",i,selist)
+                        ### #@ print("#########",i,selist)
                         finallist=list[:i]
                         break
                     elif sec_quest_2.lower() in selist.lower():
-                        ### print("### sec_2")
+                        ### #@ print("### sec_2")
                         finallist=list[:i]
                         break
                     elif sec_quest_3.lower() in selist.lower():
-                        ### print("&& sec3")
+                        ### #@ print("&& sec3")
                         finallist=list[:i]
                         break
                     else :
                         finallist=list
-                # ### print("finallist",finallist)
+                # ### #@ print("finallist",finallist)
                 return finallist                       
 
-#@ print(Briefly_describe_the_waste("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Briefly_describe_the_waste("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 def  If_the_entity_has_operations(pdf_file):
@@ -912,6 +912,18 @@ def  If_the_entity_has_operations(pdf_file):
         "current financial year"
     ]
 
+    keys = [
+        "Location of operations/offices",
+        "Type of operations",
+        "Whether the conditions of environmental approval / clearance are being complied with? (Y/N) If no, the reasons thereof and corrective action taken, if any"
+    ]
+
+    keys_3 = [
+        "S.no",
+        "Location of operations/offices",
+        "Type of operations",
+        "Whether the conditions of environmental approval / clearance are being complied with? (Y/N) If no, the reasons thereof and corrective action taken, if any"
+        ]
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[12:-4]:
             pil_image = page.to_image(resolution=300).original
@@ -944,7 +956,7 @@ def  If_the_entity_has_operations(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## print("#######",lines_between)
+    ## #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -957,19 +969,7 @@ def  If_the_entity_has_operations(pdf_file):
         elif len(f) == 4:
             final_4.append(f)
 
-    keys = [
-        "Location of operations/offices",
-        "Type of operations",
-        "Whether the conditions of environmental approval / clearance are being complied with? (Y/N) If no, the reasons thereof and corrective action taken, if any"
-    ]
 
-    keys_3 = [
-        "S.no",
-        "Location of operations/offices",
-        "Type of operations",
-        "Whether the conditions of environmental approval / clearance are being complied with? (Y/N) If no, the reasons thereof and corrective action taken, if any"
-        
-        ]
     
     myout = []
     # for row in output_rows:
@@ -995,7 +995,7 @@ def  If_the_entity_has_operations(pdf_file):
 
     return myout
 
-#@ print(If_the_entity_has_operations("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(If_the_entity_has_operations("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -1016,9 +1016,27 @@ def  Details_of_environmental(pdf_file):
     q_ends = [
         "Is the entity compliant with the applicable environmental",
         "Prevention and Control of Pollution) Act",
-        "Environment protection act and rules thereunder"
-        
+        "Environment protection act and rules thereunder"        
     ]
+
+    keys = [
+        "Name and brief details of project",
+        "EIA Notification No",
+        "Date",
+        "Whether conducted by independent external agency (Yes / No)",
+        "Results communicated in public domain(Yes / No)",
+        "Relevant Web link"
+    ]
+
+    keys_3 = [
+        "S.no",
+        "Name and brief details of project",
+        "EIA Notification No",
+        "Date",
+        "Whether conducted by independent external agency (Yes / No)",
+        "Results communicated in public domain(Yes / No)",
+        "Relevant Web link"
+        ]
 
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[12:-4]:
@@ -1052,7 +1070,7 @@ def  Details_of_environmental(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## print("#######",lines_between)
+    ## #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -1065,25 +1083,6 @@ def  Details_of_environmental(pdf_file):
         elif len(f) == 7:
             final_7.append(f)
 
-    keys = [
-        "Name and brief details of project",
-        "EIA Notification No",
-        "Date",
-        "Whether conducted by independent external agency (Yes / No)",
-        "Results communicated in public domain(Yes / No)",
-        "Relevant Web link"
-    ]
-
-    keys_3 = [
-        "S.no",
-        "Name and brief details of project",
-        "EIA Notification No",
-        "Date",
-        "Whether conducted by independent external agency (Yes / No)",
-        "Results communicated in public domain(Yes / No)",
-        "Relevant Web link"
-
-        ]
     
     myout = []
     # for row in output_rows:
@@ -1109,7 +1108,7 @@ def  Details_of_environmental(pdf_file):
 
     return myout
 
-#@ print(Details_of_environmental("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Details_of_environmental("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -1130,9 +1129,24 @@ def  Is_the_entity_compliant(pdf_file):
     q_ends = [
     "LEADERSHIP INDICATORS",
     "Water withdrawal, consumption and discharge in areas of water stress",
-    "areas of water stress"
+    "areas of water stress"        
+    ]
+
+    keys = [
+        "Specify the law / regulation / guidelines which was not complied with",
+        "Provide details of the non-compliance",
+        "Any fines / penalties / action taken by regulatory agencies such as pollution control boards or by courts",
+        "Corrective action taken, if any"
         
     ]
+
+    keys_3 = [
+        "S.no",
+        "Specify the law / regulation / guidelines which was not complied with",
+        "Provide details of the non-compliance",
+        "Any fines / penalties / action taken by regulatory agencies such as pollution control boards or by courts",
+        "Corrective action taken, if any"
+        ]
 
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[12:-4]:
@@ -1166,7 +1180,7 @@ def  Is_the_entity_compliant(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## print("#######",lines_between)
+    ## #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -1179,23 +1193,6 @@ def  Is_the_entity_compliant(pdf_file):
         elif len(f) == 5:
             final_5.append(f)
 
-    keys = [
-        "Specify the law / regulation / guidelines which was not complied with",
-        "Provide details of the non-compliance",
-        "Any fines / penalties / action taken by regulatory agencies such as pollution control boards or by courts",
-        "Corrective action taken, if any"
-        
-    ]
-
-    keys_3 = [
-        "S.no",
-        "Specify the law / regulation / guidelines which was not complied with",
-        "Provide details of the non-compliance",
-        "Any fines / penalties / action taken by regulatory agencies such as pollution control boards or by courts",
-        "Corrective action taken, if any"
-        
-
-        ]
     
     myout = []
     # for row in output_rows:
@@ -1221,7 +1218,7 @@ def  Is_the_entity_compliant(pdf_file):
 
     return myout
 
-#@ print(Is_the_entity_compliant("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Is_the_entity_compliant("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -1243,8 +1240,21 @@ def  Water_withdrawal(pdf_file):
     q_ends = [
         "Please provide details of total Scope 3 emissions and its intensity",
         "details of total Scope 3",
-        "emissions and its intensity"
-        
+        "emissions and its intensity"        
+    ]
+    keys = [
+        "Parameter",
+        "Unit (Metric tonnes of CO2 equivalent)",
+        "FY 2024-25(Current Financial Year)",
+        "FY 2023-24(Previous Financial Year)"
+    ]
+
+    keys_3 = [
+        "S.no",
+        "Parameter",
+        "Unit (Metric tonnes of CO2 equivalent)",
+        "FY 2024-25(Current Financial Year)",
+        "FY 2023-24(Previous Financial Year)"   
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
@@ -1279,7 +1289,7 @@ def  Water_withdrawal(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## print("#######",lines_between)
+    ## #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -1292,21 +1302,6 @@ def  Water_withdrawal(pdf_file):
         elif len(f) ==5:
             final_5.append(f)
 
-    keys = [
-        "Parameter",
-        "Unit (Metric tonnes of CO2 equivalent)",
-        "FY 2024-25(Current Financial Year)",
-        "FY 2023-24(Previous Financial Year)"
-    ]
-
-    keys_3 = [
-        "S.no",
-        "Parameter",
-        "Unit (Metric tonnes of CO2 equivalent)",
-        "FY 2024-25(Current Financial Year)",
-        "FY 2023-24(Previous Financial Year)"
-        
-    ]
     
     myout = []
     # for row in output_rows:
@@ -1332,7 +1327,7 @@ def  Water_withdrawal(pdf_file):
 
     return myout
 
-#@ print(Water_withdrawal("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Water_withdrawal("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -1357,6 +1352,21 @@ def  Please_provide_details(pdf_file):
         "With respect to the ecologically",
         "Essential Indicators above, provide details of significant"
     ]
+    keys = [
+        "Parameter",
+        "Unit",
+        "FY 2023-24",
+        "FY 2022-23"
+        
+    ]
+
+    keys_3 = [
+        "S.no",
+        "Parameter",
+        "Unit",
+        "FY 2023-2024",
+        "FY 2022-2023"
+        ]
 
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[12:-4]:
@@ -1390,7 +1400,7 @@ def  Please_provide_details(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## print("#######",lines_between)
+    ## #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -1403,23 +1413,6 @@ def  Please_provide_details(pdf_file):
         elif len(f) == 5:
             final_5.append(f)
 
-    keys = [
-        "Parameter",
-        "Unit",
-        "FY 2023-24",
-        "FY 2022-23"
-        
-    ]
-
-    keys_3 = [
-        "S.no",
-        "Parameter",
-        "Unit",
-        "FY 2023-2024",
-        "FY 2022-2023"
-        
-
-        ]
     
     myout = []
     # for row in output_rows:
@@ -1445,7 +1438,7 @@ def  Please_provide_details(pdf_file):
 
     return myout
 
-#@ print(Please_provide_details("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Please_provide_details("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -1469,7 +1462,6 @@ def  With_respect_to_the_ecologically(pdf_file):
         "If the entity has undertaken any specific initiatives or used innovative technology or solutions to",
         "used innovative technology or solutions",
         "please provide details of the same as well as outcome"
-
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
@@ -1504,13 +1496,13 @@ def  With_respect_to_the_ecologically(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## print("#######",lines_between)
+    ## #@ print("#######",lines_between)
 
     if lines_between:
         return lines_between
     else:
         None
-#@ print(With_respect_to_the_ecologically("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(With_respect_to_the_ecologically("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -1533,9 +1525,22 @@ def  If_the_entity_has_undertaken(pdf_file):
     q_ends = [
         "Does the entity have a business continuity and disaster management plan",
         "have a business continuity and disaster"
-        "Give details in 100 words/ web link"
-        
+        "Give details in 100 words/ web link"        
     ]
+
+    keys = [
+        "Initiative undertaken",
+        "Details of the initiative (Web-link, if any, may be provided along-with summary)",
+        "Outcome of the initiative"
+
+    ]
+
+    keys_3 = [
+        "S.no",
+        "Initiative undertaken",
+        "Details of the initiative (Web-link, if any, may be provided along-with summary)",
+        "Outcome of the initiative"
+        ]
 
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[12:-4]:
@@ -1569,7 +1574,7 @@ def  If_the_entity_has_undertaken(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## print("#######",lines_between)
+    ## #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -1582,20 +1587,6 @@ def  If_the_entity_has_undertaken(pdf_file):
         elif len(f) == 4:
             final_4.append(f)
 
-    keys = [
-        "Initiative undertaken",
-        "Details of the initiative (Web-link, if any, may be provided along-with summary)",
-        "Outcome of the initiative"
-
-    ]
-
-    keys_3 = [
-        "S.no",
-        "Initiative undertaken",
-        "Details of the initiative (Web-link, if any, may be provided along-with summary)",
-        "Outcome of the initiative"
-
-        ]
     
     myout = []
     # for row in output_rows:
@@ -1621,7 +1612,7 @@ def  If_the_entity_has_undertaken(pdf_file):
 
     return myout
 
-#@ print(If_the_entity_has_undertaken("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(If_the_entity_has_undertaken("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -1677,14 +1668,14 @@ def  Does_the_entity_have_a_business(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## print("#######",lines_between)
+    ## #@ print("#######",lines_between)
 
     if lines_between:
         return lines_between
     else:
         None
 
-#@ print(Does_the_entity_have_a_business("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Does_the_entity_have_a_business("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -1739,14 +1730,14 @@ def  Disclose_any_significant(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## print("#######",lines_between)
+    ## #@ print("#######",lines_between)
 
     if lines_between:
         return lines_between
     else:
         None
 
-#@ print(Disclose_any_significant("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Disclose_any_significant("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -1800,13 +1791,13 @@ def  Percentage_of_value_chain(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## print("#######",lines_between)
+    ## #@ print("#######",lines_between)
 
     if lines_between:
         return lines_between
     else:
         None
 
-#@ print(Percentage_of_value_chain("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Percentage_of_value_chain("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 

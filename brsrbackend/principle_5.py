@@ -3,6 +3,7 @@ import pytesseract
 from PIL import Image
 import io
 import re
+import fun
 
 
 
@@ -30,7 +31,26 @@ def  Employees_and_workers(pdf_file):
         "Details of minimum wages paid",
         "employees and workers"
     ]
+    keys = [
+        "Category",
+        "FY 2024-25Current Financial Year (Total (A))",
+        "FY 2024-25Current Financial Year (No. of employees / workers covered (B))",
+        "FY 2024-25Current Financial Year (% (B / A))",
+        "FY 2023-24Previous Financial Year (Total (C))",
+        "FY 2023-24Previous Financial Year (No. of employees / workers covered (D))",
+        "FY 2023-24Previous Financial Year (% (D / C))                  "
+    ]
 
+    keys_3 = [
+        "S.no",
+        "Category",
+        "FY 2024-25Current Financial Year (Total (A))",
+        "FY 2024-25Current Financial Year (No. of employees / workers covered (B))",
+        "FY 2024-25Current Financial Year (% (B / A))",
+        "FY 2023-24Previous Financial Year (Total (C))",
+        "FY 2023-24Previous Financial Year (No. of employees / workers covered (D))",
+        "FY 2023-24Previous Financial Year (% (D / C))                  "
+    ]
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[12:]:
             pil_image = page.to_image(resolution=300).original
@@ -76,26 +96,7 @@ def  Employees_and_workers(pdf_file):
         elif len(f) == 8:
             final_8.append(f)
 
-    keys = [
-        "Category",
-        "FY 2024-25Current Financial Year (Total (A))",
-        "FY 2024-25Current Financial Year (No. of employees / workers covered (B))",
-        "FY 2024-25Current Financial Year (% (B / A))",
-        "FY 2023-24Previous Financial Year (Total (C))",
-        "FY 2023-24Previous Financial Year (No. of employees / workers covered (D))",
-        "FY 2023-24Previous Financial Year (% (D / C))                  "
-    ]
 
-    keys_3 = [
-        "S.no",
-        "Category",
-        "FY 2024-25Current Financial Year (Total (A))",
-        "FY 2024-25Current Financial Year (No. of employees / workers covered (B))",
-        "FY 2024-25Current Financial Year (% (B / A))",
-        "FY 2023-24Previous Financial Year (Total (C))",
-        "FY 2023-24Previous Financial Year (No. of employees / workers covered (D))",
-        "FY 2023-24Previous Financial Year (% (D / C))                  "
-    ]
     
     myout = []
     for row in output_rows:

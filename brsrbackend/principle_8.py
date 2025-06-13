@@ -3,11 +3,12 @@ import pytesseract
 from PIL import Image
 import io
 import re
+import fun
 
                                 ###### PRINCIPLE VIII #######
 
 def  Details_of_Social_Impact(pdf_file):
-    print("PRINCIPLE 8")
+    #@ print("PRINCIPLE 8")
     start_found = False
     end_found = False
     lines_between = []
@@ -24,6 +25,24 @@ def  Details_of_Social_Impact(pdf_file):
         "Provide information on project",
         "entity, in the following format"
     ]
+    keys = [
+        "Name and brief details of project",
+        "SIA Notification No.",
+        "Date of notification",
+        "Whether conducted by independent external agency (Yes / No)",
+        "Results communicated in public domain (Yes / No)",
+        "Relevant Web link"
+    ]
+    keys_3 = [
+        "S.No",
+        "Name and brief details of project",
+        "SIA Notification No.",
+        "Date of notification",
+        "Whether conducted by independent external agency (Yes / No)",
+        "Results communicated in public domain (Yes / No)",
+        "Relevant Web link"
+    ]
+
 
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[15:-4]:
@@ -57,7 +76,7 @@ def  Details_of_Social_Impact(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # # print("#######",lines_between)
+    # # #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -69,24 +88,6 @@ def  Details_of_Social_Impact(pdf_file):
             final_6.append(f)
         elif len(f) == 7:
             final_7.append(f)
-
-    keys = [
-        "Name and brief details of project",
-        "SIA Notification No.",
-        "Date of notification",
-        "Whether conducted by independent external agency (Yes / No)",
-        "Results communicated in public domain (Yes / No)",
-        "Relevant Web link"
-    ]
-    keys_3 = [
-        "S.No",
-        "Name and brief details of project",
-        "SIA Notification No.",
-        "Date of notification",
-        "Whether conducted by independent external agency (Yes / No)",
-        "Results communicated in public domain (Yes / No)",
-        "Relevant Web link"
-    ]
 
 
     myout = []
@@ -110,7 +111,7 @@ def  Details_of_Social_Impact(pdf_file):
 
     return myout
 
-#@ print(Details_of_Social_Impact("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Details_of_Social_Impact("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -131,6 +132,26 @@ def  Provide_information_on_project(pdf_file):
         "Describe the mechanisms to receive and redress grievances of the community",
         "grievances of the community"
     ]
+
+    keys = [
+        "Name of Project for which R&R is ongoing",
+        "State",
+        "District",
+        "No. of Project Affected Families (PAFs)",
+        "% of PAFs covered by R&R",
+        "Amounts paid to PAFs in the FY (In INR)",
+    ]
+    keys_3=[
+        "S.No.",
+        "Name of Project for which R&R is ongoing",
+        "State",
+        "District",
+        "No. of Project Affected Families (PAFs)",
+        "% of PAFs covered by R&R",
+        "Amounts paid to PAFs in the FY (In INR)",
+        
+    ]
+
 
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[15:-2]:
@@ -164,7 +185,7 @@ def  Provide_information_on_project(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # # print("#######",lines_between)
+    # # #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -176,26 +197,6 @@ def  Provide_information_on_project(pdf_file):
             final_6.append(f)
         elif len(f) == 7:
             final_7.append(f)
-
-    keys = [
-        "Name of Project for which R&R is ongoing",
-        "State",
-        "District",
-        "No. of Project Affected Families (PAFs)",
-        "% of PAFs covered by R&R",
-        "Amounts paid to PAFs in the FY (In INR)",
-    ]
-    keys_3=[
-        "S.No.",
-        "Name of Project for which R&R is ongoing",
-        "State",
-        "District",
-        "No. of Project Affected Families (PAFs)",
-        "% of PAFs covered by R&R",
-        "Amounts paid to PAFs in the FY (In INR)",
-        
-    ]
-
     myout = []
     # for row in output_rows:
     #     data = dict(zip(keys, row))
@@ -218,7 +219,7 @@ def  Provide_information_on_project(pdf_file):
 
     return myout
 
-#@ print(Provide_information_on_project("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Provide_information_on_project("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -273,13 +274,13 @@ def  Describe_the_mechanisms_to_receive(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     if lines_between:
         return lines_between
     else :
         return None
 
-#@ print(Describe_the_mechanisms_to_receive("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Describe_the_mechanisms_to_receive("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -299,6 +300,20 @@ def  Percentage_of_input_material(pdf_file):
         "Job creation in smaller towns – Disclose wages paid to persons employed (including employees or workers",
         "Disclose wages paid to persons employed",
         "following locations, as % of total wage cost"
+    ]
+    keys = [
+        "Particulars",
+        "FY 2023-24 (Current Financial Year)",
+        "FY 2022-23 (Previous Financial year)"
+
+    ]
+
+
+    keys_3 = [
+        "S.No.",
+        "Particulars",
+        "FY 2023-24 (Current Financial Year)",
+        "FY 2022-23 (Previous Financial year)"
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
@@ -333,7 +348,7 @@ def  Percentage_of_input_material(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # # print("#######",lines_between)
+    # # #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -346,20 +361,6 @@ def  Percentage_of_input_material(pdf_file):
         elif len(f) == 4:
             final_4.append(f)
 
-    keys = [
-        "Particulars",
-        "FY 2023-24 (Current Financial Year)",
-        "FY 2022-23 (Previous Financial year)"
-
-    ]
-
-
-    keys_3 = [
-        "S.No.",
-        "Particulars",
-        "FY 2023-24 (Current Financial Year)",
-        "FY 2022-23 (Previous Financial year)"
-    ]
 
     myout = []
     # for row in output_rows:
@@ -383,7 +384,7 @@ def  Percentage_of_input_material(pdf_file):
 
     return myout
 
-#@ print(Percentage_of_input_material("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Percentage_of_input_material("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 def  Job_creation_in_smaller_towns(pdf_file):
@@ -403,6 +404,17 @@ def  Job_creation_in_smaller_towns(pdf_file):
         "Provide details of actions",
         "Essential Indicators above"
     ]
+    keys = [
+        "Details of negative social impact identified",
+        "Corrective action taken"
+    ]
+
+    keys_3 = [
+        "S.No.",
+        "Details of negative social impact identified",
+        "Corrective action taken"
+    ]
+    
 
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[-12:]:
@@ -436,7 +448,7 @@ def  Job_creation_in_smaller_towns(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # # print("#######",lines_between)
+    # # #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -449,17 +461,6 @@ def  Job_creation_in_smaller_towns(pdf_file):
         elif len(f) == 3:
             final_3.append(f)
 
-    keys = [
-        "Details of negative social impact identified",
-        "Corrective action taken"
-    ]
-
-    keys_3 = [
-        "S.No.",
-        "Details of negative social impact identified",
-        "Corrective action taken"
-    ]
-    
     
 
     myout = []
@@ -485,7 +486,7 @@ def  Job_creation_in_smaller_towns(pdf_file):
 
 
     return myout
-#@ print(Job_creation_in_smaller_towns("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Job_creation_in_smaller_towns("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -505,10 +506,21 @@ def  Provide_details_of_actions_taken(pdf_file):
     q_ends = [
         "Provide the following information on CSR projects undertaken by your entity in designated aspirational districts",
         "your entity in designated",
-        "government bodies"
-        
+        "government bodies"        
     ]
 
+    keys = [
+        "Details of negative social impact identified",
+        "Corrective action taken"
+    ]
+
+    keys_4 = [
+        "Sl.No",
+        "Details of negative social impact identified",
+        "Corrective action taken"        
+    ]
+    
+    
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[-12:]:
             pil_image = page.to_image(resolution=300).original
@@ -541,7 +553,7 @@ def  Provide_details_of_actions_taken(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # # print("#######",lines_between)
+    # # #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -554,20 +566,6 @@ def  Provide_details_of_actions_taken(pdf_file):
         elif len(f) == 3:
             final_3.append(f)
 
-    keys = [
-        "Details of negative social impact identified",
-        "Corrective action taken"
-    ]
-
-    keys_4 = [
-        "Sl.No",
-        "Details of negative social impact identified",
-        "Corrective action taken"
-
-        
-    ]
-    
-    
 
     myout = []
     # for row in output_rows:
@@ -592,7 +590,7 @@ def  Provide_details_of_actions_taken(pdf_file):
 
 
     return myout
-#@ print(Provide_details_of_actions_taken("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Provide_details_of_actions_taken("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -615,7 +613,17 @@ def  Provide_the_following_information(pdf_file):
         "Do you have a preferential procurement policy",
         "vulnerable groups"
     ]
-
+    keys = [
+        "State",
+        "Aspirational District",
+        "Amount Spent in INR"   
+    ]
+    keys_3 = [
+        "S.no",
+        "State",
+        "Aspirational District",
+        "Amount Spent in INR"
+    ]
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[10:]:
             pil_image = page.to_image(resolution=300).original
@@ -648,7 +656,7 @@ def  Provide_the_following_information(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -661,17 +669,7 @@ def  Provide_the_following_information(pdf_file):
         elif len(f) == 4:
             final_4.append(f)
 
-    keys = [
-        "State",
-        "Aspirational District",
-        "Amount Spent in INR"   
-    ]
-    keys_3 = [
-        "S.no",
-        "State",
-        "Aspirational District",
-        "Amount Spent in INR"
-    ]
+
     
     myout = []
     # for row in output_rows:
@@ -697,7 +695,7 @@ def  Provide_the_following_information(pdf_file):
 
     return myout
 
-#@ print(Provide_the_following_information("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Provide_the_following_information("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 def  Do_you_have_a_preferential(pdf_file):
@@ -751,12 +749,12 @@ def  Do_you_have_a_preferential(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     if lines_between:
         return lines_between
     else:
         return None
-#@ print(Do_you_have_a_preferential("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Do_you_have_a_preferential("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -812,13 +810,13 @@ def  From_which_marginalized(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     if lines_between:
         return lines_between
     else:
         return None
 
-#@ print(From_which_marginalized("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(From_which_marginalized("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -840,7 +838,17 @@ def  What_percentage_of_total_procurement(pdf_file):
         "properties owned or acquired",
         "based on traditional knowledge"
     ]
-
+    keys = [
+        "Particulars",
+        "FY 2023-24 (Current Financial Year)",
+        "FY 2022-23 (Previous Financial year)"
+    ]
+    keys_3 = [
+        "S.no",
+        "Particulars",
+        "FY 2023-24 (Current Financial Year)",
+        "FY 2022-23 (Previous Financial year)"
+    ]
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[10:]:
             pil_image = page.to_image(resolution=300).original
@@ -873,7 +881,7 @@ def  What_percentage_of_total_procurement(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -886,17 +894,7 @@ def  What_percentage_of_total_procurement(pdf_file):
         elif len(f) == 4:
             final_4.append(f)
 
-    keys = [
-        "Particulars",
-        "FY 2023-24 (Current Financial Year)",
-        "FY 2022-23 (Previous Financial year)"
-    ]
-    keys_3 = [
-        "S.no",
-        "Particulars",
-        "FY 2023-24 (Current Financial Year)",
-        "FY 2022-23 (Previous Financial year)"
-    ]
+
     
     myout = []
     if len(final_3) > len(final_4):
@@ -918,7 +916,7 @@ def  What_percentage_of_total_procurement(pdf_file):
 
     return myout
 
-#@ print(What_percentage_of_total_procurement("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(What_percentage_of_total_procurement("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -941,7 +939,20 @@ def  Details_of_the_benefits_derived(pdf_file):
         "usage of traditional knowledge is involved"
         
     ]
-
+    keys = [
+        "Intellectual Property based on traditional knowledge",
+        "Owned/Acquired (Yes/No)",
+        "Benefit shared (Yes / No)",
+        "Basis of calculating benefit share"
+    ]
+    keys_3 = [
+        "S.no",
+        "Intellectual Property based on traditional knowledge",
+        "Owned/Acquired (Yes/No)",
+        "Benefit shared (Yes / No)",
+        "Basis of calculating benefit share"
+    ]
+    
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[10:]:
             pil_image = page.to_image(resolution=300).original
@@ -974,7 +985,7 @@ def  Details_of_the_benefits_derived(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -987,20 +998,7 @@ def  Details_of_the_benefits_derived(pdf_file):
         elif len(f) == 5:
             final_5.append(f)
 
-    keys = [
-        "Intellectual Property based on traditional knowledge",
-        "Owned/Acquired (Yes/No)",
-        "Benefit shared (Yes / No)",
-        "Basis of calculating benefit share"
-    ]
-    keys_3 = [
-        "S.no",
-        "Intellectual Property based on traditional knowledge",
-        "Owned/Acquired (Yes/No)",
-        "Benefit shared (Yes / No)",
-        "Basis of calculating benefit share"
-    ]
-    
+
     myout = []
     if len(final_4) > len(final_5):
         for row in final_4:
@@ -1021,7 +1019,7 @@ def  Details_of_the_benefits_derived(pdf_file):
 
     return myout
 
-#@ print(Details_of_the_benefits_derived("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Details_of_the_benefits_derived("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -1042,10 +1040,21 @@ def  Details_of_corrective_actions_taken(pdf_file):
         "Details of beneficiaries of CSR Projects",
         "Details of beneficiaries",
         "CSR Projects"
-        
+                
+    ]
+    keys = [
+        "Name of authority",
+        "Brief of the Case",
+        "Corrective action taken"
+    ]
+    keys_3 = [
+        "S.no",
+        "Name of authority",
+        "Brief of the Case",
+        "Corrective action taken"
         
     ]
-
+    
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[10:]:
             pil_image = page.to_image(resolution=300).original
@@ -1078,7 +1087,7 @@ def  Details_of_corrective_actions_taken(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -1091,19 +1100,7 @@ def  Details_of_corrective_actions_taken(pdf_file):
         elif len(f) == 4:
             final_4.append(f)
 
-    keys = [
-        "Name of authority",
-        "Brief of the Case",
-        "Corrective action taken"
-    ]
-    keys_3 = [
-        "S.no",
-        "Name of authority",
-        "Brief of the Case",
-        "Corrective action taken"
-        
-    ]
-    
+
     myout = []
     if len(final_3) > len(final_4):
         for row in final_3:
@@ -1124,7 +1121,7 @@ def  Details_of_corrective_actions_taken(pdf_file):
 
     return myout
 
-#@ print(Details_of_corrective_actions_taken("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Details_of_corrective_actions_taken("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -1147,7 +1144,18 @@ def  Details_of_beneficiaries(pdf_file):
         "Businesses should engage",
         "consumers in a responsible manner"
     ]
-
+    keys = [
+        "CSR Project",
+        "No. of persons benefited from CSR Projects",
+        "% of beneficiaries from vulnerable and marginalized groups"
+    ]
+    keys_3 = [
+        "S.no",
+        "CSR Project",
+        "No. of persons benefited from CSR Projects",
+        "% of beneficiaries from vulnerable and marginalized groups"
+    ]
+    
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[10:-2]:
             pil_image = page.to_image(resolution=300).original
@@ -1180,7 +1188,7 @@ def  Details_of_beneficiaries(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -1193,18 +1201,7 @@ def  Details_of_beneficiaries(pdf_file):
         elif len(f) == 4:
             final_4.append(f)
 
-    keys = [
-        "CSR Project",
-        "No. of persons benefited from CSR Projects",
-        "% of beneficiaries from vulnerable and marginalized groups"
-    ]
-    keys_3 = [
-        "S.no",
-        "CSR Project",
-        "No. of persons benefited from CSR Projects",
-        "% of beneficiaries from vulnerable and marginalized groups"
-    ]
-    
+
     myout = []
     if len(final_3) > len(final_4):
         for row in final_3:

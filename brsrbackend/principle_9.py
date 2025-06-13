@@ -3,6 +3,7 @@ import pytesseract
 from PIL import Image
 import io
 import re
+import fun
 
 
 
@@ -13,7 +14,7 @@ import re
                         
                         
 def  Describe_the_mechanisms(pdf_file):
-    print("PRINCIPLE 9")
+    #@ print("PRINCIPLE 9")
     start_found = False
     end_found = False
     lines_between = []
@@ -64,13 +65,13 @@ def  Describe_the_mechanisms(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     if lines_between:
         return lines_between
     else:
         return None
 
-#@ print(Describe_the_mechanisms("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Describe_the_mechanisms("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -93,7 +94,16 @@ def  Turnover_products(pdf_file):
         "Number of consumer",
         "complaints in respect"
     ]
+    keys = [
+        "Particulars",
+        "As a percentage of total turnover"
+    ]
 
+    keys_3 = [
+        "S.no",
+        "Particulars",
+        "As a percentage of total turnover"
+    ]
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[-10:]:
             pil_image = page.to_image(resolution=300).original
@@ -126,7 +136,7 @@ def  Turnover_products(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -139,16 +149,7 @@ def  Turnover_products(pdf_file):
         elif len(f) == 3:
             final_3.append(f)
 
-    keys = [
-        "Particulars",
-        "As a percentage of total turnover"
-    ]
 
-    keys_3 = [
-        "S.no",
-        "Particulars",
-        "As a percentage of total turnover"
-    ]
     myout = []
     # for row in output_rows:
     #     data = dict(zip(keys, row))
@@ -173,7 +174,7 @@ def  Turnover_products(pdf_file):
 
     return myout
 
-#@ print(Turnover_products("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Turnover_products("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -195,9 +196,29 @@ def  Number_consumer(pdf_file):
         "instances of product recalls on",
         "account of safety issues"
     ]
+    keys = [
+        "Category",
+        "FY 2024-25(Current Financial Year)-(Received during the year)",
+        "FY 2024-25(Current Financial Year)-(Pending resolution at end of year)",
+        "FY 2024-25(Current Financial Year)-(Remarks)",
+        "FY 2023-24(Previous Financial Year)-(Received during the year)",
+        "FY 2023-24(Previous Financial Year)-(Pending resolution at end of year)",
+        "FY 2023-24(Previous Financial Year)-(Remarks)"
+        
+    ]
 
+    keys_3 = [
+        "S.no",
+        "Category",
+        "FY 2024-25(Current Financial Year)-(Received during the year)",
+        "FY 2024-25(Current Financial Year)-(Pending resolution at end of year)",
+        "FY 2024-25(Current Financial Year)-(Remarks)",
+        "FY 2023-24(Previous Financial Year)-(Received during the year)",
+        "FY 2023-24(Previous Financial Year)-(Pending resolution at end of year)",
+        "FY 2023-24(Previous Financial Year)-(Remarks)"
+    ]
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[15:]:
+        for page in pdf.pages[-10:]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -228,7 +249,7 @@ def  Number_consumer(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -241,27 +262,7 @@ def  Number_consumer(pdf_file):
         elif len(f) == 8:
             final_8.append(f)
 
-    keys = [
-        "Category",
-        "FY 2024-25(Current Financial Year)-(Received during the year)",
-        "FY 2024-25(Current Financial Year)-(Pending resolution at end of year)",
-        "FY 2024-25(Current Financial Year)-(Remarks)",
-        "FY 2023-24(Previous Financial Year)-(Received during the year)",
-        "FY 2023-24(Previous Financial Year)-(Pending resolution at end of year)",
-        "FY 2023-24(Previous Financial Year)-(Remarks)"
-        
-    ]
 
-    keys_3 = [
-        "S.no",
-        "Category",
-        "FY 2024-25(Current Financial Year)-(Received during the year)",
-        "FY 2024-25(Current Financial Year)-(Pending resolution at end of year)",
-        "FY 2024-25(Current Financial Year)-(Remarks)",
-        "FY 2023-24(Previous Financial Year)-(Received during the year)",
-        "FY 2023-24(Previous Financial Year)-(Pending resolution at end of year)",
-        "FY 2023-24(Previous Financial Year)-(Remarks)"
-    ]
     
     myout = []
     # for row in output_rows:
@@ -287,7 +288,7 @@ def  Number_consumer(pdf_file):
 
     return myout
 
-#@ print(Number_consumer("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Number_consumer("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -307,12 +308,21 @@ def  Details_of_instances_of_product(pdf_file):
     q_ends = [
         "Does the entity have a framework/ policy",
         "cyber security and risks related",
-        "risks related to data privacy"
+        "risks related to data privacy"        
+    ]
+    keys = [
+        "Number",
+        "Reasons for recall"
         
     ]
 
+    keys_3 = [
+        "S.no",
+        "Number",
+        "Reasons for recall"
+    ]
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[15:]:
+        for page in pdf.pages[-10:]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -343,7 +353,7 @@ def  Details_of_instances_of_product(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -356,17 +366,7 @@ def  Details_of_instances_of_product(pdf_file):
         elif len(f) == 3:
             final_3.append(f)
 
-    keys = [
-        "Number",
-        "Reasons for recall"
-        
-    ]
 
-    keys_3 = [
-        "S.no",
-        "Number",
-        "Reasons for recall"
-    ]
     
     myout = []
     # for row in output_rows:
@@ -392,7 +392,7 @@ def  Details_of_instances_of_product(pdf_file):
 
     return myout
 
-#@ print(Details_of_instances_of_product("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Details_of_instances_of_product("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -448,13 +448,13 @@ def  Does_the_entity_have_a_framework(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     if lines_between:
         return lines_between
     else:
         return None
 
-#@ print(Does_the_entity_have_a_framework("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Does_the_entity_have_a_framework("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -510,13 +510,13 @@ def  Provide_details_of_any_corrective(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     if lines_between:
         return lines_between
     else:
         return None
 
-#@ print(Provide_details_of_any_corrective("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Provide_details_of_any_corrective("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 def  Provide_the_following_information(pdf_file):
@@ -570,13 +570,13 @@ def  Provide_the_following_information(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     if lines_between:
         return lines_between
     else:
         return None
 
-#@ print(Provide_the_following_information("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Provide_the_following_information("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -632,13 +632,13 @@ def  Channels_platforms(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     if lines_between:
         return lines_between
     else:
         return None
 
-#@ print(Channels_platforms("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Channels_platforms("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -694,13 +694,13 @@ def  Steps_taken(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     if lines_between:
         return lines_between
     else:
         return None
 
-#@ print(Steps_taken("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Steps_taken("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -755,13 +755,13 @@ def  Mechanisms_place(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # print("#######",lines_between)
+    # #@ print("#######",lines_between)
     if lines_between:
         return lines_between
     else:
         return None
 
-#@ print(Mechanisms_place("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Mechanisms_place("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -772,7 +772,7 @@ def Does_the_entity_display_product_information(pdf_path):
         question="Does the entity display product information on the product over and above what is mandated"
         question_2="Does the entity display product information on the product over and above what is "
         question_3="mandated as per local laws"
-        for i, page in enumerate(pdf.pages):
+        for i, page in enumerate(pdf.pages[-6:]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
                 #(f"Question found on page {i}")
@@ -823,7 +823,7 @@ def Does_the_entity_display_product_information(pdf_path):
                 # #("finallist",finallist)
                 return finallist                       
 
-#@ print(Does_the_entity_display_product_information("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Does_the_entity_display_product_information("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -833,7 +833,7 @@ def Provide_the_following_information(pdf_path):
         question="Provide the following information relating to data breaches"
         question_2="Provide the following information relating"
         question_3="data breaches"
-        for i, page in enumerate(pdf.pages):
+        for i, page in enumerate(pdf.pages[-6:]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
                 #(f"Question found on page {i}")
@@ -884,7 +884,7 @@ def Provide_the_following_information(pdf_path):
                 # #("finallist",finallist)
                 return finallist                       
 
-#@ print(Provide_the_following_information("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Provide_the_following_information("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -895,7 +895,7 @@ def Number_of_instances(pdf_path):
         question="Number of instances of data breaches along-with impact"
         question_2="Number of instances of data breaches "
         question_3="along-with impact"
-        for i, page in enumerate(pdf.pages):
+        for i, page in enumerate(pdf.pages[-6:]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
                 #(f"Question found on page {i}")
@@ -946,7 +946,7 @@ def Number_of_instances(pdf_path):
                 # #("finallist",finallist)
                 return finallist                       
 
-#@ print(Number_of_instances("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Number_of_instances("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 
@@ -958,7 +958,7 @@ def Percentage_data_breaches(pdf_path):
         question="Percentage of data breaches involving personally identifiable information of customers"
         question_2="Percentage of data breaches involving "
         question_3="identifiable information of customers"
-        for i, page in enumerate(pdf.pages):
+        for i, page in enumerate(pdf.pages[-6:]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
                 #(f"Question found on page {i}")
@@ -1009,7 +1009,7 @@ def Percentage_data_breaches(pdf_path):
                 # #("finallist",finallist)
                 return finallist                       
 
-#@ print(Percentage_data_breaches("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(Percentage_data_breaches("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
 
 

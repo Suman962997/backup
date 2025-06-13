@@ -3,6 +3,7 @@ import pytesseract
 from PIL import Image
 import io
 import re
+import fun
 
                                                     ###### PRINCIPLE IV #########
 
@@ -65,7 +66,7 @@ def  Describe_the_processes(pdf_path):
                     else :
                         finallist=list
                 # # #@ ("finallist",finallist)
-                return finallist                       
+                return str(finallist)                       
 
 #@ (Describe_the_processes("C:/Users/coda/Documents/narendra.pdf"))
 #@ ("************")
@@ -91,7 +92,25 @@ def List_stakeholder(pdf_file):
         "Provide the processes for consultation between",
         "provided to the Board"
     ]
+    keys = [
+        "Stakeholder Group",
+        "Whether identified as Vulnerable & Marginalized Group (Yes/No)",
+        "Channels of communication(Email, SMS, Newspaper, Pamphlets, Advertisement, Community Meetings, Notice Board, Website), Other	",
+        "Frequency of engagement(Annually/ Half yearly/ Quarterly / others – please specify)",
+        "Purpose and scope of engagement including key topics and concerns raised during such engagement",
+        
+    ]
 
+    keys_3 = [
+        "S.no",
+        "Stakeholder Group",
+        "Whether identified as Vulnerable & Marginalized Group (Yes/No)",
+        "Channels of communication(Email, SMS, Newspaper, Pamphlets, Advertisement, Community Meetings, Notice Board, Website), Other	",
+        "Frequency of engagement(Annually/ Half yearly/ Quarterly / others – please specify)",
+        "Purpose and scope of engagement including key topics and concerns raised during such engagement",
+        
+    ]
+    
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[10:]:
             pil_image = page.to_image(resolution=300).original
@@ -137,25 +156,7 @@ def List_stakeholder(pdf_file):
         elif len(f) == 6:
             final_6.append(f)
 
-    keys = [
-        "Stakeholder Group",
-        "Whether identified as Vulnerable & Marginalized Group (Yes/No)",
-        "Channels of communication(Email, SMS, Newspaper, Pamphlets, Advertisement, Community Meetings, Notice Board, Website), Other	",
-        "Frequency of engagement(Annually/ Half yearly/ Quarterly / others – please specify)",
-        "Purpose and scope of engagement including key topics and concerns raised during such engagement",
-        
-    ]
 
-    keys_3 = [
-        "S.no",
-        "Stakeholder Group",
-        "Whether identified as Vulnerable & Marginalized Group (Yes/No)",
-        "Channels of communication(Email, SMS, Newspaper, Pamphlets, Advertisement, Community Meetings, Notice Board, Website), Other	",
-        "Frequency of engagement(Annually/ Half yearly/ Quarterly / others – please specify)",
-        "Purpose and scope of engagement including key topics and concerns raised during such engagement",
-        
-    ]
-    
     myout = []
     for row in output_rows:
         data = dict(zip(keys, row))

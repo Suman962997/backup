@@ -13,9 +13,10 @@ from Extract_keys import KEYS_TO_EXTRACT_A,KEYS_TO_EXTRACT_B,KEYS_TO_EXTRACT_C
 import fitz  # PyMuPDF
 # from kik import *
 # from section_a import *
+import time
+import fun
 import section_a
 import section_b
-
 import principle_1
 import principle_2
 import principle_3
@@ -36,6 +37,7 @@ app = FastAPI()
 app = FastAPI(title="Document Extractor API" )
 app.add_middleware(
     CORSMiddleware,
+    # allow_origins=["http://localhost:3000"],
     allow_origins=["http://192.168.2.72:3000","http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
@@ -286,7 +288,7 @@ def parse_brsr_text_section_a(file_path,json_merge):
             "questions": [
               {
                 "questionNo": "1",
-                "question": "Details of business activities (accounting for 90% of the turnover)",
+                "question":"Details of business activities (accounting for 90% of the turnover):",
                 "questionAnswer":section_a.Details_of_business(file_path),
                 # "questionAnswer":json_merge["Details of business activities (accounting for 90% of the turnover)"]
 
@@ -306,7 +308,7 @@ def parse_brsr_text_section_a(file_path,json_merge):
             "questions": [
               {
                 "questionNo": "1",
-                "question": "No. of locations where plants and/or operations/ offices of the entity are situated:",
+                "question": "Number of locations where plants and offices of the entity are situated:",
                 "questionAnswer":section_a.Number_of_locations_where(file_path),
               },
               {
@@ -391,7 +393,7 @@ def parse_brsr_text_section_a(file_path,json_merge):
               {
                 "questionNo": "1",
                 "question": "Complaints/Grievances on any of the principles (Principles 1 to 9) under the National Guidelines on Responsible Business Conduct:",
-                "questionAnswer":section_a.Complaints_Grievances(file_path),#json_merge["Complaints/Grievances on any of the principles (Principles 1 to 9) under the National Guidelines on Responsible Business Conduct:"]
+                "questionAnswer":section_a.Complaints_Grievances(file_path),
               },
               {
             "questionNo": "2",
@@ -508,33 +510,37 @@ def parse_brsr_text_section_b(file_path,json_merge):
               },
               {
                 "questionNo": "6",
+                "question": "Compliance with statutory requirements of relevance to the principles and rectification of any non-compliances",
+                "questionAnswer":section_b.Compliance_with_statutory(file_path),
+              },
+              {
+                "questionNo": "7",
                 "question": "Has the entity carried out independent assessment/ evaluation of the working of its policies by an external agency? (Yes/No). If yes, provide name of the agency.",
                 
                 "questionAnswer":section_b.Has_the_entity_carried(file_path),
                 # "questionAnswer":json_merge["Has the entity carried out independent assessment/ evaluation of the working of its policies by an external agency? (Yes/No). If yes, provide name of the agency."]
               },
               {
-                "questionNo": "7",
+                "questionNo": "8",
                 "question": "If answer to question (1) above is “No” i.e. not all Principles are covered by a policy, reasons to be stated, as below:",
                 
                 # "questionAnswer":json_merge["If answer to question (1) above is “No” i.e. not all Principles are covered by a policy, reasons to be stated, as below:"]
                 "questionAnswer":section_b.If_answer_to_question(file_path),
               },
               {
-                "questionNo": "8",
+                "questionNo": "9",
                 "question": "Upstream (Suppliers & Logistics Partners)",                
                 "questionAnswer":"",
               },
 
               {
-                "questionNo": "9",
+                "questionNo": "10",
                 "question": "Downstream (Distributors & Customers)",                
                 "questionAnswer":"",
               },
               ]},]}}   
 
-
-def parse_brsr_text_section_c(file_path,json_merge):
+def parse_brsr_text_section_c1(file_path,json_merge):
   return {
     "data":[
       {
@@ -548,68 +554,82 @@ def parse_brsr_text_section_c(file_path,json_merge):
               {
                 "questionNo": "1",
                 "question": "Percentage coverage by training and awareness programmes on any of the Principles during the financial year:",
-                # "questionAnswer": "",#json_merge["Percentage coverage by training and awareness programmes on any of the Principles during the financial year:"],
-                "questionAnswer":principle_1.Percentage_coverage_by_training(file_path)#"Percentage coverage by training and awareness programmes on"),
+                "questionAnswer":principle_1.Percentage_coverage_by_training(file_path),#"Percentage coverage by training and awareness programmes on"),
               },
               {
-                "questionNo": "2",
+              "questionNo":"2",
+              "question":"Details of fines / penalties /punishment/ award/ compounding fees/ settlement amount paid in proceedings (by the entity or by directors / KMPs) with regulators/ law enforcement agencies/ judicial institutions, in the financial year, in the following format (Note: the entity shall make disclosures on the basis of materiality as specified in Regulation 30 of SEBI (Listing Obligations and Disclosure Obligations) Regulations, 2015 and as disclosed on the entity’s website",
+              "questionAnswer":principle_1.Details_of_fines(file_path)
+              },
+              {
+                "questionNo": "3",
                 "question":"Monetary",
                 "questionAnswer":principle_1.Monetary(file_path)#"Percentage coverage by training and awareness programmes on"),
               },
               {
-                "questionNo": "3",
+                "questionNo": "4",
                 "question":"Non-Monetary",
                 "questionAnswer":principle_1.Non_Monetary(file_path)#"Percentage coverage by training and awareness programmes on"),
               },
               {
-                "questionNo": "4",
+                "questionNo": "5",
                 "question": "Of the instances disclosed in Question 2 above, details of the Appeal/ Revision preferred in cases where monetary or non-monetary action has been appealed.",
                 "questionAnswer":principle_1.Of_the_instances_disclosed(file_path),#"Of the instances disclosed in Question 2 above, details of the Appeal/ Revision")
               },
                 {
-                "questionNo": "5",
+                "questionNo": "6",
                 "question": "Does the entity have an anti-corruption or anti-bribery policy? If yes, provide details in brief and if available, provide a web-link to the policy.",
                 "questionAnswer":principle_1.Does_the_entity_have_an_anti(file_path),#"Does the entity have an anti-corruption or anti-bribery policy? If yes, provide"),
               },
                 {
-                "questionNo": "6",
+                "questionNo": "7",
                 "question": "Number of Directors/KMPs/employees/workers against whom disciplinary action was taken by any law enforcement agency for the charges of bribery/ corruption",
                 "questionAnswer":principle_1.Number_of_Directors(file_path),#"Number of Directors/KMPs/employees/workers against whom disciplinary action was taken by any law enforcement"),
               },
                 {
-                "questionNo": "7",
+                "questionNo": "8",
                 "question": "Details of complaints with regard to conflict of interest",
                 "questionAnswer":principle_1.Details_of_complaints(file_path),#"Details of complaints with regard to conflict of interest"),
               },
                 {
-                "questionNo": "8",
+                "questionNo": "9",
                 "question": "Provide details of any corrective action taken or underway on issues related to fines / penalties / action taken by regulators/ law enforcement agencies/ judicial institutions, on cases of corruption and conflicts of interest.",
                 "questionAnswer":principle_1.Provide_details_of_any_corrective(file_path),#"Provide details of any corrective action taken or underway on issues related to fines / penalties / action taken by regulators/"),
               },
                 {
-                "questionNo": "9",
+                "questionNo": "10",
                 "question": "Number of days of accounts payables ((Accounts payable *365) / Cost of goods/services procured) in the following format:",
                 "questionAnswer":principle_1.Number_of_days_of_accounts(file_path),
               },
                 {
-                "questionNo": "10",
+                "questionNo": "11",
                 "question": "Provide details of concentration of purchases and sales with trading houses, dealers, and related parties along-with loans and advances & investments, with related parties, in the following format:",
                 "questionAnswer":principle_1.Open_ness_of_business(file_path),#"Awareness programmes conducted for value chain partners on any"),
               },
                 {
-                "questionNo": "10",
+                "questionNo": "12",
                 "question": "Awareness programmes conducted for value chain partners on any of the Principles during the financial year:",
                 "questionAnswer":principle_1.Awareness_programmes_conducted(file_path),#"Awareness programmes conducted for value chain partners on any"),
               },
                 {
-                "questionNo": "11",
+                "questionNo": "13",
                 "question": "Does the entity have processes in place to avoid/ manage conflict of interests involving members of the Board? (Yes/No) If Yes, provide details of the same.",
                 "questionAnswer":principle_1.Does_the_entity_have_processes(file_path),#"Does the entity have processes in place"),
               }
 
             ]
           },
-            {
+                ]
+      }]}
+
+def parse_brsr_text_section_c2(file_path,json_merge):
+  return {
+    "data":[
+      {
+        "title": "Principle wise performance disclosure",
+        "section": "section_c",
+        "parts": [
+                   {
             "partNo": "two",
             "subtitle": "Businesses should provide goods and services in a manner that is sustainable and safe",
             "questions": [
@@ -665,7 +685,18 @@ def parse_brsr_text_section_c(file_path,json_merge):
               },
         ]
       },
-            {
+            
+                ]
+      }]}
+
+def parse_brsr_text_section_c3(file_path,json_merge):
+  return {
+    "data":[
+      {
+        "title": "Principle wise performance disclosure",
+        "section": "section_c",
+        "parts": [
+           {
             "partNo": "three",
             "subtitle": "Businesses should respect and promote the well-being of all employees, including those in their value chains",
             "questions": [
@@ -812,19 +843,31 @@ def parse_brsr_text_section_c(file_path,json_merge):
               },
         ]
       },
-            {
+                ]
+      }]}
+
+
+def parse_brsr_text_section_c4(file_path,json_merge):
+  return {
+    "data":[
+      {
+        "title": "Principle wise performance disclosure",
+        "section": "section_c",
+        "parts": [
+          
+         {
             "partNo": "four",
             "subtitle": "Businesses should respect the interests of and be responsive to all its stakeholders",
             "questions": [
               {
                 "questionNo": "1",
                 "question": "Describe the processes for identifying key stakeholder groups of the entity.",
-                "questionAnswer":principle_4.Describe_the_processes(file_path),#json_merge["Describe the processes for identifying key stakeholder groups of the entity."],
+                "questionAnswer":principle_4.Describe_the_processes(file_path),
               },
               {
                 "questionNo": "2",
                 "question": "List stakeholder groups identified as key for your entity and the frequency of engagement with each stakeholder group.",
-                "questionAnswer":principle_4.List_stakeholder(file_path),#json_merge["List stakeholder groups identified as key for your entity and the frequency of engagement with each stakeholder group."],
+                "questionAnswer":principle_4.List_stakeholder(file_path),
               },
               {
                 "questionNo": "3",
@@ -845,7 +888,17 @@ def parse_brsr_text_section_c(file_path,json_merge):
 
         ]
       },
-            {
+                ]
+      }]}
+
+def parse_brsr_text_section_c5(file_path,json_merge):
+  return {
+    "data":[
+      {
+        "title": "Principle wise performance disclosure",
+        "section": "section_c",
+        "parts": [
+          {
             "partNo": "five",
             "subtitle": " Businesses should respect and promote human rights",
             "questions": [
@@ -937,6 +990,16 @@ def parse_brsr_text_section_c(file_path,json_merge):
 
         ]
       },
+                ]
+      }]}
+
+def parse_brsr_text_section_c6(file_path,json_merge):
+  return {
+    "data":[
+      {
+        "title": "Principle wise performance disclosure",
+        "section": "section_c",
+        "parts": [
             {
             "partNo": "six",
             "subtitle": "Businesses should respect and make efforts to protect and restore",
@@ -1073,12 +1136,18 @@ def parse_brsr_text_section_c(file_path,json_merge):
                 "question": "By the top ten (in terms of value of purchases and sales,respectively) value chain partners”",
                 "questionAnswer":""
               },
-
-
-
-
         ]
       },
+                ]
+      }]}
+
+def parse_brsr_text_section_c7(file_path,json_merge):
+  return {
+    "data":[
+      {
+        "title": "Principle wise performance disclosure",
+        "section": "section_c",
+        "parts": [
             {
             "partNo": "seven",
             "subtitle": " Businesses, when engaging in influencing public and regulatory policy, should do so in a manner that is responsible and transparent",
@@ -1104,9 +1173,18 @@ def parse_brsr_text_section_c(file_path,json_merge):
                 "question": "Details of public policy positions advocated by the entity:",
                 "questionAnswer":principle_7.Details_of_public_policy(file_path),#json_merge["Details of public policy positions advocated by the entity:"],
               },
-
         ]
       },
+                ]
+      }]}
+
+def parse_brsr_text_section_c8(file_path,json_merge):
+  return {
+    "data":[
+      {
+        "title": "Principle wise performance disclosure",
+        "section": "section_c",
+        "parts": [
             {
             "partNo": "eight",
             "subtitle": "Businesses should promote inclusive growth and equitable development",
@@ -1178,10 +1256,18 @@ def parse_brsr_text_section_c(file_path,json_merge):
                 "question": "Details of beneficiaries of CSR Projects:",
                 "questionAnswer":principle_8.Details_of_beneficiaries(file_path),
               },
-
-
         ]
       },
+                ]
+      }]}
+
+def parse_brsr_text_section_c9(file_path,json_merge):
+  return {
+    "data":[
+      {
+        "title": "Principle wise performance disclosure",
+        "section": "section_c",
+        "parts": [
             {
             "partNo": "nine",
             "subtitle": "Businesses should engage with and provide value to their consumers in a responsible manner",
@@ -1253,6 +1339,7 @@ def parse_brsr_text_section_c(file_path,json_merge):
               },
               
           ]  }
+
                 ]
       }]}
 
@@ -1260,11 +1347,12 @@ def parse_brsr_text_section_c(file_path,json_merge):
 
 
 @app.post("/extract/" )
-async def extract_document(file: UploadFile = File(...),questionKey: str = Form(...)):
+async def extract_document(file: UploadFile = File(...),questionKey: str = Form(...),principleKey: str = Form(...)):
     if not (file.filename.endswith(".pdf" ) or file.filename.endswith(".docx" )):
         raise HTTPException(status_code=400, detail="Only PDF or DOCX files are supported." )
           
     if questionKey=="section_a":
+      start_time = time.time()  # ⏱ Start time
       print(questionKey)
       content = await file.read()
       temp_path =file.filename
@@ -1291,12 +1379,16 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
           
       finally:
         import os
-        # if os.path.exists(temp_path):
-        #     os.remove(temp_path)
+        end_time = time.time()  # End time
+        total_seconds = end_time - start_time
+        minutes = int(total_seconds // 60)
+        seconds = int(total_seconds % 60)
+        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
 
 
     elif questionKey=="section_b":
       print(questionKey)
+      start_time = time.time()  # ⏱ Start time
       content = await file.read()
       temp_path =file.filename
       
@@ -1320,12 +1412,50 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
 
       finally:
         import os
-          # if os.path.exists(temp_path):
-          #     os.remove(temp_path)
-              
+        end_time = time.time()  # End time
+        total_seconds = end_time - start_time
+        minutes = int(total_seconds // 60)
+        seconds = int(total_seconds % 60)
+        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
 
-    elif questionKey=="section_c":
+
+    # elif questionKey=="section_c":
+    #   print(questionKey)
+    #   start_time = time.time()  # ⏱ Start time
+    #   content = await file.read()
+    #   temp_path = f"temp_{file.filename}"
+      
+    #   with open(temp_path, "wb" ) as f:
+    #       f.write(content)
+
+    #   try:
+    #       if file.filename.endswith(".pdf" ):
+    #           text = extract_text_from_pdf(temp_path)
+    #       else:
+    #           text = extract_text_from_docx(temp_path)
+                    
+    #       chunks = chunk_text(text)
+    #       results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
+
+    #       # print(results)
+    #       merged = merge_results(results)
+    #       print(merged)
+    #       res=parse_brsr_text_section_c(temp_path,merged)
+    #       return res          
+
+    #   finally:
+    #     import os
+    #     end_time = time.time()  # End time
+    #     total_seconds = end_time - start_time
+    #     minutes = int(total_seconds // 60)
+    #     seconds = int(total_seconds % 60)
+    #     print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
+      
+
+    elif questionKey=="section_c" and principleKey=="principle_1":
       print(questionKey)
+      print(principleKey)
+      start_time = time.time()  # ⏱ Start time
       content = await file.read()
       temp_path = f"temp_{file.filename}"
       
@@ -1344,21 +1474,318 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
           # print(results)
           merged = merge_results(results)
           print(merged)
-          res=parse_brsr_text_section_c(temp_path,merged)
+          res=parse_brsr_text_section_c1(temp_path,merged)
           return res          
 
       finally:
-          import os
-          if os.path.exists(temp_path):
-              os.remove(temp_path)
-              
+        import os
+        end_time = time.time()  # End time
+        total_seconds = end_time - start_time
+        minutes = int(total_seconds // 60)
+        seconds = int(total_seconds % 60)
+        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
       
+
+
+
+
+    elif questionKey=="section_c" and principleKey=="principle_2":
+      print(questionKey)
+      print(principleKey)
+      start_time = time.time()  # ⏱ Start time
+      content = await file.read()
+      temp_path = f"temp_{file.filename}"
+      
+      with open(temp_path, "wb" ) as f:
+          f.write(content)
+
+      try:
+          if file.filename.endswith(".pdf" ):
+              text = extract_text_from_pdf(temp_path)
+          else:
+              text = extract_text_from_docx(temp_path)
+                    
+          chunks = chunk_text(text)
+          results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
+
+          # print(results)
+          merged = merge_results(results)
+          print(merged)
+          res=parse_brsr_text_section_c2(temp_path,merged)
+          return res          
+
+      finally:
+        import os
+        end_time = time.time()  # End time
+        total_seconds = end_time - start_time
+        minutes = int(total_seconds // 60)
+        seconds = int(total_seconds % 60)
+        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
+
+
+      
+
+    elif questionKey=="section_c" and principleKey=="principle_3":
+      print(questionKey)
+      print(principleKey)
+      start_time = time.time()  # ⏱ Start time
+      content = await file.read()
+      temp_path = f"temp_{file.filename}"
+      
+      with open(temp_path, "wb" ) as f:
+          f.write(content)
+
+      try:
+          if file.filename.endswith(".pdf" ):
+              text = extract_text_from_pdf(temp_path)
+          else:
+              text = extract_text_from_docx(temp_path)
+                    
+          chunks = chunk_text(text)
+          results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
+
+          # print(results)
+          merged = merge_results(results)
+          print(merged)
+          res=parse_brsr_text_section_c3(temp_path,merged)
+          return res          
+
+      finally:
+        import os
+        end_time = time.time()  # End time
+        total_seconds = end_time - start_time
+        minutes = int(total_seconds // 60)
+        seconds = int(total_seconds % 60)
+        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
+      
+
+
+
+    elif questionKey=="section_c" and principleKey=="principle_4":
+      print(questionKey)
+      print(principleKey)
+      start_time = time.time()  # ⏱ Start time
+      content = await file.read()
+      temp_path = f"temp_{file.filename}"
+      
+      with open(temp_path, "wb" ) as f:
+          f.write(content)
+
+      try:
+          if file.filename.endswith(".pdf" ):
+              text = extract_text_from_pdf(temp_path)
+          else:
+              text = extract_text_from_docx(temp_path)
+                    
+          chunks = chunk_text(text)
+          results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
+
+          # print(results)
+          merged = merge_results(results)
+          print(merged)
+          res=parse_brsr_text_section_c4(temp_path,merged)
+          return res          
+
+      finally:
+        import os
+        end_time = time.time()  # End time
+        total_seconds = end_time - start_time
+        minutes = int(total_seconds // 60)
+        seconds = int(total_seconds % 60)
+        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
+      
+
+
+
+    elif questionKey=="section_c" and principleKey=="principle_5":
+      print(questionKey)
+      print(principleKey)
+      start_time = time.time()  # ⏱ Start time
+      content = await file.read()
+      temp_path = f"temp_{file.filename}"
+      
+      with open(temp_path, "wb" ) as f:
+          f.write(content)
+
+      try:
+          if file.filename.endswith(".pdf" ):
+              text = extract_text_from_pdf(temp_path)
+          else:
+              text = extract_text_from_docx(temp_path)
+                    
+          chunks = chunk_text(text)
+          results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
+
+          # print(results)
+          merged = merge_results(results)
+          print(merged)
+          res=parse_brsr_text_section_c5(temp_path,merged)
+          return res          
+
+      finally:
+        import os
+        end_time = time.time()  # End time
+        total_seconds = end_time - start_time
+        minutes = int(total_seconds // 60)
+        seconds = int(total_seconds % 60)
+        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
+      
+
+
+
+
+    elif questionKey=="section_c" and principleKey=="principle_6":
+      print(questionKey)
+      print(principleKey)
+      start_time = time.time()  # ⏱ Start time
+      content = await file.read()
+      temp_path = f"temp_{file.filename}"
+      
+      with open(temp_path, "wb" ) as f:
+          f.write(content)
+
+      try:
+          if file.filename.endswith(".pdf" ):
+              text = extract_text_from_pdf(temp_path)
+          else:
+              text = extract_text_from_docx(temp_path)
+                    
+          chunks = chunk_text(text)
+          results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
+
+          # print(results)
+          merged = merge_results(results)
+          print(merged)
+          res=parse_brsr_text_section_c6(temp_path,merged)
+          return res          
+
+      finally:
+        import os
+        end_time = time.time()  # End time
+        total_seconds = end_time - start_time
+        minutes = int(total_seconds // 60)
+        seconds = int(total_seconds % 60)
+        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
+      
+
+
+
+
+
+    elif questionKey=="section_c" and principleKey=="principle_7":
+      print(questionKey)
+      print(principleKey)
+      start_time = time.time()  # ⏱ Start time
+      content = await file.read()
+      temp_path = f"temp_{file.filename}"
+      
+      with open(temp_path, "wb" ) as f:
+          f.write(content)
+
+      try:
+          if file.filename.endswith(".pdf" ):
+              text = extract_text_from_pdf(temp_path)
+          else:
+              text = extract_text_from_docx(temp_path)
+                    
+          chunks = chunk_text(text)
+          results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
+
+          # print(results)
+          merged = merge_results(results)
+          print(merged)
+          res=parse_brsr_text_section_c7(temp_path,merged)
+          return res          
+
+      finally:
+        import os
+        end_time = time.time()  # End time
+        total_seconds = end_time - start_time
+        minutes = int(total_seconds // 60)
+        seconds = int(total_seconds % 60)
+        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
+      
+
+
+
+
+
+    elif questionKey=="section_c" and principleKey=="principle_8":
+      print(questionKey)
+      print(principleKey)
+      start_time = time.time()  # ⏱ Start time
+      content = await file.read()
+      temp_path = f"temp_{file.filename}"
+      
+      with open(temp_path, "wb" ) as f:
+          f.write(content)
+
+      try:
+          if file.filename.endswith(".pdf" ):
+              text = extract_text_from_pdf(temp_path)
+          else:
+              text = extract_text_from_docx(temp_path)
+                    
+          chunks = chunk_text(text)
+          results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
+
+          # print(results)
+          merged = merge_results(results)
+          print(merged)
+          res=parse_brsr_text_section_c8(temp_path,merged)
+          return res          
+
+      finally:
+        import os
+        end_time = time.time()  # End time
+        total_seconds = end_time - start_time
+        minutes = int(total_seconds // 60)
+        seconds = int(total_seconds % 60)
+        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
+      
+
+
+
+
+
+    elif questionKey=="section_c" and principleKey=="principle_9":
+      print(questionKey)
+      print(principleKey)
+      start_time = time.time()  # ⏱ Start time
+      content = await file.read()
+      temp_path = f"temp_{file.filename}"
+      
+      with open(temp_path, "wb" ) as f:
+          f.write(content)
+
+      try:
+          if file.filename.endswith(".pdf" ):
+              text = extract_text_from_pdf(temp_path)
+          else:
+              text = extract_text_from_docx(temp_path)
+                    
+          chunks = chunk_text(text)
+          results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
+
+          # print(results)
+          merged = merge_results(results)
+          print(merged)
+          res=parse_brsr_text_section_c9(temp_path,merged)
+          return res          
+
+      finally:
+        import os
+        end_time = time.time()  # End time
+        total_seconds = end_time - start_time
+        minutes = int(total_seconds // 60)
+        seconds = int(total_seconds % 60)
+        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
+      
+
+
 
     else:
       return "SECTION NOT FOUND !"
-
-
-
     
 
 

@@ -4,6 +4,7 @@ from PIL import Image
 import io
 import re
 import pandas as pd
+import fun
 
                                         ######## PART II #########
 
@@ -28,7 +29,19 @@ def  Details_of_business(pdf_file):
         "accounting for 90% of the entity’s Turnover"
         
     ]
+    keys = [
+        "Description of Main Activity",
+        "Description of Business Activity",
+        "% of Turnover of the entity",
 
+    ]
+
+    keys_3 = [
+        "S.No",
+        "Description of Main Activity",
+        "Description of Business Activity",
+        "% of Turnover of the entity",
+    ]
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[:10]:
             pil_image = page.to_image(resolution=300).original
@@ -74,20 +87,7 @@ def  Details_of_business(pdf_file):
         elif len(f) == 4:
             final_4.append(f)
 
-    keys = [
-        "Description of Main Activity",
-        "Description of Business Activity",
-        "% of Turnover of the entity",
 
-    ]
-
-    keys_3 = [
-        "S.No",
-        "Description of Main Activity",
-        "Description of Business Activity",
-        "% of Turnover of the entity",
-
-    ]
     
     myout = []
 
@@ -105,7 +105,7 @@ def  Details_of_business(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -117,6 +117,7 @@ def  Products_Services(pdf_file):
     start_found = False
     end_found = False
     lines_between = []
+    # lines_between = ["PART II COMPLETED SUCESSFULLY !"]
     custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
 
     # Define multiple possible start and end strings
@@ -131,6 +132,19 @@ def  Products_Services(pdf_file):
         "offices of the entity are situated",
     ]
 
+    keys = [
+        "Product/Service",
+        "NIC Code",
+        "% of total Turnover contributed"
+    ]
+
+    keys_3 = [
+        "S.No",
+        "Product/Service",
+        "NIC Code",
+        "% of total Turnover contributed"
+    ]
+
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[:10]:
             pil_image = page.to_image(resolution=300).original
@@ -176,20 +190,9 @@ def  Products_Services(pdf_file):
         elif len(f) == 4:
             final_4.append(f)
 
-    keys = [
-        "Product/Service",
-        "NIC Code",
-        "% of total Turnover contributed"
-    ]
-
-    keys_3 = [
-        "S.No",
-        "Product/Service",
-        "NIC Code",
-        "% of total Turnover contributed"
-    ]
     
     myout = []
+    # myout = ["PART II COMPLETED SUCESSFULLY !"]
 
     if len(final_3) > len(final_4):
         for row in final_3:
@@ -205,7 +208,7 @@ def  Products_Services(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -310,7 +313,7 @@ def  Number_of_locations_where(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -410,7 +413,7 @@ def  Number_of_locations(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -474,7 +477,7 @@ def  What_is_the_contribution(pdf_file):
     if lines_between:
         return lines_between
     else:
-        return None
+        return "Not Applicable"
 
 
 #@ print(What_is_the_contribution("C:/Users/coda/Documents/narendra.pdf"))
@@ -536,7 +539,7 @@ def  A_brief_on_types(pdf_file):
     if lines_between:
         return lines_between
     else:
-        return None
+        return "Not Applicable"
 
 
 #@ print(A_brief_on_types("C:/Users/coda/Documents/narendra.pdf"))
@@ -563,6 +566,25 @@ def  Employees_and_workers(pdf_file):
         "Differently abled Employees and workers",
         "Differently abled Employees",
         "Employees and workers"
+    ]
+    
+    keys = [
+        "Particulars",
+        "Total (A)",
+        "Male No. (B)",
+        "Male % (B / A)",
+        "Female No. (C)",
+        "Female % (C / A)"
+    ]
+
+    keys_3 = [
+        "S.no",
+        "Particulars",
+        "Total (A)",
+        "Male No. (B)",
+        "Male % (B / A)",
+        "Female No. (C)",
+        "Female % (C / A)"
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
@@ -609,25 +631,6 @@ def  Employees_and_workers(pdf_file):
             final_6.append(f)
         elif len(f) == 7:
             final_7.append(f)
-
-    keys = [
-        "Particulars",
-        "Total (A)",
-        "Male No. (B)",
-        "Male % (B / A)",
-        "Female No. (C)",
-        "Female % (C / A)"
-    ]
-
-    keys_3 = [
-        "S.no",
-        "Particulars",
-        "Total (A)",
-        "Male No. (B)",
-        "Male % (B / A)",
-        "Female No. (C)",
-        "Female % (C / A)"
-    ]
     
     myout = []
     # for row in output_rows:
@@ -648,7 +651,7 @@ def  Employees_and_workers(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -759,7 +762,7 @@ def  Differently_abled_employees(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -787,7 +790,20 @@ def  Participation_Inclusion(pdf_file):
         "employees and workers"
 
     ]
+    keys = [
+        "Category",
+        "Total (A)",
+        "No. and percentage of Females No. (B)",
+        "No. and percentage of Females % (B / A)"
+    ]
 
+    keys_3 = [
+        "S.no",
+        "Category",
+        "Total (A)",
+        "No. and percentage of Females No. (B)",
+        "No. and percentage of Females % (B / A)"
+    ]
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[:10]:
             pil_image = page.to_image(resolution=300).original
@@ -833,21 +849,7 @@ def  Participation_Inclusion(pdf_file):
         elif len(f) == 5:
             final_5.append(f)
 
-    keys = [
-        "Category",
-        "Total (A)",
-        "No. and percentage of Females No. (B)",
-        "No. and percentage of Females % (B / A)"
-    ]
 
-    keys_3 = [
-        "S.no",
-        "Category",
-        "Total (A)",
-        "No. and percentage of Females No. (B)",
-        "No. and percentage of Females % (B / A)"
-        
-    ]
     
     myout = []
     # for row in output_rows:
@@ -868,16 +870,13 @@ def  Participation_Inclusion(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
 
 #@ print(Participation_Inclusion("C:/Users/coda/Documents/narendra.pdf"))
 #@ print("************")
-
-                                        ######## PART V #########
-
 
 def  Turnover_rate(pdf_file):
     print("PART V")
@@ -900,6 +899,35 @@ def  Turnover_rate(pdf_file):
 
     ]
 
+    keys = [
+    "Category",
+    " FY (2024-25) Male",
+    " FY (2024-25) Female",
+    " FY (2024-25) Total",
+    " FY (2023-24) Male",
+    " FY (2023-24) Female",
+    " FY (2023-24) Total",
+    " FY (2022-23) Male",
+    " FY (2022-23) Female",
+    " FY (2022-23) Total",
+
+    ]
+
+    keys_3 = [
+    "S.no",
+    "Category",
+    " FY (2024-25) Male",
+    " FY (2024-25) Female",
+    " FY (2024-25) Total",
+    " FY (2023-24) Male",
+    " FY (2023-24) Female",
+    " FY (2023-24) Total",
+    " FY (2022-23) Male",
+    " FY (2022-23) Female",
+    " FY (2022-23) Total",        
+    ]
+    
+
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[:10]:
             pil_image = page.to_image(resolution=300).original
@@ -925,6 +953,7 @@ def  Turnover_rate(pdf_file):
             if end_found:
                 break
 
+
     if not start_found:
         return {"error": f"Start question not found. Tried: {q_starts}"}
     if not end_found:
@@ -945,36 +974,6 @@ def  Turnover_rate(pdf_file):
         elif len(f) == 11:
             final_11.append(f)
 
-    keys = [
-        "Category",
-        "FY (2024-25) Male",
-        "FY (2024-25) Female",
-        "FY (2024-25) Total",
-        "FY (2023-24) Male",
-        "FY (2023-24) Female",
-        "FY (2023-24) Total",
-        "FY (2022-23) Male",
-        "FY (2022-23) Female",
-        "FY (2022-23) Total"
-
-    ]
-
-    keys_3 = [
-        "S.no",
-        "Category",
-        "FY (2024-25) Male",
-        "FY (2024-25) Female",
-        "FY (2024-25) Total",
-        "FY (2023-24) Male",
-        "FY (2023-24) Female",
-        "FY (2023-24) Total",
-        "FY (2022-23) Male",
-        "FY (2022-23) Female",
-        "FY (2022-23) Total"
-
-        
-    ]
-    
     myout = []
     # for row in output_rows:
     #     data = dict(zip(keys, row))
@@ -994,13 +993,17 @@ def  Turnover_rate(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
 
 #@ print(Turnover_rate("C:/Users/coda/Documents/narendra.pdf"))
 #@ print("************")
+
+
+                                        ######## PART V #########
+
 
 def  Names_of_holding(pdf_file):
     start_found = False
@@ -1016,13 +1019,28 @@ def  Names_of_holding(pdf_file):
     ]
     q_ends = [
         "Do any other entity/entities",
-        "CSR Details"
+        "CSR Details",
         "Whether CSR is applicable"
+    ]
+
+    keys = [
+              "Name of the holding / subsidiary / associate companies / joint ventures (A)",
+              "Indicate whether holding/ Subsidiary/ Associate/ Joint Venture",
+              "% of shares held by listed entity",
+              "Does the entity indicated at column A, participate in the Business Responsibility initiatives of the listed entity? (Yes/ No)"        
 
     ]
 
+    keys_3 = [
+        "S.no",
+              "Name of the holding / subsidiary / associate companies / joint ventures (A)",
+              "Indicate whether holding/ Subsidiary/ Associate/ Joint Venture",
+              "% of shares held by listed entity",
+              "Does the entity indicated at column A, participate in the Business Responsibility initiatives of the listed entity? (Yes/ No)"        
+    ]
+    
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[:10]:
+        for page in pdf.pages[:13]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -1066,24 +1084,7 @@ def  Names_of_holding(pdf_file):
         elif len(f) == 5:
             final_5.append(f)
 
-    keys = [
-        "Name of the holding / subsidiary / associate companies / joint ventures (A)",
-        "Indicate whether holding/ Subsidiary/ Associate/ Joint Venture",
-        "% of shares held by listed entity",
-        "Does the entity indicated at column A, participate in the Business Responsibility initiatives of the listed entity? (Yes/ No)"
 
-
-    ]
-
-    keys_3 = [
-        "S.no",
-        "Name of the holding / subsidiary / associate companies / joint ventures (A)",
-        "Indicate whether holding/ Subsidiary/ Associate/ Joint Venture",
-        "% of shares held by listed entity",
-        "Does the entity indicated at column A, participate in the Business Responsibility initiatives of the listed entity? (Yes/ No)"
-        
-    ]
-    
     myout = []
     # for row in output_rows:
     #     data = dict(zip(keys, row))
@@ -1103,13 +1104,13 @@ def  Names_of_holding(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
 
-#@ print(Names_of_holding("C:/Users/coda/Documents/narendra.pdf"))
-#@ print("************")
+# print(Names_of_holding("C:/Users/coda/Documents/vendanta.pdf"))
+# print("************")
 
 def  Do_any_other_entity(pdf_file):
     start_found = False
@@ -1166,7 +1167,7 @@ def  Do_any_other_entity(pdf_file):
     if lines_between:
         return lines_between
     else:
-        return None
+        return "Not Applicable"
 
 #@ print(Do_any_other_entity("C:/Users/coda/Documents/narendra.pdf"))
 #@ print("************")
@@ -1227,7 +1228,7 @@ def Whether_CSR(pdf_path):
                 if finallist:
                     return finallist
                 else:
-                    return None
+                    return "Not Applicable"
 #@ print(Whether_CSR("C:/Users/coda/Documents/narendra.pdf"))
 #@ print("************")
 
@@ -1284,7 +1285,7 @@ def Turnover(pdf_path):
                 if finallist:
                     return finallist
                 else:
-                    return None
+                    return "Not Applicable"
 #@ print(Turnover("C:/Users/coda/Documents/narendra.pdf"))
 #@ print("************")
 
@@ -1341,12 +1342,13 @@ def Net_worth(pdf_path):
                 if finallist:
                     return finallist
                 else:
-                    return None
+                    return "Not Applicable"
 #@ print(Net_worth("C:/Users/coda/Documents/narendra.pdf"))
 #@ print("************")
 
 
                                         ######## PART VII #########
+
 
 
 def   Complaints_Grievances(pdf_file):
@@ -1359,18 +1361,40 @@ def   Complaints_Grievances(pdf_file):
     # Define multiple possible start and end strings
     q_starts = [
         "Complaints/Grievances on any of the principles",
-        "under the National Guidelines"
+        "under the National Guidelines",
         "Responsible Business Conduct"
 
     ]
     q_ends = [
         "Overview of the entity’s material responsible business conduct issues",
         "Overview of the entity’s",
-        "material responsible business conduct issues"
+        "responsible business conduct issues"
     ]
 
+
+    keys = [
+              "Stakeholder group from whom complaint is received ",
+              "Grievance Redressal Mechanism in Place (Yes/No) (If Yes, then provide web-link for grievance redress policy)",
+              "Number of complaints filed during the year(FY 2024-25)",
+              "Number of complaints pending resolution at close of the year(FY 2024-25)",
+              "Remark(FY 2024-25)",
+              "Number of complaints filed during the year(FY 2023-24)",
+              "Number of complaints pending resolution at close of the year(FY 2023-24)",
+              "Remark(FY 2023-24)"    ]
+
+    keys_3 = [
+              "S.no",
+              "Stakeholder group from whom complaint is received ",
+              "Grievance Redressal Mechanism in Place (Yes/No) (If Yes, then provide web-link for grievance redress policy)",
+              "Number of complaints filed during the year(FY 2024-25)",
+              "Number of complaints pending resolution at close of the year(FY 2024-25)",
+              "Remark(FY 2024-25)",
+              "Number of complaints filed during the year(FY 2023-24)",
+              "Number of complaints pending resolution at close of the year(FY 2023-24)",
+              "Remark(FY 2023-24)"    ]
+
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[:10]:
+        for page in pdf.pages[:18]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -1401,7 +1425,7 @@ def   Complaints_Grievances(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## #@ print("#######",lines_between)
+    ##  print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -1414,31 +1438,6 @@ def   Complaints_Grievances(pdf_file):
         elif len(f) == 9:
             final_9.append(f)
 
-    keys = [
-        "Stakeholder group from whom complaint is received",
-        "Grievance Redressal Mechanism in Place (Yes/ No) (If Yes, then provide web link for grievance redress policy",
-        "FY 2022 Number of complaints filed during the year",
-        "FY 2022 Number of complaints pending resolution at close of year",
-        "FY 2022 Remarks",
-        "FY 2021 Number of complaints filed during the year",
-        "FY 2021 Number of complaints pending resolution at close of year",
-        "FY 2021 Remarks"
-
-    ]
-
-    keys_3 = [
-        "S.no",
-        "Stakeholder group from whom complaint is received",
-        "Grievance Redressal Mechanism in Place (Yes/ No) (If Yes, then provide web link for grievance redress policy",
-        "FY 2022 Number of complaints filed during the year",
-        "FY 2022 Number of complaints pending resolution at close of year",
-        "FY 2022 Remarks",
-        "FY 2021 Number of complaints filed during the year",
-        "FY 2021 Number of complaints pending resolution at close of year",
-        "FY 2021 Remarks"
-
-        
-    ]
     
     myout = []
     # for row in output_rows:
@@ -1459,13 +1458,14 @@ def   Complaints_Grievances(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
 
-#@ print(Complaints_Grievances("C:/Users/coda/Documents/narendra.pdf"))
+#@ print(Complaints_Grievances("C:/Users/coda/Documents/titan.pdf"))
 #@ print("************")
+
 
 
 def  Please_indicate_material(pdf_file):
@@ -1476,19 +1476,37 @@ def  Please_indicate_material(pdf_file):
 
     # Define multiple possible start and end strings
     q_starts = [
-        "Overview of the entity’s material responsible business conduct issues",
-        "Overview of the entity’s",
-        "material responsible business conduct issues"
+        "Overview of the entity’s material responsible",
+        "Please indicate material responsible business",
+        "business conduct issues"
 
     ]
     q_ends = [
-        "SECTION B: MANAGEMENT AND PROCESS DISCLOSURES",
         "SECTION B",
-        "MANAGEMENT AND PROCESS DISCLOSURES"
+        "MANAGEMENT AND PROCESS DISCLOSURES",
+        "SECTION B: MANAGEMENT AND PROCESS DISCLOSURES"
+    ]
+    
+    keys = [
+        "Material issue identified",
+        "Indicate whether risk or opportunity (R/O)",
+        "Rationale for identifying the risk/opportunity",
+        "In case of risk, approach to adapt or mitigate",
+        "Financial implications of the risk or opportunity (Indicate positive or negative implications)"
+    ]
+
+    keys_3 = [
+              "S.no",
+        "Material issue identified",
+        "Indicate whether risk or opportunity (R/O)",
+        "Rationale for identifying the risk/opportunity",
+        "In case of risk, approach to adapt or mitigate",
+        "Financial implications of the risk or opportunity (Indicate positive or negative implications)"
+              
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[:10]:
+        for page in pdf.pages:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -1519,7 +1537,8 @@ def  Please_indicate_material(pdf_file):
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    ## #@ print("#######",lines_between)
+
+    # print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -1532,24 +1551,6 @@ def  Please_indicate_material(pdf_file):
         elif len(f) == 6:
             final_6.append(f)
 
-    keys = [
-        'Material issue identified',
-        "Indicate whether risk or opportunity (R/O)",
-        "Rationale for identifying the risk/opportunity",
-        "In case of risk, approach to adapt or mitigate",
-        "Financial implications of the risk or opportunity (Indicate positive or negative implications)"
-
-    ]
-
-    keys_3 = [
-        "S.no",
-        'Material issue identified',
-        "Indicate whether risk or opportunity (R/O)",
-        "Rationale for identifying the risk/opportunity",
-        "In case of risk, approach to adapt or mitigate",
-        "Financial implications of the risk or opportunity (Indicate positive or negative implications)"
-        
-    ]
     
     myout = []
     # for row in output_rows:
@@ -1575,5 +1576,7 @@ def  Please_indicate_material(pdf_file):
 
     return myout
 
-#@ print(Please_indicate_material("C:/Users/coda/Documents/narendra.pdf"))
+#@ print(Please_indicate_material("C:/Users/coda/Documents/deigeo.pdf"))
 #@ print("************")
+
+

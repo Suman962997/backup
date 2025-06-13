@@ -2,6 +2,7 @@ import pdfplumber
 import pytesseract
 from PIL import Image
 import re
+import fun
 
 
 
@@ -28,6 +29,38 @@ def  well_being_of_employees(pdf_file):
         "Details of measures for the",
     ]
 
+
+    keys = [
+        "Category",
+        "Total (A)",
+        "Health insurance (Number (B))",
+        "Health insurance (% (B / A))",
+        "Accident insurance (Number (C))",
+        "Accident insurance (% (C / A))",
+        "Maternity Benefits (Number (D))",
+        "Maternity Benefits (% (D / A))",
+        "Paternity Benefits (Number (E))",
+        "Paternity Benefits (% (E / A))",
+        "Day Care Facilities (Number (F))",
+        "Day Care Facilities (% (F / A))"
+    ]
+
+    keys_3 = [
+        "S.no",
+        "Category",
+        "Total (A)",
+        "Health insurance (Number (B))",
+        "Health insurance (% (B / A))",
+        "Accident insurance (Number (C))",
+        "Accident insurance (% (C / A))",
+        "Maternity Benefits (Number (D))",
+        "Maternity Benefits (% (D / A))",
+        "Paternity Benefits (Number (E))",
+        "Paternity Benefits (% (E / A))",
+        "Day Care Facilities (Number (F))",
+        "Day Care Facilities (% (F / A))"
+    ]
+    
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[7:23]:
             pil_image = page.to_image(resolution=300).original
@@ -73,37 +106,6 @@ def  well_being_of_employees(pdf_file):
         elif len(f) == 13:
             final_13.append(f)
 
-    keys = [
-        "Category",
-        "Total (A)",
-        "Health insurance (Number (B))",
-        "Health insurance (% (B / A))",
-        "Accident insurance (Number (C))",
-        "Accident insurance (% (C / A))",
-        "Maternity Benefits (Number (D))",
-        "Maternity Benefits (% (D / A))",
-        "Paternity Benefits (Number (E))",
-        "Paternity Benefits (% (E / A))",
-        "Day Care Facilities (Number (F))",
-        "Day Care Facilities (% (F / A))"
-    ]
-
-    keys_3 = [
-        "S.no",
-        "Category",
-        "Total (A)",
-        "Health insurance (Number (B))",
-        "Health insurance (% (B / A))",
-        "Accident insurance (Number (C))",
-        "Accident insurance (% (C / A))",
-        "Maternity Benefits (Number (D))",
-        "Maternity Benefits (% (D / A))",
-        "Paternity Benefits (Number (E))",
-        "Paternity Benefits (% (E / A))",
-        "Day Care Facilities (Number (F))",
-        "Day Care Facilities (% (F / A))"
-    ]
-    
     myout = []
     # for row in output_rows:
     #     data = dict(zip(keys, row))
@@ -322,16 +324,16 @@ def  Spending_on_measures_towards(pdf_file):
             final_4.append(f)
 
     keys = [
-        "Category",
-        "FY 2043-25(Current Financial Year)",
-        "FY 2023-24(Previous Financial Year)"
+              "Category",
+              "FY 2043-25(Current Financial Year)",
+              "FY 2023-24(Previous Financial Year)"
     ]
 
     keys_3 = [
-        "S.no",
-        "Category",
-        "FY 2043-25(Current Financial Year)",
-        "FY 2023-24(Previous Financial Year)"
+            "S.no",
+            "Category",
+            "FY 2043-25(Current Financial Year)",
+            "FY 2023-24(Previous Financial Year)"
     ]
     
     myout = []
