@@ -1268,7 +1268,7 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
       print(questionKey)
       content = await file.read()
       temp_path =file.filename
-      print("file path",temp_path)
+      print(temp_path)
       
       with open(temp_path, "wb" ) as f:
           f.write(content)
