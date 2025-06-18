@@ -71,7 +71,7 @@ def  Percentage_of_R_and_D(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -111,7 +111,7 @@ def  Percentage_of_R_and_D(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -361,6 +361,7 @@ def Whether_Extended_Producer_Responsibility_EPR(pdf_path):
 #@ print("************")
 
 
+
 def  Has_the_entity_conducted_Life(pdf_file):
     start_found = False
     end_found = False
@@ -428,14 +429,14 @@ def  Has_the_entity_conducted_Life(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
 
-    # #@ print("#######",lines_between)
+    # print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -450,9 +451,6 @@ def  Has_the_entity_conducted_Life(pdf_file):
 
     
     myout = []
-    # for row in output_rows:
-    #     data = dict(zip(keys, row))
-    #     myout.append(data)
 
     if len(final_6) > len(final_7):
         for row in final_6:
@@ -468,12 +466,12 @@ def  Has_the_entity_conducted_Life(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
 
-#@ print(Has_the_entity_conducted_Life("C:/Users/coda/Documents/bse.pdf"))
+#@ print(Has_the_entity_conducted_Life("C:/Users/coda/Documents/titan.pdf"))
 #@ print("************")
 
 
@@ -497,20 +495,20 @@ def  If_there_are_any_significant_social(pdf_file):
     ]
     
     keys = [
-              "Name of Product / Service",
-              "Description of the risk / concern",
-              "Action Taken"
+            "Name of Product / Service",
+            "Description of the risk / concern",
+            "Action Taken"
               ]
 
     keys_3 = [
-             "S.no",
-              "Name of Product / Service",
-              "Description of the risk / concern",
-              "Action Taken"
+            "S.no",
+            "Name of Product / Service",
+            "Description of the risk / concern",
+            "Action Taken"
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[7:16]:
+        for page in pdf.pages[7:20]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -535,14 +533,14 @@ def  If_there_are_any_significant_social(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
 
-    # #@ print("#######",lines_between)
+    # print("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -575,14 +573,13 @@ def  If_there_are_any_significant_social(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
 
 #@ print(If_there_are_any_significant_social("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
-
 
 def  Percentage_of_recycled(pdf_file):
     start_found = False
@@ -617,7 +614,7 @@ def  Percentage_of_recycled(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[7:1]:
+        for page in pdf.pages[7:22]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -642,7 +639,7 @@ def  Percentage_of_recycled(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -682,7 +679,7 @@ def  Percentage_of_recycled(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -732,7 +729,7 @@ def  Of_the_products_and_packaging(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[8:18]:
+        for page in pdf.pages[8:20]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -757,7 +754,7 @@ def  Of_the_products_and_packaging(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -797,7 +794,7 @@ def  Of_the_products_and_packaging(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -838,7 +835,7 @@ def  Reclaimed_products(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[8:18]:
+        for page in pdf.pages[8:22]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -863,7 +860,7 @@ def  Reclaimed_products(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -903,7 +900,7 @@ def  Reclaimed_products(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout

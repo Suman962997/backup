@@ -70,7 +70,7 @@ def  Percentage_coverage_by_training(pdf_file):
 
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -99,12 +99,12 @@ def  Percentage_coverage_by_training(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return str(lines_between)
+        return lines_between
 
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -158,16 +158,16 @@ def  Details_of_fines(pdf_file):
 
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
     if lines_between:
-        return str(lines_between)
+        return lines_between
     else:
-        return None
+        return "Not Applicable"
 
 #@ print(Details_of_fines("C:/Users/coda/Documents/tata.pdf"))
 #@ print("************")
@@ -239,7 +239,7 @@ def  Monetary(pdf_file):
 
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -269,12 +269,12 @@ def  Monetary(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return str(lines_between)
+        return lines_between
 
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -347,7 +347,7 @@ def  Non_Monetary(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -378,12 +378,12 @@ def  Non_Monetary(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return str(lines_between)
+        return lines_between
 
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -449,7 +449,7 @@ def  Of_the_instances_disclosed(pdf_file):
 
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -480,12 +480,12 @@ def  Of_the_instances_disclosed(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return str(lines_between)
+        return lines_between
 
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -494,66 +494,65 @@ def  Of_the_instances_disclosed(pdf_file):
 #@ print("************")
 
 
-def  Does_the_entity_have_an_anti(pdf_path):
-    
-    with pdfplumber.open(pdf_path) as pdf:
-        #("file opend")
-        question="Does the entity have an anti-corruption or anti-bribery policy"
-        question_2="Does the entity have an"
-        question_3="Does the entity have an"
-        for i, page in enumerate(pdf.pages[6:16]):
-            text = page.extract_text()
-            if text and question in text or question_2 in text  or question_3 in text:
-                #(f"Question found on page {i}")
-                image = page.to_image(resolution=300).original  #
+def  Does_the_entity_have_an_anti(pdf_file):
+    start_found = False
+    end_found = False
+    lines_between = []
+    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
 
-                 #
-                custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
-                ocr_text = pytesseract.image_to_string(image, config=custom_config)
-                  #(ocr_text)
-                lines = ocr_text.splitlines()
-                sec_quest=" Number of Directors/KMPs/employees/workers against "
-                sec_quest_2="Number of Directors/KMPs" 
-                sec_quest_3="/KMPs/employees/workers"
-                list=[]     
-                for i, line in enumerate(lines):
-                     #(i,line)
-                    if question.lower() in line.lower():
-                        #("***q1")
-                        list=lines[i:]
-                        break
-                    elif question_2.lower() in line.lower():
-                        #("***q2")
-                        list=lines[i:]
-                        break
-                    elif question_3.lower() in line.lower():
-                        list=lines[i:]
-                        break
-                 #("405 **",list)
-                finallist=[]
-                
-                for i,selist in enumerate(list):
-                     #("*",i,selist)
-                    if sec_quest.lower() in selist.lower():
-                                      #("",i,selist)
-                        finallist=list[:i]
-                        break
-                    elif sec_quest_2.lower() in selist.lower():
-                        #(" sec_2")
-                        finallist=list[:i]
-                        break
-                    elif sec_quest_3.lower() in selist.lower():
-                        #("&& sec3")
-                        finallist=list[:i]
-                        break
-                    else :
-                        finallist=list
-                    
-                 #("finallist",finallist)
-                return str(finallist)            
+    # Define multiple possible start and end strings
+    q_starts = [
+        "Does the entity have an anti-corruption or anti-bribery policy",
+        "Does the entity have an anti-corruption",
+        "Does the entity have an"
+    ]
+    q_ends = [
+        "Number of Directors/KMPs/employees/workers against",
+        "Number of Directors/KMPs/employees",
+        "Number of Directors"
+    ]
+    
+    with pdfplumber.open(pdf_file) as pdf:
+        for page in pdf.pages[6:16]:
+            pil_image = page.to_image(resolution=300).original
+            text = pytesseract.image_to_string(pil_image, config=custom_config)
+
+            if not text:
+                continue
+
+            for line in text.splitlines():
+                # Check if line matches any start phrase
+                if not start_found and any(start.lower() in line.lower() for start in q_starts):
+                    start_found = True
+                    continue  # skip the line containing start phrase
+
+                # Check if line matches any end phrase
+                if start_found and any(end.lower() in line.lower() for end in q_ends):
+                    end_found = True
+                    break
+
+                if start_found:
+                    lines_between.append(line)
+
+            if end_found:
+                break
+
+
+    if not start_found:
+        return [f"Start question not found. Tried: {q_starts[0]}"]
+    if not end_found:
+        return {"error": f"End question not found. Tried: {q_ends}"}
+    if not lines_between:
+        return {"error": "No content found between start and end questions."}
+
+    if lines_between:
+        return lines_between
+    else:
+        return "Not Applicable"
 
 #@ print(Does_the_entity_have_an_anti("C:/Users/coda/Documents/tata.pdf"))
 #@ print("************")
+
 
 def  Number_of_Directors(pdf_file):
     start_found = False
@@ -613,7 +612,7 @@ def  Number_of_Directors(pdf_file):
 
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -644,12 +643,12 @@ def  Number_of_Directors(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return str(lines_between)
+        return lines_between
 
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -723,7 +722,7 @@ def  Details_of_complaints(pdf_file):
             if end_found:
                 break
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -754,12 +753,12 @@ def  Details_of_complaints(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return str(lines_between)
+        return lines_between
 
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -824,7 +823,7 @@ def Provide_details_of_any_corrective(pdf_path):
                     else :
                         finallist=list
                  #("finallist",finallist)
-                return str(finallist)                      
+                return finallist                      
 
 #@ print(Provide_details_of_any_corrective("C:/Users/coda/Documents/tata.pdf"))
 #@ print("************")
@@ -891,7 +890,7 @@ def  Number_of_days_of_accounts(pdf_file):
 
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -922,12 +921,12 @@ def  Number_of_days_of_accounts(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return str(lines_between)
+        return lines_between
 
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -937,7 +936,7 @@ def  Number_of_days_of_accounts(pdf_file):
 
 
 
-def  Open_ness_of_business(pdf_file):
+def  Provide_details_of_concentration_of_purchases(pdf_file):
     start_found = False
     end_found = False
     lines_between = []
@@ -997,7 +996,7 @@ def  Open_ness_of_business(pdf_file):
 
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1027,17 +1026,17 @@ def  Open_ness_of_business(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return str(lines_between)
+        return lines_between
 
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
 
-#@ print(Open_ness_of_business("C:/Users/coda/Documents/tata.pdf"))
+#@ print(Provide_details_of_concentration_of_purchases("C:/Users/coda/Documents/titan.pdf"))
 #@ print("************")
 
 
@@ -1100,7 +1099,7 @@ def  Awareness_programmes_conducted(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1131,12 +1130,12 @@ def  Awareness_programmes_conducted(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return str(lines_between)
+        return lines_between
 
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -1199,9 +1198,9 @@ def   Does_the_entity_have_processes(pdf_file):
 
     # #@ print("#######",lines_between)
     if lines_between:
-        return str(lines_between)
+        return lines_between
     else:
-        return None
+        return "Not Applicable"
 
 #@ print(Does_the_entity_have_processes("C:/Users/coda/Documents/tata.pdf"))
 #@ print("************")

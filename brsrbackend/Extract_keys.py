@@ -20,14 +20,3 @@ Turnover (in Rs.)
 Net worth (in Rs.)
 Net worth (in Rs.)
 """
-
-KEYS_TO_EXTRACT_B = """
-Details of Review of NGRBCs by the Company
-Upstream (Suppliers & Logistics Partners)
-Downstream (Distributors & Customers)
-"""
-
-KEYS_TO_EXTRACT_C = """
-By the listed entity
-Provide the following information relating to data breaches
-"""

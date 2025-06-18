@@ -43,6 +43,7 @@ def  well_being_of_employees(pdf_file):
         "Paternity Benefits (% (E / A))",
         "Day Care Facilities (Number (F))",
         "Day Care Facilities (% (F / A))"
+
     ]
 
     keys_3 = [
@@ -59,6 +60,7 @@ def  well_being_of_employees(pdf_file):
         "Paternity Benefits (% (E / A))",
         "Day Care Facilities (Number (F))",
         "Day Care Facilities (% (F / A))"
+
     ]
     
     with pdfplumber.open(pdf_file) as pdf:
@@ -87,7 +89,7 @@ def  well_being_of_employees(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -125,7 +127,7 @@ def  well_being_of_employees(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -147,58 +149,10 @@ def  well_being_of_Workers(pdf_file):
 
     ]
     q_ends = [
-        "Spending on measures towards well-being of employees and workers",
-        "Spending on measures towards well-being of employees",
-        "including permanent and other than permanent"
-
+        "Details of retirement benefits, for Current",
+        "Details of retirement",
+        "Current FY and Previous"
     ]
-
-    with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[7:23]:
-            pil_image = page.to_image(resolution=300).original
-            text = pytesseract.image_to_string(pil_image, config=custom_config)
-
-            if not text:
-                continue
-
-            for line in text.splitlines():
-                # Check if line matches any start phrase
-                if not start_found and any(start.lower() in line.lower() for start in q_starts):
-                    start_found = True
-                    continue  # skip the line containing start phrase
-
-                # Check if line matches any end phrase
-                if start_found and any(end.lower() in line.lower() for end in q_ends):
-                    end_found = True
-                    break
-
-                if start_found:
-                    lines_between.append(line)
-
-            if end_found:
-                break
-
-    if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
-    if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
-    if not lines_between:
-        return {"error": "No content found between start and end questions."}
-
-    # #@ print("#######",lines_between)
-    output_rows = []
-    for line in lines_between:
-        output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
-
-    final_12 = []
-    final_13 = []
-    for f in output_rows:
-        if len(f) == 12:
-            final_12.append(f)
-        elif len(f) == 13:
-            final_13.append(f)
-
-
     keys = [
         "Category",
         "Total (A)",
@@ -228,56 +182,7 @@ def  well_being_of_Workers(pdf_file):
         "Paternity Benefits (% (E / A))",
         "Day Care Facilities (Number (F))",
         "Day Care Facilities (% (F / A))"
-    ]
-
-    myout = []
-    # for row in output_rows:
-    #     data = dict(zip(keys, row))
-    #     myout.append(data)
-
-    if len(final_12) > len(final_13):
-        for row in final_12:
-            data = dict(zip(keys, row))
-            myout.append(data)
-    elif len(final_13) > len(final_12):
-        for row in final_13:
-            data = dict(zip(keys_3, row))
-            myout.append(data)
-    else:
-        return lines_between
-
-
-
-    if not myout:
-        return None
-
-
-    return myout
-
-#@ print(well_being_of_Workers("C:/Users/coda/Documents/ncc.pdf"))
-#@ print("************")
-
-
-
-def  Spending_on_measures_towards(pdf_file):
-    start_found = False
-    end_found = False
-    lines_between = []
-    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
-
-    # Define multiple possible start and end strings
-    q_starts = [
-        "Spending on measures towards well-being of employees and workers",
-        "Spending on measures towards well-being of employees",
-        "including permanent and other than permanent"
-
-    ]
-    q_ends = [
-        "Details of retirement benefits, for Current FY and Previous Financial Year",
-        "Details of retirement benefits",
-        "Current FY and Previous Financial Year"
-    ]
-
+        ]
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[7:23]:
             pil_image = page.to_image(resolution=300).original
@@ -304,7 +209,7 @@ def  Spending_on_measures_towards(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -315,38 +220,28 @@ def  Spending_on_measures_towards(pdf_file):
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
 
-    final_3 = []
-    final_4 = []
+    final_12 = []
+    final_13 = []
     for f in output_rows:
-        if len(f) == 3:
-            final_3.append(f)
-        elif len(f) == 4:
-            final_4.append(f)
+        if len(f) == 12:
+            final_12.append(f)
+        elif len(f) == 13:
+            final_13.append(f)
 
-    keys = [
-              "Category",
-              "FY 2043-25(Current Financial Year)",
-              "FY 2023-24(Previous Financial Year)"
-    ]
 
-    keys_3 = [
-            "S.no",
-            "Category",
-            "FY 2043-25(Current Financial Year)",
-            "FY 2023-24(Previous Financial Year)"
-    ]
-    
+
+
     myout = []
     # for row in output_rows:
     #     data = dict(zip(keys, row))
     #     myout.append(data)
 
-    if len(final_3) > len(final_4):
-        for row in final_3:
+    if len(final_12) > len(final_13):
+        for row in final_12:
             data = dict(zip(keys, row))
             myout.append(data)
-    elif len(final_4) > len(final_3):
-        for row in final_4:
+    elif len(final_13) > len(final_12):
+        for row in final_13:
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
@@ -355,15 +250,13 @@ def  Spending_on_measures_towards(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
 
-#@ print(Spending_on_measures_towards("C:/Users/coda/Documents/ncc.pdf"))
+#@ print(well_being_of_Workers("C:/Users/coda/Documents/ncc.pdf"))
 #@ print("************")
-
-
 
 
 def  Details_retirement_benefits(pdf_file):
@@ -385,6 +278,27 @@ def  Details_retirement_benefits(pdf_file):
         "workplaces"
     ]
 
+    keys = [
+        "Benefits",
+        "No. of employees covered as a % of total employees",
+        "No. of workers covered as a % of total workers",
+        "Deducted and deposited with the authority(Y/N/N.A.)",
+        "No. of employees covered as a % of total employees",
+        "No. of workers covered as a % of total worker",
+        "Deducted and deposited with the authority(Y/N/N.A.)"
+    ]
+
+    keys_3 = [
+        "S.no",
+        "Benefits",
+        "No. of employees covered as a % of total employees",
+        "No. of workers covered as a % of total workers",
+        "Deducted and deposited with the authority(Y/N/N.A.)",
+        "No. of employees covered as a % of total employees",
+        "No. of workers covered as a % of total worker",
+        "Deducted and deposited with the authority(Y/N/N.A.)"
+        ]
+
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[7:23]:
             pil_image = page.to_image(resolution=300).original
@@ -411,7 +325,7 @@ def  Details_retirement_benefits(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -430,26 +344,7 @@ def  Details_retirement_benefits(pdf_file):
         elif len(f) == 8:
             final_8.append(f)
 
-    keys = [
-        "Benefits",
-        "No. of employees covered as a % of total employees",
-        "No. of workers covered as a % of total workers",
-        "Deducted and deposited with the authority(Y/N/N.A.)",
-        "No. of employees covered as a % of total employees",
-        "No. of workers covered as a % of total worker",
-        "Deducted and deposited with the authority(Y/N/N.A.)"
-    ]
 
-    keys_3 = [
-        "S.no",
-        "Benefits",
-        "No. of employees covered as a % of total employees",
-        "No. of workers covered as a % of total workers",
-        "Deducted and deposited with the authority(Y/N/N.A.)",
-        "No. of employees covered as a % of total employees",
-        "No. of workers covered as a % of total worker",
-        "Deducted and deposited with the authority(Y/N/N.A.)"
-    ]
     
     myout = []
     # for row in output_rows:
@@ -470,7 +365,7 @@ def  Details_retirement_benefits(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -586,7 +481,7 @@ def  Does_the_entity_have_an_equal(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -596,7 +491,7 @@ def  Does_the_entity_have_an_equal(pdf_file):
     if lines_between:
         return lines_between
     else:
-        return None
+        return "Not Applicable"
 #@ print(Does_the_entity_have_an_equal("C:/Users/coda/Documents/ncc.pdf"))
 #@ print("************")
 
@@ -621,7 +516,25 @@ def  Return_to_work(pdf_file):
         "receive and redress grievances",
         "categories of employees"
     ]
+    
+    keys = [
+    "Gender",
+    "Return to work rate",
+    "Retention rate",
+    "Return to work rate",
+    "Retention rate"   
+    ]
 
+    keys_3 = [
+    "S.no",
+    "Gender",
+    "Return to work rate",
+    "Retention rate",
+    "Return to work rate",
+    "Retention rate"   
+
+
+    ]
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[8:28]:
             pil_image = page.to_image(resolution=300).original
@@ -648,7 +561,7 @@ def  Return_to_work(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -667,23 +580,7 @@ def  Return_to_work(pdf_file):
         elif len(f) == 6:
             final_6.append(f)
 
-    keys = [
-     "Gender",
-     "Return to work rate",
-     "Retention rate",
-     "Return to work rate",
-     "Retention rate"   
-    ]
 
-    keys_3 = [
-        "S.no",
-        "Gender",
-        "Return to work rate",
-        "Retention rate",
-        "Return to work rate",
-        "Retention rate"   
-
-    ]
     
     myout = []
     # for row in output_rows:
@@ -704,7 +601,7 @@ def  Return_to_work(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -733,6 +630,16 @@ def  Is_there_mechanism(pdf_file):
         "Unions recognised by the listed entity"
     ]
 
+    keys = [
+        "Particulars",
+        "Yes/No(If Yes, then give details of the mechanism in brief)"
+    ]
+
+    keys_3 = [
+        "S.no",
+        "Particulars",
+        "Yes/No(If Yes, then give details of the mechanism in brief)"
+    ]
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[7:23]:
             pil_image = page.to_image(resolution=300).original
@@ -759,7 +666,7 @@ def  Is_there_mechanism(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -778,16 +685,7 @@ def  Is_there_mechanism(pdf_file):
         elif len(f) == 3:
             final_3.append(f)
 
-    keys = [
-        "category",
-        "Yes/No(If Yes, then give details of the mechanism in brief)"
-    ]
 
-    keys_3 = [
-        "S.no",
-        "category",
-        "Yes/No(If Yes, then give details of the mechanism in brief)"
-    ]
     
     myout = []
     # for row in output_rows:
@@ -808,7 +706,7 @@ def  Is_there_mechanism(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -837,6 +735,30 @@ def  Membership_of_employees(pdf_file):
         "employees and workers"
         
     ]
+    keys = [
+        "category",
+        "FY 2024-25(Current Financial Year)-(Total employees / workers in respective category(A))",
+        "FY 2024-25(Current Financial Year)-(No. of employees / workers in respective category, who are part of association(s) or Union(B))",
+        "FY 2024-25(Current Financial Year)-(% (B / A))",
+        "FY 2023-24(Previous Financial Year)-(Total employees / workers in respective category(C))",
+        "FY 2023-24(Previous Financial Year)-(No. of employees / workers in respective category, who are part of association(s) or Union(D))",
+        "FY 2023-24(Previous Financial Year)-(% (D / C))"
+        
+        
+    ]
+
+    keys_3 = [
+        "S.no",
+        "category",
+        "FY 2024-25(Current Financial Year)-(Total employees / workers in respective category(A))",
+        "FY 2024-25(Current Financial Year)-(No. of employees / workers in respective category, who are part of association(s) or Union(B))",
+        "FY 2024-25(Current Financial Year)-(% (B / A))",
+        "FY 2023-24(Previous Financial Year)-(Total employees / workers in respective category(C))",
+        "FY 2023-24(Previous Financial Year)-(No. of employees / workers in respective category, who are part of association(s) or Union(D))",
+        "FY 2023-24(Previous Financial Year)-(% (D / C))"
+
+    ]
+    
 
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[8:27]:
@@ -864,7 +786,7 @@ def  Membership_of_employees(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -883,29 +805,6 @@ def  Membership_of_employees(pdf_file):
         elif len(f) == 8:
             final_8.append(f)
 
-    keys = [
-        "category",
-        "FY 2024-25(Current Financial Year)-(Total employees / workers in respective category(A))",
-        "FY 2024-25(Current Financial Year)-(No. of employees / workers in respective category, who are part of association(s) or Union(B))",
-        "FY 2024-25(Current Financial Year)-(% (B / A))",
-        "FY 2023-24(Previous Financial Year)-(Total employees / workers in respective category(C))",
-        "FY 2023-24(Previous Financial Year)-(No. of employees / workers in respective category, who are part of association(s) or Union(D))",
-        "FY 2023-24(Previous Financial Year)-(% (D / C))"
-        
-        
-    ]
-
-    keys_3 = [
-        "S.no",
-        "category",
-        "FY 2024-25(Current Financial Year)-(Total employees / workers in respective category(A))",
-        "FY 2024-25(Current Financial Year)-(No. of employees / workers in respective category, who are part of association(s) or Union(B))",
-        "FY 2024-25(Current Financial Year)-(% (B / A))",
-        "FY 2023-24(Previous Financial Year)-(Total employees / workers in respective category(C))",
-        "FY 2023-24(Previous Financial Year)-(No. of employees / workers in respective category, who are part of association(s) or Union(D))",
-        "FY 2023-24(Previous Financial Year)-(% (D / C))"
-    ]
-    
     myout = []
     # for row in output_rows:
     #     data = dict(zip(keys, row))
@@ -925,7 +824,7 @@ def  Membership_of_employees(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -953,51 +852,6 @@ def  Details_of_training(pdf_file):
         "reviews of employees and workers"
     ]
 
-    with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[8:27]:
-            pil_image = page.to_image(resolution=300).original
-            text = pytesseract.image_to_string(pil_image, config=custom_config)
-
-            if not text:
-                continue
-
-            for line in text.splitlines():
-                # Check if line matches any start phrase
-                if not start_found and any(start.lower() in line.lower() for start in q_starts):
-                    start_found = True
-                    continue  # skip the line containing start phrase
-
-                # Check if line matches any end phrase
-                if start_found and any(end.lower() in line.lower() for end in q_ends):
-                    end_found = True
-                    break
-
-                if start_found:
-                    lines_between.append(line)
-
-            if end_found:
-                break
-
-    if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
-    if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
-    if not lines_between:
-        return {"error": "No content found between start and end questions."}
-
-    # #@ print("#######",lines_between)
-    output_rows = []
-    for line in lines_between:
-        output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
-
-    final_11 = []
-    final_12 = []
-    for f in output_rows:
-        if len(f) == 11:
-            final_11.append(f)
-        elif len(f) == 12:
-            final_12.append(f)
-
     keys = [
         "category",
         "Total (A)",
@@ -1028,52 +882,6 @@ def  Details_of_training(pdf_file):
         "On Skill upgradation (% (F / D))"
     ]
     
-    myout = []
-    # for row in output_rows:
-    #     data = dict(zip(keys, row))
-    #     myout.append(data)
-
-    if len(final_11) > len(final_12):
-        for row in final_11:
-            data = dict(zip(keys, row))
-            myout.append(data)
-    elif len(final_12) > len(final_11):
-        for row in final_12:
-            data = dict(zip(keys_3, row))
-            myout.append(data)
-    else:
-        return lines_between
-
-
-
-    if not myout:
-        return None
-
-
-    return myout
-
-#@ print(Details_of_training("C:/Users/coda/Documents/ncc.pdf"))
-#@ print("************")
-
-
-def  Details_of_performance(pdf_file):
-    start_found = False
-    end_found = False
-    lines_between = []
-    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
-
-    # Define multiple possible start and end strings
-    q_starts = [
-        "Details of performance and career development reviews of employees and workers",
-        "Details of performance and career",
-        "reviews of employees and workers"
-
-    ]
-    q_ends = [
-        "Health and safety management system",
-        "Whether an occupational health and safety management system",
-        "If yes, the coverage such system"
-    ]
 
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[8:27]:
@@ -1101,7 +909,7 @@ def  Details_of_performance(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1112,14 +920,61 @@ def  Details_of_performance(pdf_file):
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
 
-    final_7 = []
-    final_8 = []
+    final_11 = []
+    final_12 = []
     for f in output_rows:
-        if len(f) == 7:
-            final_7.append(f)
-        elif len(f) == 8:
-            final_8.append(f)
+        if len(f) == 11:
+            final_11.append(f)
+        elif len(f) == 12:
+            final_12.append(f)
 
+
+    myout = []
+    # for row in output_rows:
+    #     data = dict(zip(keys, row))
+    #     myout.append(data)
+
+    if len(final_11) > len(final_12):
+        for row in final_11:
+            data = dict(zip(keys, row))
+            myout.append(data)
+    elif len(final_12) > len(final_11):
+        for row in final_12:
+            data = dict(zip(keys_3, row))
+            myout.append(data)
+    else:
+        return lines_between
+
+
+
+    if not myout:
+        return "Not Applicable"
+
+
+    return myout
+
+#@ print(Details_of_training("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
+
+
+def  Details_of_performance(pdf_file):
+    start_found = False
+    end_found = False
+    lines_between = []
+    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
+
+    # Define multiple possible start and end strings
+    q_starts = [
+        "Details of performance and career development reviews of employees and workers",
+        "Details of performance and career",
+        "reviews of employees and workers"
+
+    ]
+    q_ends = [
+        "Health and safety management system",
+        "Whether an occupational health and safety management system",
+        "If yes, the coverage such system"
+    ]
     keys = [
         "category",
         "FY 2024-25(Current Financial Year)-(Total (A))",
@@ -1138,9 +993,55 @@ def  Details_of_performance(pdf_file):
         "FY 2024-25(Current Financial Year)-(% (B / A))",
         "FY 2023-24(Previous Financial Year)-(Total (C))",
         "FY 2023-24(Previous Financial Year)-(No. (D))",
-        "FY 2023-24(Previous Financial Year)-(% (D / C))"
+        "FY 2023-24(Previous Financial Year)-(% (D / C))"        
 
     ]
+    with pdfplumber.open(pdf_file) as pdf:
+        for page in pdf.pages[8:27]:
+            pil_image = page.to_image(resolution=300).original
+            text = pytesseract.image_to_string(pil_image, config=custom_config)
+
+            if not text:
+                continue
+
+            for line in text.splitlines():
+                # Check if line matches any start phrase
+                if not start_found and any(start.lower() in line.lower() for start in q_starts):
+                    start_found = True
+                    continue  # skip the line containing start phrase
+
+                # Check if line matches any end phrase
+                if start_found and any(end.lower() in line.lower() for end in q_ends):
+                    end_found = True
+                    break
+
+                if start_found:
+                    lines_between.append(line)
+
+            if end_found:
+                break
+
+    if not start_found:
+        return [f"Start question not found. Tried: {q_starts[0]}"]
+    if not end_found:
+        return {"error": f"End question not found. Tried: {q_ends}"}
+    if not lines_between:
+        return {"error": "No content found between start and end questions."}
+
+    # #@ print("#######",lines_between)
+    output_rows = []
+    for line in lines_between:
+        output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
+
+    final_7 = []
+    final_8 = []
+    for f in output_rows:
+        if len(f) == 7:
+            final_7.append(f)
+        elif len(f) == 8:
+            final_8.append(f)
+
+
     
     myout = []
     # for row in output_rows:
@@ -1161,7 +1062,7 @@ def  Details_of_performance(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -1435,7 +1336,20 @@ def  Details_safety_related(pdf_file):
         "Describe the measures taken",
         "safe and healthy workplace"
     ]
+    keys = [
+        "Safety Incident/Number",
+        "Category",
+        "FY 2022",
+        "FY 2021"
+    ]
 
+    keys_3 = [
+        "S.no",
+        "Safety Incident/Number",
+        "Category",
+        "FY 2022",
+        "FY 2021"
+    ]
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[8:27]:
             pil_image = page.to_image(resolution=300).original
@@ -1462,7 +1376,7 @@ def  Details_safety_related(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1481,20 +1395,7 @@ def  Details_safety_related(pdf_file):
         elif len(f) == 5:
             final_5.append(f)
 
-    keys = [
-        "Safety Incident/Number",
-        "Category",
-        "FY 2022",
-        "FY 2021"
-    ]
 
-    keys_3 = [
-        "S.no",
-        "Safety Incident/Number",
-        "Category",
-        "FY 2022",
-        "FY 2021"
-    ]
     
     myout = []
     # for row in output_rows:
@@ -1515,7 +1416,7 @@ def  Details_safety_related(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -1606,6 +1507,26 @@ def  Number_of_Complaints(pdf_file):
         "Assessments"
     ]
 
+    keys = [
+        "Category",
+        "Filed during the year",
+        "Pending resolution at the end of year",
+        "Remarks",
+        "Filed during the year",
+        "Pending resolution at the end of year",
+        "Remarks"
+    ]
+
+    keys_3 = [
+        "S.no",
+        "Category",
+        "Filed during the year",
+        "Pending resolution at the end of year",
+        "Remarks",
+        "Filed during the year",
+        "Pending resolution at the end of year",
+        "Remarks"
+        ]
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[8:27]:
             pil_image = page.to_image(resolution=300).original
@@ -1632,7 +1553,7 @@ def  Number_of_Complaints(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1651,26 +1572,7 @@ def  Number_of_Complaints(pdf_file):
         elif len(f) == 8:
             final_8.append(f)
 
-    keys = [
-        "Category",
-        "Filed during the year",
-        "Pending resolution at the end of year",
-        "Remarks",
-        "Filed during the year",
-        "Pending resolution at the end of year",
-        "Remarks"
-    ]
 
-    keys_3 = [
-        "S.no",
-        "Category",
-        "Filed during the year",
-        "Pending resolution at the end of year",
-        "Remarks",
-        "Filed during the year",
-        "Pending resolution at the end of year",
-        "Remarks"
-    ]
     
     myout = []
     # for row in output_rows:
@@ -1691,7 +1593,7 @@ def  Number_of_Complaints(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -1721,7 +1623,17 @@ def  Assessments_for_the_year(pdf_file):
         "address safety-related",
         "assessments of health & safety"
     ]
+    keys = [
+        "Category",
+        "% of your plants and offices that were assessed (by entity or statutory authorities or third parties"
+    ]
 
+    keys_3 = [
+        "S.no",
+        "Category",
+        "% of your plants and offices that were assessed (by entity or statutory authorities or third parties"
+    ]
+    
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[8:27]:
             pil_image = page.to_image(resolution=300).original
@@ -1748,7 +1660,7 @@ def  Assessments_for_the_year(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1767,17 +1679,7 @@ def  Assessments_for_the_year(pdf_file):
         elif len(f) == 3:
             final_3.append(f)
 
-    keys = [
-        "Category",
-        "% of your plants and offices that were assessed (by entity or statutory authorities or third parties"
-    ]
 
-    keys_3 = [
-        "S.no",
-        "Category",
-        "% of your plants and offices that were assessed (by entity or statutory authorities or third parties"
-    ]
-    
     myout = []
     # for row in output_rows:
     #     data = dict(zip(keys, row))
@@ -1797,7 +1699,7 @@ def  Assessments_for_the_year(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -2037,7 +1939,7 @@ def  Provide_the_number_of_employees(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -2092,7 +1994,7 @@ def  Provide_the_number_of_employees(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -2269,7 +2171,7 @@ def Provide_details_of_any_corrective_actions(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -2279,7 +2181,7 @@ def Provide_details_of_any_corrective_actions(pdf_file):
     if lines_between:
         return lines_between
     else:
-        return None
+        return "Not Applicable"
 #@ print(Provide_details_of_any_corrective_actions("C:/Users/coda/Documents/siemens.pdf"))
 #@ print("************")
 

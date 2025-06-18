@@ -8,11 +8,8 @@ from google.api_core.exceptions import ResourceExhausted
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 import os
-from Extract_keys import KEYS_TO_EXTRACT_A,KEYS_TO_EXTRACT_B,KEYS_TO_EXTRACT_C
+from Extract_keys import KEYS_TO_EXTRACT_A
 # Configure Gemini
-import fitz  # PyMuPDF
-# from kik import *
-# from section_a import *
 import time
 import fun
 import section_a
@@ -72,7 +69,7 @@ def extract_text_from_docx(file):
     return "\n".join([para.text for para in doc.paragraphs])
 
 
-def chunk_text(text,max_tokens=1500):
+def chunk_text(text,max_tokens=3000):
     paragraphs = text.split("\n" )
     chunks, current_chunk = [], ""
     for para in paragraphs:
@@ -132,50 +129,6 @@ TEXT:
         raise HTTPException(status_code=429, detail="Gemini API quota exceeded." )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
-def extract_fields_with_gemini_b(text_chunk: str) -> dict:
-    # print(text_chunk)
-    model = genai.GenerativeModel("gemini-2.0-flash" )
-    prompt = f"""
-You are an expert in information extraction. Extract the following details from the provided text and return them in valid JSON format with keys exactly as listed below. Only return the JSON — no extra commentary.
-
-{KEYS_TO_EXTRACT_B}
-
-TEXT:
-{text_chunk}
-"""
-    try:
-        response = model.generate_content(prompt)
-        # print(response.text)
-        parsed = extract_json_from_text(response.text)
-        return parsed if parsed else {}
-    except ResourceExhausted:
-        raise HTTPException(status_code=429, detail="Gemini API quota exceeded." )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-def extract_fields_with_gemini_c(text_chunk: str) -> dict:
-    # print(text_chunk)
-    model = genai.GenerativeModel("gemini-2.0-flash" )
-    prompt = f"""
-You are an expert in information extraction. Extract the following details from the provided text and return them in valid JSON format with keys exactly as listed below. Only return the JSON — no extra commentary.
-
-{KEYS_TO_EXTRACT_C}
-
-TEXT:
-{text_chunk}
-"""
-    try:
-        response = model.generate_content(prompt)
-        # print(response.text)
-        parsed = extract_json_from_text(response.text)
-        return parsed if parsed else {}
-    except ResourceExhausted:
-        raise HTTPException(status_code=429, detail="Gemini API quota exceeded." )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
 
 
 
@@ -313,7 +266,7 @@ def parse_brsr_text_section_a(file_path,json_merge):
               },
               {
                 "questionNo": "2",
-                "question": "No. of locations",
+                "question": "Number of locations",
                 "questionAnswer":section_a.Number_of_locations(file_path),
               },
               {
@@ -409,7 +362,7 @@ def parse_brsr_text_section_a(file_path,json_merge):
  }
 
 
-def parse_brsr_text_section_b(file_path,json_merge):
+def parse_brsr_text_section_b(file_path):
     print("sucessfully file sent",file_path)
 
     return{
@@ -424,7 +377,7 @@ def parse_brsr_text_section_b(file_path,json_merge):
             "questions": [
               {
                 "questionNo": "1",
-                "question": "Whether your entity policy/policies cover each principle and its core elements of the NGRBCs. (Yes/No)",
+                "question": "Whether your entity’s policy/policies cover each principle and its core elements of the NGRBCs. (Yes/No)",
                 
                 "questionAnswer":section_b.Whether_your_entity(file_path),
               },
@@ -508,39 +461,40 @@ def parse_brsr_text_section_b(file_path,json_merge):
                 "question": "Frequency(Annually/ Half yearly/ Quarterly/ Any other – please specify)",
                 "questionAnswer":section_b.Frequency_Annually(file_path),
               },
+              # {
+              #   "questionNo": "6",
+              #   "question": "Compliance with statutory requirements of relevance to the principles and rectification of any non-compliances",
+              #   "questionAnswer":section_b.Compliance_with_statutory(file_path),
+              # },
               {
                 "questionNo": "6",
-                "question": "Compliance with statutory requirements of relevance to the principles and rectification of any non-compliances",
-                "questionAnswer":section_b.Compliance_with_statutory(file_path),
-              },
-              {
-                "questionNo": "7",
                 "question": "Has the entity carried out independent assessment/ evaluation of the working of its policies by an external agency? (Yes/No). If yes, provide name of the agency.",
                 
                 "questionAnswer":section_b.Has_the_entity_carried(file_path),
                 # "questionAnswer":json_merge["Has the entity carried out independent assessment/ evaluation of the working of its policies by an external agency? (Yes/No). If yes, provide name of the agency."]
               },
               {
-                "questionNo": "8",
+                "questionNo": "7",
                 "question": "If answer to question (1) above is “No” i.e. not all Principles are covered by a policy, reasons to be stated, as below:",
                 
                 # "questionAnswer":json_merge["If answer to question (1) above is “No” i.e. not all Principles are covered by a policy, reasons to be stated, as below:"]
                 "questionAnswer":section_b.If_answer_to_question(file_path),
               },
               {
-                "questionNo": "9",
+                "questionNo": "8",
                 "question": "Upstream (Suppliers & Logistics Partners)",                
                 "questionAnswer":"",
               },
 
               {
-                "questionNo": "10",
+                "questionNo": "9",
                 "question": "Downstream (Distributors & Customers)",                
                 "questionAnswer":"",
               },
               ]},]}}   
 
-def parse_brsr_text_section_c1(file_path,json_merge):
+def parse_brsr_text_section_c1(file_path):
+  print("sucessfully file sent",file_path)
   return {
     "data":[
       {
@@ -604,7 +558,7 @@ def parse_brsr_text_section_c1(file_path,json_merge):
                 {
                 "questionNo": "11",
                 "question": "Provide details of concentration of purchases and sales with trading houses, dealers, and related parties along-with loans and advances & investments, with related parties, in the following format:",
-                "questionAnswer":principle_1.Open_ness_of_business(file_path),#"Awareness programmes conducted for value chain partners on any"),
+                "questionAnswer":principle_1.Provide_details_of_concentration_of_purchases(file_path),#"Awareness programmes conducted for value chain partners on any"),
               },
                 {
                 "questionNo": "12",
@@ -622,7 +576,8 @@ def parse_brsr_text_section_c1(file_path,json_merge):
                 ]
       }]}
 
-def parse_brsr_text_section_c2(file_path,json_merge):
+def parse_brsr_text_section_c2(file_path):
+  print("sucessfully file sent",file_path)
   return {
     "data":[
       {
@@ -640,46 +595,51 @@ def parse_brsr_text_section_c2(file_path,json_merge):
               },
               {
                 "questionNo": "2",
+                "question": "Does the entity have procedures in place for sustainable sourcing? (Yes/No)",
+                "questionAnswer":principle_2.Does_the_entity_have_procedures(file_path),
+              },
+              {
+                "questionNo": "3",
                 "question": "If yes, what percentage of inputs were sourced sustainably?",
                 "questionAnswer":principle_2.b_If_yes_what_percentage(file_path),
               },
               {
-                "questionNo": "3",
+                "questionNo": "4",
                 "question": "Describe the processes in place to safely reclaim your products for reusing, recycling and disposing at the end of life, for :",
                 "questionAnswer": principle_2.Describe_the_processes_in_place(file_path),
               },
 
               {
-                "questionNo": "4",
+                "questionNo": "5",
                 "question": "Whether Extended Producer Responsibility (EPR) is applicable to the entity’s activities (Yes / No). If yes, whether the waste collection plan is in line with the Extended Producer Responsibility (EPR) plan submitted to Pollution Control Boards? If not, provide steps taken to address the same.",
                 "questionAnswer":principle_2.Whether_Extended_Producer_Responsibility_EPR(file_path),#json_merge["Whether Extended Producer Responsibility (EPR) is applicable to the entity’s activities (Yes / No). If yes, whether the waste collection plan is in line with the Extended Producer Responsibility (EPR) plan submitted to Pollution Control Boards? If not, provide steps taken to address the same."],
               },
 
               {
-                "questionNo": "5",
+                "questionNo": "6",
                 "question": "Has the entity conducted Life Cycle Perspective / Assessments (LCA) for any of its products (for manufacturing industry) or for its services (for service industry)? If yes, provide details in the following format?",
                 "questionAnswer": principle_2.Has_the_entity_conducted_Life(file_path),
               },
 
               {
-                "questionNo": "6",
+                "questionNo": "7",
                 "question": "If there are any significant social or environmental concerns and/or risks arising from production or disposal of your products / services, as identified in the Life Cycle Perspective / Assessments (LCA) or through any other means, briefly describe the same along-with action taken to mitigate the same.",
                 "questionAnswer":principle_2.If_there_are_any_significant_social(file_path),#json_merge["If there are any significant social or environmental concerns and/or risks arising from production or disposal of your products / services, as identified in the Life Cycle Perspective / Assessments (LCA) or through any other means, briefly describe the same along-with action taken to mitigate the same."],
               },
 
               {
-                "questionNo": "7",
+                "questionNo": "8",
                 "question": "Percentage of recycled or reused input material to total material (by value) used in production (for manufacturing industry) or providing services (for service industry)",
                 "questionAnswer":principle_2.Percentage_of_recycled(file_path),#json_merge["Percentage of recycled or reused input material to total material (by value) used in production (for manufacturing industry) or providing services (for service industry)"],
               },
 
               {
-                "questionNo": "8",
+                "questionNo": "9",
                 "question": "Of the products and packaging reclaimed at end of life of products, amount (in metric tonnes) reused, recycled, and safely disposed, as per the following format:",
                 "questionAnswer":principle_2.Of_the_products_and_packaging(file_path),#json_merge["Of the products and packaging reclaimed at end of life of products, amount (in metric tonnes) reused, recycled, and safely disposed, as per the following format:"],
               },
               {
-                "questionNo": "9",
+                "questionNo": "10",
                 "question": "Reclaimed products and their packaging materials (as percentage of products sold) for each product category.",
                 "questionAnswer": principle_2.Reclaimed_products(file_path),#json_merge["Reclaimed products and their packaging materials (as percentage of products sold) for each product category."],
               },
@@ -689,7 +649,8 @@ def parse_brsr_text_section_c2(file_path,json_merge):
                 ]
       }]}
 
-def parse_brsr_text_section_c3(file_path,json_merge):
+def parse_brsr_text_section_c3(file_path):
+  print("sucessfully file sent",file_path)
   return {
     "data":[
       {
@@ -710,144 +671,133 @@ def parse_brsr_text_section_c3(file_path,json_merge):
                 "question":"Details of measures for the well-being of workers:",
                 "questionAnswer":principle_3.well_being_of_Workers(file_path),#json_merge["Details of retirement benefits, for Current and Previous FY"],
               },
+              # {
+              #   "questionNo": "3",
+              #   "question":"Spending on measures towards well-being of employees and workers (including permanent and other than permanent) in the following format –",
+              #   "questionAnswer":principle_3.Spending_on_measures_towards(file_path),#json_merge["Details of retirement benefits, for Current and Previous FY"],
+              # },
               {
                 "questionNo": "3",
-                "question":"Spending on measures towards well-being of employees and workers (including permanent and other than permanent) in the following format –",
-                "questionAnswer":principle_3.Spending_on_measures_towards(file_path),#json_merge["Details of retirement benefits, for Current and Previous FY"],
-              },
-              {
-                "questionNo": "4",
                 "question": "Details of retirement benefits, for Current and Previous FY",
                 "questionAnswer":principle_3.Details_retirement_benefits(file_path),
               },
               {
-                "questionNo": "5",
+                "questionNo": "4",
                 "question": "Accessibility of workplaces",
                 "questionAnswer":principle_3.Accessibility_of_workplaces(file_path),
               },
               {
-                "questionNo": "6",
+                "questionNo": "5",
                 "question": "Does the entity have an equal opportunity policy as per the Rights of Persons with Disabilities Act, 2016? If so, provide a web-link to the policy.",
                 "questionAnswer":principle_3.Does_the_entity_have_an_equal(file_path),#json_merge["Does the entity have an equal opportunity policy as per the Rights of Persons with Disabilities Act, 2016? If so, provide a web-link to the policy."],
               },
               {
-                "questionNo": "7",
+                "questionNo": "6",
                 "question": "Return to work and Retention rates of permanent employees and workers that took parental leave.",
                 "questionAnswer":principle_3.Return_to_work(file_path),#json_merge["Return to work and Retention rates of permanent employees and workers that took parental leave."],
               },
               {
-                "questionNo": "8",
+                "questionNo": "7",
                 "question": "Is there a mechanism available to receive and redress grievances for the following categories of employees and worker? If yes, give details of the mechanism in brief",
                 "questionAnswer":principle_3.Is_there_mechanism(file_path),#json_merge["Is there a mechanism available to receive and redress grievances for the following categories of employees and worker? If yes, give details of the mechanism in brief"],
               },
               {
-                "questionNo": "9",
+                "questionNo": "8",
                 "question": "Membership of employees and worker in association(s) or Unions recognised by the listed entity:",
                 "questionAnswer":principle_3.Membership_of_employees(file_path),#json_merge["Membership of employees and worker in association(s) or Unions recognised by the listed entity:"],
               },
               {
-                "questionNo": "10",
+                "questionNo": "9",
                 "question": "Details of training given to employees and workers:",
                 "questionAnswer":principle_3.Details_of_training(file_path),#json_merge["Details of training given to employees and workers:"],
               },
               {
-                "questionNo": "11",
+                "questionNo": "10",
                 "question": "Details of performance and career development reviews of employees and workers:",
                 "questionAnswer":principle_3.Details_of_performance(file_path),#json_merge["Details of performance and career development reviews of employees and workers:"],
               },
               {
-                "questionNo": "12",
+                "questionNo": "11",
                 "question":"Whether an occupational health and safety management system has been implemented by the entity? (Yes/ No). If yes, the coverage such system?",
                 "questionAnswer":principle_3.a_Whether_an_occupational(file_path),#json_merge["Details of performance and career development reviews of employees and workers:"],
               },
               {
-                "questionNo": "13",
+                "questionNo": "12",
                 "question":"What are the processes used to identify work-related hazards and assess risks on a routine and non-routine basis by the entity?",
                 "questionAnswer":principle_3.b_What_are_the_processes(file_path),#json_merge["Details of performance and career development reviews of employees and workers:"],
               },
               {
-                "questionNo": "14",
+                "questionNo": "13",
                 "question":"Whether you have processes for workers to report the work related hazards and to remove themselves from such risks. (Y/N)",
                 "questionAnswer":principle_3.c_Whether_you_have_processes_for_workers(file_path),#json_merge["Details of performance and career development reviews of employees and workers:"],
               },
               {
-                "questionNo": "15",
+                "questionNo": "14",
                 "question":"Do the employees/ worker of the entity have access to non-occupational medical and healthcare services? (Yes/ No)",
                 "questionAnswer":principle_3.d_Do_the_employees_workers(file_path),#json_merge["Details of performance and career development reviews of employees and workers:"],
               },
               {
-                "questionNo": "16",
+                "questionNo": "15",
                 "question": "Details of safety related incidents, in the following format:",
                 "questionAnswer":principle_3.Details_safety_related(file_path),#json_merge["Details of safety related incidents, in the following format:"],
               },
               {
-                "questionNo": "17",
+                "questionNo": "16",
                 "question": "Describe the measures taken by the entity to ensure a safe and healthy work place",
                 "questionAnswer":principle_3.Describe_the_measures(file_path),#json_merge["Describe the measures taken by the entity to ensure a safe and healthy work place"],
               },
               {
-                "questionNo": "18",
+                "questionNo": "17",
                 "question": "Number of Complaints on the following made by employees and workers:",
                 "questionAnswer":principle_3.Number_of_Complaints(file_path),#json_merge["Number of Complaints on the following made by employees and workers:"],
               },
               {
-                "questionNo": "19",
+                "questionNo": "18",
                 "question": "Assessments for the year:",
                 "questionAnswer":principle_3.Assessments_for_the_year(file_path),#json_merge["Assessments for the year:"],
               },
               {
-                "questionNo": "20",
+                "questionNo": "19",
                 "question": "Provide details of any corrective action taken or underway to address safety-related incidents (if any) and on significant risks / concerns arising from assessments of health & safety practices and working conditions.",
-                "questionAnswer":principle_3.Provide_details_of_any_corrective(file_path),#json_merge["Provide details of any corrective action taken or underway to address safety-related incidents (if any) and on significant risks / concerns arising from assessments of health & safety practices and working conditions."],
+                "questionAnswer":principle_3.Provide_details_of_any_corrective(file_path),
               },
-                            {
+                {
+                "questionNo": "20",
+                "question": "Does the entity extend any life insurance or any compensatory package in the event of death of (A) Employees (Y/N)",
+                "questionAnswer":principle_3.Does_the_entity_extend(file_path),
+              },
+              {
                 "questionNo": "21",
-                "question": "Does the entity extend any life insurance or any compensatory package in the event of death of (A) Employees (Y/N) ",
-                "questionAnswer":principle_3.Does_the_entity_extend(file_path),#json_merge["Provide details of any corrective action taken or underway to address safety-related incidents (if any) and on significant risks / concerns arising from assessments of health & safety practices and working conditions."],
+                "question": "Provide the measures undertaken by the entity to ensure that statutory dues have been deducted and deposited by the value chain partners",
+                "questionAnswer":principle_3.Provide_the_measures_undertaken(file_path),
               },
               {
                 "questionNo": "22",
-                "question":"(A) Employees (Y/N) ",
-                "questionAnswer":"",#json_merge["Provide details of any corrective action taken or underway to address safety-related incidents (if any) and on significant risks / concerns arising from assessments of health & safety practices and working conditions."],
+                "question": "Provide the number of employees / workers having suffered high consequence work-related injury / ill-health / fatalities (as reported in Q11 of Essential Indicators above), who have been are rehabilitated and placed in suitable employment or whose family members have been placed in suitable employment:",
+                "questionAnswer":principle_3.Provide_the_number_of_employees(file_path),
               },
               {
                 "questionNo": "23",
-                "question":"(B) Workers (Y/N)",
-                "questionAnswer":"",#json_merge["Provide details of any corrective action taken or underway to address safety-related incidents (if any) and on significant risks / concerns arising from assessments of health & safety practices and working conditions."],
+                "question": "Does the entity provide transition assistance programs to facilitate continued employability and the management of career endings resulting from retirement or termination of employment? (Yes/ No)",
+                "questionAnswer":principle_3.Does_the_entity_provide_transition(file_path),
               },
-
               {
                 "questionNo": "24",
-                "question": "Provide the measures undertaken by the entity to ensure that statutory dues have been deducted and deposited by the value chain partners",
-                "questionAnswer":principle_3.Provide_the_measures_undertaken(file_path),#json_merge["Provide the measures undertaken by the entity to ensure that statutory dues have been deducted and deposited by the value chain partners"],
-              },
-              {
-                "questionNo": "18",
-                "question": "Provide the number of employees / workers having suffered high consequence work-related injury / ill-health / fatalities (as reported in Q11 of Essential Indicators above), who have been are rehabilitated and placed in suitable employment or whose family members have been placed in suitable employment:",
-                "questionAnswer":principle_3.Provide_the_number_of_employees(file_path),#json_merge["Provide the number of employees / workers having suffered high consequence work-related injury / ill-health / fatalities (as reported in Q11 of Essential Indicators above), who have been are rehabilitated and placed in suitable employment or whose family members have been placed in suitable employment:"],
-              },
-              {
-                "questionNo": "19",
-                "question": "Does the entity provide transition assistance programs to facilitate continued employability and the management of career endings resulting from retirement or termination of employment? (Yes/ No)",
-                "questionAnswer":principle_3.Does_the_entity_provide_transition(file_path),#json_merge["Does the entity provide transition assistance programs to facilitate continued employability and the management of career endings resulting from retirement or termination of employment? (Yes/ No)"],
-              },
-              {
-                "questionNo": "20",
                 "question": "Details on assessment of value chain partners:",
-                "questionAnswer":principle_3.Details_on_assessment(file_path),#json_merge["Details on assessment of value chain partners:"],
+                "questionAnswer":principle_3.Details_on_assessment(file_path),
               },
               {
-                "questionNo": "21",
+                "questionNo": "25",
                 "question": "Provide details of any corrective actions taken or underway to address significant risks / concerns arising from assessments of health and safety practices and working conditions of value chain partners.",
-                "questionAnswer":principle_3.Provide_details_of_any_corrective(file_path),#json_merge["Provide details of any corrective actions taken or underway to address significant risks / concerns arising from assessments of health and safety practices and working conditions of value chain partners."],
+                "questionAnswer":principle_3.Provide_details_of_any_corrective(file_path),
               },
         ]
       },
                 ]
       }]}
 
-
-def parse_brsr_text_section_c4(file_path,json_merge):
+def parse_brsr_text_section_c4(file_path):
+  print("sucessfully file sent",file_path)
   return {
     "data":[
       {
@@ -891,7 +841,8 @@ def parse_brsr_text_section_c4(file_path,json_merge):
                 ]
       }]}
 
-def parse_brsr_text_section_c5(file_path,json_merge):
+def parse_brsr_text_section_c5(file_path):
+  print("sucessfully file sent",file_path)
   return {
     "data":[
       {
@@ -905,87 +856,87 @@ def parse_brsr_text_section_c5(file_path,json_merge):
               {
                 "questionNo": "1",
                 "question": "Employees and workers who have been provided training on human rights issues and policy(ies) of the entity, in the following format:",
-                "questionAnswer":principle_5.Employees_and_workers(file_path),#json_merge["Employees and workers who have been provided training on human rights issues and policy(ies) of the entity, in the following format:"],
+                "questionAnswer":principle_5.Employees_and_workers(file_path),
               },
               {
                 "questionNo": "2",
                 "question": "Details of minimum wages paid to employees and workers, in the following format:",
-                "questionAnswer":principle_5.Details_of_minimum(file_path),#json_merge["Details of minimum wages paid to employees and workers, in the following format:"],
+                "questionAnswer":principle_5.Details_of_minimum(file_path),
               },
               {
                 "questionNo": "3",
-                "question": "Median remuneration / wages:",
-                "questionAnswer":principle_5.Details_of_remuneration(file_path),#json_merge["Details of minimum wages paid to employees and workers, in the following format:"],
+                "question": "Details of remuneration/salary/wages, in the following format:",
+                "questionAnswer":principle_5.Details_of_remuneration(file_path),
               },
+              # {
+              #   "questionNo": "4",
+              #   "question": "Gross wages paid to females as % of total wages paid by the entity, in the following format:",
+              #   "questionAnswer":principle_5.Gross_wages_paid(file_path),#json_merge["Details of minimum wages paid to employees and workers, in the following format:"],
+              # },
               {
                 "questionNo": "4",
-                "question": "Gross wages paid to females as % of total wages paid by the entity, in the following format:",
-                "questionAnswer":principle_5.Gross_wages_paid(file_path),#json_merge["Details of minimum wages paid to employees and workers, in the following format:"],
+                "question": "Do you have a focal point (Individual/ Committee) responsible for addressing human rights impacts or issues caused or contributed to by the business? (Yes/ No)",
+                "questionAnswer":principle_5.Do_you_have_a_focal_point(file_path),
               },
               {
                 "questionNo": "5",
-                "question": "Do you have a focal point (Individual/ Committee) responsible for addressing human rights impacts or issues caused or contributed to by the business? (Yes/ No)",
-                "questionAnswer":principle_5.Do_you_have_a_focal_point(file_path),#json_merge["Do you have a focal point (Individual/ Committee) responsible for addressing human rights impacts or issues caused or contributed to by the business? (Yes/ No)"],
+                "question": "Describe the internal mechanisms in place to redress grievances related to human rights issues.",
+                "questionAnswer":principle_5.Describe_the_internal_mechanisms(file_path),
               },
               {
                 "questionNo": "6",
-                "question": "Describe the internal mechanisms in place to redress grievances related to human rights issues.",
-                "questionAnswer":principle_5.Describe_the_internal_mechanisms(file_path),#json_merge["Describe the internal mechanisms in place to redress grievances related to human rights issues."],
+                "question": "Number of Complaints on the following made by employees and workers:",
+                "questionAnswer":principle_5.Number_of_Complaints(file_path),
               },
               {
                 "questionNo": "7",
-                "question": "Number of Complaints on the following made by employees and workers:",
-                "questionAnswer":principle_5.Number_of_Complaints(file_path),#json_merge["Number of Complaints on the following made by employees and workers:"],
+                "question":"Complaints filed under the Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013, in the following format:",
+                "questionAnswer":principle_5.Complaints_filed_under(file_path),
               },
               {
                 "questionNo": "8",
-                "question": "Complaints filed under the Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013, in the following format:",
-                "questionAnswer":principle_5.Complaints_filed_under(file_path),#json_merge["Complaints filed under the Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013, in the following format:"],
+                "question": "Mechanisms to prevent adverse consequences to the complainant in discrimination and harassment cases.",
+                "questionAnswer":principle_5.Mechanisms_prevent(file_path),
               },
               {
                 "questionNo": "9",
-                "question": "Mechanisms to prevent adverse consequences to the complainant in discrimination and harassment cases.",
-                "questionAnswer":principle_5.Mechanisms_prevent(file_path),#json_merge["Mechanisms to prevent adverse consequences to the complainant in discrimination and harassment cases."],
+                "question": "Do human rights requirements form part of your business agreements and contracts? (Yes/ No)",
+                "questionAnswer":principle_5.Do_human_rights_requirements(file_path),
               },
               {
                 "questionNo": "10",
-                "question": "Do human rights requirements form part of your business agreements and contracts? (Yes/ No)",
-                "questionAnswer":principle_5.Do_human_rights_requirements(file_path),#json_merge["Do human rights requirements form part of your business agreements and contracts? (Yes/ No)"],
+                "question": "Assessments for the year:",
+                "questionAnswer":principle_5.Assessments(file_path),
               },
               {
                 "questionNo": "11",
-                "question": "Assessments for the year:",
-                "questionAnswer":principle_5.Assessments(file_path),#json_merge["Assessments for the year:"],
+                "question": "Provide details of any corrective actions taken or underway to address significant risks / concerns arising from the assessments at Question 10 above.",
+                "questionAnswer":principle_5.Provide_details_of_any(file_path),
               },
               {
                 "questionNo": "12",
-                "question": "Provide details of any corrective actions taken or underway to address significant risks / concerns arising from the assessments at Question 10 above.",
-                "questionAnswer":principle_5.Provide_details_of_any(file_path),#json_merge["Provide details of any corrective actions taken or underway to address significant risks / concerns arising from the assessments at Question 10 above."],
+                "question": "Details of a business process being modified / introduced as a result of addressing human rights grievances/complaints.",
+                "questionAnswer":principle_5.Details_of_a_business_process(file_path),
               },
               {
                 "questionNo": "13",
-                "question": "Details of a business process being modified / introduced as a result of addressing human rights grievances/complaints.",
-                "questionAnswer":principle_5.Details_of_a_business_process(file_path),#json_merge["Details of a business process being modified / introduced as a result of addressing human rights grievances/complaints."],
+                "question": "Details of the scope and coverage of any Human rights due-diligence conducted",
+                "questionAnswer":principle_5.Details_of_the_scope(file_path),
               },
               {
                 "questionNo": "14",
-                "question": "Details of the scope and coverage of any Human rights due-diligence conducted",
-                "questionAnswer":principle_5.Details_of_the_scope(file_path),#json_merge["Details of the scope and coverage of any Human rights due-diligence conducted"],
+                "question": "Is the premise/office of the entity accessible to differently abled visitors, as per the requirements of the Rights of Persons with Disabilities Act, 2016?",
+                "questionAnswer":principle_5.Is_the_premise(file_path),
               },
               {
                 "questionNo": "15",
-                "question": "Is the premise/office of the entity accessible to differently abled visitors, as per the requirements of the Rights of Persons with Disabilities Act, 2016?",
-                "questionAnswer":principle_5.Is_the_premise(file_path),#json_merge["Is the premise/office of the entity accessible to differently abled visitors, as per the requirements of the Rights of Persons with Disabilities Act, 2016?"],
+                "question": "Details on assessment of value chain partners:",
+                "questionAnswer":principle_5.Details_on_assessment_value_chain(file_path),
               },
               {
                 "questionNo": "16",
-                "question": "Details on assessment of value chain partners:",
-                "questionAnswer":principle_5.Details_on_assessment_value_chain(file_path),#json_merge["Details on assessment of value chain partners:"],
-              },
-              {
-                "questionNo": "17",
                 "question": "Provide details of any corrective actions taken or underway to address significant risks / concerns arising from the assessments at Question 4 above.",
-                "questionAnswer":principle_5.Provide_details_of_any_corrective(file_path),#json_merge["Provide details of any corrective actions taken or underway to address significant risks / concerns arising from the assessments at Question 4 above."],
+                "questionAnswer":principle_5.Provide_details_of_any_corrective(file_path),
               },
 
         ]
@@ -993,7 +944,8 @@ def parse_brsr_text_section_c5(file_path,json_merge):
                 ]
       }]}
 
-def parse_brsr_text_section_c6(file_path,json_merge):
+def parse_brsr_text_section_c6(file_path):
+  print("sucessfully file sent",file_path)
   return {
     "data":[
       {
@@ -1141,7 +1093,8 @@ def parse_brsr_text_section_c6(file_path,json_merge):
                 ]
       }]}
 
-def parse_brsr_text_section_c7(file_path,json_merge):
+def parse_brsr_text_section_c7(file_path):
+  print("sucessfully file sent",file_path)
   return {
     "data":[
       {
@@ -1155,30 +1108,31 @@ def parse_brsr_text_section_c7(file_path,json_merge):
               {
                 "questionNo": "1",
                 "question": "Number of affiliations with trade and industry chambers/ associations.",
-                "questionAnswer":principle_7.Number_of_affiliations(file_path),#json_merge["Number of affiliations with trade and industry chambers/ associations."],
+                "questionAnswer":principle_7.Number_of_affiliations(file_path),
               },
               {
                 "questionNo": "2",
                 "question": "List the top 10 trade and industry chambers/ associations (determined based on the total members of such body) the entity is a member of/ affiliated to, in the following format",
-                "questionAnswer":principle_7.List_the_top_10_trade(file_path),#json_merge["List the top 10 trade and industry chambers/ associations (determined based on the total members of such body) the entity is a member of/ affiliated to, in the following format"]
+                "questionAnswer":principle_7.List_the_top_10_trade(file_path),
               },
               
               {
                 "questionNo": "3",
                 "question": "Provide details of corrective action taken or underway on any issues related to anti-competitive conduct by the entity, based on adverse orders from regulatory authorities.",
-                "questionAnswer":principle_7.Provide_details_of_corrective_action(file_path),#json_merge["Provide details of corrective action taken or underway on any issues related to anti-competitive conduct by the entity, based on adverse orders from regulatory authorities."],
+                "questionAnswer":principle_7.Provide_details_of_corrective_action(file_path),
               },
               {
                 "questionNo": "4",
                 "question": "Details of public policy positions advocated by the entity:",
-                "questionAnswer":principle_7.Details_of_public_policy(file_path),#json_merge["Details of public policy positions advocated by the entity:"],
+                "questionAnswer":principle_7.Details_of_public_policy(file_path),
               },
         ]
       },
                 ]
       }]}
 
-def parse_brsr_text_section_c8(file_path,json_merge):
+def parse_brsr_text_section_c8(file_path):
+  print("sucessfully file sent",file_path)
   return {
     "data":[
       {
@@ -1192,37 +1146,37 @@ def parse_brsr_text_section_c8(file_path,json_merge):
               {
                 "questionNo": "1",
                 "question": "Details of Social Impact Assessments (SIA) of projects undertaken by the entity based on applicable laws, in the current financial year.",
-                "questionAnswer":principle_8.Details_of_Social_Impact(file_path),#json_merge["Details of Social Impact Assessments (SIA) of projects undertaken by the entity based on applicable laws, in the current financial year."],
+                "questionAnswer":principle_8.Details_of_Social_Impact(file_path),
               },
               {
                 "questionNo": "2",
                 "question": "Provide information on project(s) for which ongoing Rehabilitation and Resettlement (R&R) is being undertaken by your entity, in the following format",
-                "questionAnswer":principle_8.Provide_information_on_project(file_path),#json_merge["Provide information on project(s) for which ongoing Rehabilitation and Resettlement (R&R) is being undertaken by your entity, in the following format"],
-              },
+                "questionAnswer":principle_8.Provide_information_on_project(file_path),
+                },
 
               {
                 "questionNo": "3",
                 "question": "Describe the mechanisms to receive and redress grievances of the community.",
-                "questionAnswer":principle_8.Describe_the_mechanisms_to_receive(file_path),#json_merge["Describe the mechanisms to receive and redress grievances of the community."],
-              },
+                "questionAnswer":principle_8.Describe_the_mechanisms_to_receive(file_path),
+                },
 
               {
                 "questionNo": "4",
                 "question": "Percentage of input material (inputs to total inputs by value) sourced from suppliers",
-                "questionAnswer":principle_8.Percentage_of_input_material(file_path),#json_merge["Percentage of input material (inputs to total inputs by value) sourced from suppliers"],
-              },
+                "questionAnswer":principle_8.Percentage_of_input_material(file_path),
+                },
 
               {
                 "questionNo": "5",
                 "question": "Job creation in smaller towns – Disclose wages paid to persons employed (including employees or workers employed on a permanent or non-permanent / on contract basis) in the following locations, as % of total wage cost",
-                "questionAnswer":principle_8.Job_creation_in_smaller_towns(file_path),#json_merge["Job creation in smaller towns – Disclose wages paid to persons employed (including employees or workers employed on a permanent or non-permanent / on contract basis) in the following locations, as % of total wage cost"],
-              },
+                "questionAnswer":principle_8.Job_creation_in_smaller_towns(file_path),
+                },
 
               {
                 "questionNo": "6",
                 "question": "Provide details of actions taken to mitigate any negative social impacts identified in the Social Impact Assessments (Reference: Question 1 of Essential Indicators above):",
-                "questionAnswer":principle_8.Provide_details_of_actions_taken(file_path),#json_merge["Provide details of actions taken to mitigate any negative social impacts identified in the Social Impact Assessments (Reference: Question 1 of Essential Indicators above):"],
-              },
+                "questionAnswer":principle_8.Provide_details_of_actions_taken(file_path),
+                },
 
               {
                 "questionNo": "7",
@@ -1231,28 +1185,34 @@ def parse_brsr_text_section_c8(file_path,json_merge):
               },
               {
                 "questionNo": "8",
+                "question": "Do you have a preferential procurement policy where you give preference to purchase from suppliers comprising marginalized /vulnerable groups? (Yes/No)",
+                "questionAnswer":principle_8.Do_you_have_a_preferential(file_path),
+              },
+
+              {
+                "questionNo": "9",
                 "question": "From which marginalized /vulnerable groups do you procure?",
                 "questionAnswer":principle_8.From_which_marginalized(file_path),
               },
               {
-                "questionNo": "9",
+                "questionNo": "10",
                 "question": "What percentage of total procurement (by value) does it constitute?",
                 "questionAnswer":principle_8.What_percentage_of_total_procurement(file_path),
               },
               {
-                "questionNo": "10",
+                "questionNo": "11",
                 "question": "Details of the benefits derived and shared from the intellectual properties owned or acquired by your entity (in the current financial year), based on traditional knowledge:",
                 "questionAnswer":principle_8.Details_of_the_benefits_derived(file_path),
               },
 
               {
-                "questionNo": "11",
+                "questionNo": "12",
                 "question": "Details of corrective actions taken or underway, based on any adverse order in intellectual property related disputes wherein usage of traditional knowledge is involved.",
                 "questionAnswer":principle_8.Details_of_corrective_actions_taken(file_path),
               },
 
               {
-                "questionNo": "12",
+                "questionNo": "13",
                 "question": "Details of beneficiaries of CSR Projects:",
                 "questionAnswer":principle_8.Details_of_beneficiaries(file_path),
               },
@@ -1261,7 +1221,8 @@ def parse_brsr_text_section_c8(file_path,json_merge):
                 ]
       }]}
 
-def parse_brsr_text_section_c9(file_path,json_merge):
+def parse_brsr_text_section_c9(file_path):
+  print("sucessfully file sent",file_path)
   return {
     "data":[
       {
@@ -1347,10 +1308,12 @@ def parse_brsr_text_section_c9(file_path,json_merge):
 
 
 @app.post("/extract/" )
-async def extract_document(file: UploadFile = File(...),questionKey: str = Form(...),principleKey: str = Form(...)):
+async def extract_document(file: UploadFile = File(...),questionKey: str = Form(...),principleKey:str = Form(...)):
     if not (file.filename.endswith(".pdf" ) or file.filename.endswith(".docx" )):
         raise HTTPException(status_code=400, detail="Only PDF or DOCX files are supported." )
-          
+
+
+
     if questionKey=="section_a":
       start_time = time.time()  # ⏱ Start time
       print(questionKey)
@@ -1402,12 +1365,7 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
               text = extract_text_from_docx(temp_path)
 
                     
-          chunks = chunk_text(text)
-          results = [extract_fields_with_gemini_b(chunk) for chunk in chunks[:5]]
-
-          print(results)
-          merged = merge_results(results)
-          res=parse_brsr_text_section_b(temp_path,merged)
+          res=parse_brsr_text_section_b(temp_path)
           return res          
 
       finally:
@@ -1419,42 +1377,24 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
         print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
 
 
-    # elif questionKey=="section_c":
-    #   print(questionKey)
-    #   start_time = time.time()  # ⏱ Start time
-    #   content = await file.read()
-    #   temp_path = f"temp_{file.filename}"
-      
-    #   with open(temp_path, "wb" ) as f:
-    #       f.write(content)
-
-    #   try:
-    #       if file.filename.endswith(".pdf" ):
-    #           text = extract_text_from_pdf(temp_path)
-    #       else:
-    #           text = extract_text_from_docx(temp_path)
-                    
-    #       chunks = chunk_text(text)
-    #       results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
-
-    #       # print(results)
-    #       merged = merge_results(results)
-    #       print(merged)
-    #       res=parse_brsr_text_section_c(temp_path,merged)
-    #       return res          
-
-    #   finally:
-    #     import os
-    #     end_time = time.time()  # End time
-    #     total_seconds = end_time - start_time
-    #     minutes = int(total_seconds // 60)
-    #     seconds = int(total_seconds % 60)
-    #     print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
-      
-
-    elif questionKey=="section_c" and principleKey=="principle_1":
+    elif questionKey=="section_c" and principleKey==principleKey:
       print(questionKey)
       print(principleKey)
+      def principlefun(principlestr):
+        principles={
+          "principle_1":parse_brsr_text_section_c1,
+          "principle_2":parse_brsr_text_section_c2,
+          "principle_3":parse_brsr_text_section_c3,
+          "principle_4":parse_brsr_text_section_c4,
+          "principle_5":parse_brsr_text_section_c5,
+          "principle_6":parse_brsr_text_section_c6,
+          "principle_7":parse_brsr_text_section_c7,
+          "principle_8":parse_brsr_text_section_c8,
+          "principle_9":parse_brsr_text_section_c9,
+          }
+        return principles[principlestr]
+      principle_fun=principlefun(principleKey)         
+      principle_fun=principlefun(principleKey)   
       start_time = time.time()  # ⏱ Start time
       content = await file.read()
       temp_path = f"temp_{file.filename}"
@@ -1468,13 +1408,11 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
           else:
               text = extract_text_from_docx(temp_path)
                     
-          chunks = chunk_text(text)
-          results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
-
-          # print(results)
-          merged = merge_results(results)
-          print(merged)
-          res=parse_brsr_text_section_c1(temp_path,merged)
+          # chunks = chunk_text(text)
+          # results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
+          
+          # merged = merge_results(results)
+          res=principle_fun(temp_path)
           return res          
 
       finally:
@@ -1485,305 +1423,6 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
         seconds = int(total_seconds % 60)
         print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
       
-
-
-
-
-    elif questionKey=="section_c" and principleKey=="principle_2":
-      print(questionKey)
-      print(principleKey)
-      start_time = time.time()  # ⏱ Start time
-      content = await file.read()
-      temp_path = f"temp_{file.filename}"
-      
-      with open(temp_path, "wb" ) as f:
-          f.write(content)
-
-      try:
-          if file.filename.endswith(".pdf" ):
-              text = extract_text_from_pdf(temp_path)
-          else:
-              text = extract_text_from_docx(temp_path)
-                    
-          chunks = chunk_text(text)
-          results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
-
-          # print(results)
-          merged = merge_results(results)
-          print(merged)
-          res=parse_brsr_text_section_c2(temp_path,merged)
-          return res          
-
-      finally:
-        import os
-        end_time = time.time()  # End time
-        total_seconds = end_time - start_time
-        minutes = int(total_seconds // 60)
-        seconds = int(total_seconds % 60)
-        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
-
-
-      
-
-    elif questionKey=="section_c" and principleKey=="principle_3":
-      print(questionKey)
-      print(principleKey)
-      start_time = time.time()  # ⏱ Start time
-      content = await file.read()
-      temp_path = f"temp_{file.filename}"
-      
-      with open(temp_path, "wb" ) as f:
-          f.write(content)
-
-      try:
-          if file.filename.endswith(".pdf" ):
-              text = extract_text_from_pdf(temp_path)
-          else:
-              text = extract_text_from_docx(temp_path)
-                    
-          chunks = chunk_text(text)
-          results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
-
-          # print(results)
-          merged = merge_results(results)
-          print(merged)
-          res=parse_brsr_text_section_c3(temp_path,merged)
-          return res          
-
-      finally:
-        import os
-        end_time = time.time()  # End time
-        total_seconds = end_time - start_time
-        minutes = int(total_seconds // 60)
-        seconds = int(total_seconds % 60)
-        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
-      
-
-
-
-    elif questionKey=="section_c" and principleKey=="principle_4":
-      print(questionKey)
-      print(principleKey)
-      start_time = time.time()  # ⏱ Start time
-      content = await file.read()
-      temp_path = f"temp_{file.filename}"
-      
-      with open(temp_path, "wb" ) as f:
-          f.write(content)
-
-      try:
-          if file.filename.endswith(".pdf" ):
-              text = extract_text_from_pdf(temp_path)
-          else:
-              text = extract_text_from_docx(temp_path)
-                    
-          chunks = chunk_text(text)
-          results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
-
-          # print(results)
-          merged = merge_results(results)
-          print(merged)
-          res=parse_brsr_text_section_c4(temp_path,merged)
-          return res          
-
-      finally:
-        import os
-        end_time = time.time()  # End time
-        total_seconds = end_time - start_time
-        minutes = int(total_seconds // 60)
-        seconds = int(total_seconds % 60)
-        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
-      
-
-
-
-    elif questionKey=="section_c" and principleKey=="principle_5":
-      print(questionKey)
-      print(principleKey)
-      start_time = time.time()  # ⏱ Start time
-      content = await file.read()
-      temp_path = f"temp_{file.filename}"
-      
-      with open(temp_path, "wb" ) as f:
-          f.write(content)
-
-      try:
-          if file.filename.endswith(".pdf" ):
-              text = extract_text_from_pdf(temp_path)
-          else:
-              text = extract_text_from_docx(temp_path)
-                    
-          chunks = chunk_text(text)
-          results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
-
-          # print(results)
-          merged = merge_results(results)
-          print(merged)
-          res=parse_brsr_text_section_c5(temp_path,merged)
-          return res          
-
-      finally:
-        import os
-        end_time = time.time()  # End time
-        total_seconds = end_time - start_time
-        minutes = int(total_seconds // 60)
-        seconds = int(total_seconds % 60)
-        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
-      
-
-
-
-
-    elif questionKey=="section_c" and principleKey=="principle_6":
-      print(questionKey)
-      print(principleKey)
-      start_time = time.time()  # ⏱ Start time
-      content = await file.read()
-      temp_path = f"temp_{file.filename}"
-      
-      with open(temp_path, "wb" ) as f:
-          f.write(content)
-
-      try:
-          if file.filename.endswith(".pdf" ):
-              text = extract_text_from_pdf(temp_path)
-          else:
-              text = extract_text_from_docx(temp_path)
-                    
-          chunks = chunk_text(text)
-          results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
-
-          # print(results)
-          merged = merge_results(results)
-          print(merged)
-          res=parse_brsr_text_section_c6(temp_path,merged)
-          return res          
-
-      finally:
-        import os
-        end_time = time.time()  # End time
-        total_seconds = end_time - start_time
-        minutes = int(total_seconds // 60)
-        seconds = int(total_seconds % 60)
-        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
-      
-
-
-
-
-
-    elif questionKey=="section_c" and principleKey=="principle_7":
-      print(questionKey)
-      print(principleKey)
-      start_time = time.time()  # ⏱ Start time
-      content = await file.read()
-      temp_path = f"temp_{file.filename}"
-      
-      with open(temp_path, "wb" ) as f:
-          f.write(content)
-
-      try:
-          if file.filename.endswith(".pdf" ):
-              text = extract_text_from_pdf(temp_path)
-          else:
-              text = extract_text_from_docx(temp_path)
-                    
-          chunks = chunk_text(text)
-          results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
-
-          # print(results)
-          merged = merge_results(results)
-          print(merged)
-          res=parse_brsr_text_section_c7(temp_path,merged)
-          return res          
-
-      finally:
-        import os
-        end_time = time.time()  # End time
-        total_seconds = end_time - start_time
-        minutes = int(total_seconds // 60)
-        seconds = int(total_seconds % 60)
-        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
-      
-
-
-
-
-
-    elif questionKey=="section_c" and principleKey=="principle_8":
-      print(questionKey)
-      print(principleKey)
-      start_time = time.time()  # ⏱ Start time
-      content = await file.read()
-      temp_path = f"temp_{file.filename}"
-      
-      with open(temp_path, "wb" ) as f:
-          f.write(content)
-
-      try:
-          if file.filename.endswith(".pdf" ):
-              text = extract_text_from_pdf(temp_path)
-          else:
-              text = extract_text_from_docx(temp_path)
-                    
-          chunks = chunk_text(text)
-          results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
-
-          # print(results)
-          merged = merge_results(results)
-          print(merged)
-          res=parse_brsr_text_section_c8(temp_path,merged)
-          return res          
-
-      finally:
-        import os
-        end_time = time.time()  # End time
-        total_seconds = end_time - start_time
-        minutes = int(total_seconds // 60)
-        seconds = int(total_seconds % 60)
-        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
-      
-
-
-
-
-
-    elif questionKey=="section_c" and principleKey=="principle_9":
-      print(questionKey)
-      print(principleKey)
-      start_time = time.time()  # ⏱ Start time
-      content = await file.read()
-      temp_path = f"temp_{file.filename}"
-      
-      with open(temp_path, "wb" ) as f:
-          f.write(content)
-
-      try:
-          if file.filename.endswith(".pdf" ):
-              text = extract_text_from_pdf(temp_path)
-          else:
-              text = extract_text_from_docx(temp_path)
-                    
-          chunks = chunk_text(text)
-          results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
-
-          # print(results)
-          merged = merge_results(results)
-          print(merged)
-          res=parse_brsr_text_section_c9(temp_path,merged)
-          return res          
-
-      finally:
-        import os
-        end_time = time.time()  # End time
-        total_seconds = end_time - start_time
-        minutes = int(total_seconds // 60)
-        seconds = int(total_seconds % 60)
-        print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
-      
-
-
-
     else:
       return "SECTION NOT FOUND !"
     

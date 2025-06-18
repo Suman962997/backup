@@ -77,7 +77,7 @@ def  Employees_and_workers(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -117,7 +117,7 @@ def  Employees_and_workers(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -144,52 +144,6 @@ def  Details_of_minimum(pdf_file):
         "remuneration/salary/wages",
         "salary/wages"
     ]
-
-    with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:]:
-            pil_image = page.to_image(resolution=300).original
-            text = pytesseract.image_to_string(pil_image, config=custom_config)
-
-            if not text:
-                continue
-
-            for line in text.splitlines():
-                # Check if line matches any start phrase
-                if not start_found and any(start.lower() in line.lower() for start in q_starts):
-                    start_found = True
-                    continue  # skip the line containing start phrase
-
-                # Check if line matches any end phrase
-                if start_found and any(end.lower() in line.lower() for end in q_ends):
-                    end_found = True
-                    break
-
-                if start_found:
-                    lines_between.append(line)
-
-            if end_found:
-                break
-
-    if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
-    if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
-    if not lines_between:
-        return {"error": "No content found between start and end questions."}
-
-    # ## #@ print("#######",lines_between)
-    output_rows = []
-    for line in lines_between:
-        output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
-
-    final_11 = []
-    final_12 = []
-    for f in output_rows:
-        if len(f) == 11:
-            final_11.append(f)
-        elif len(f) == 12:
-            final_12.append(f)
-
     keys = [
         "Category",
         "Total (A)",
@@ -219,6 +173,52 @@ def  Details_of_minimum(pdf_file):
         "More than Minimum Wage (% (F / D))"
     ]
     
+
+    with pdfplumber.open(pdf_file) as pdf:
+        for page in pdf.pages[12:]:
+            pil_image = page.to_image(resolution=300).original
+            text = pytesseract.image_to_string(pil_image, config=custom_config)
+
+            if not text:
+                continue
+
+            for line in text.splitlines():
+                # Check if line matches any start phrase
+                if not start_found and any(start.lower() in line.lower() for start in q_starts):
+                    start_found = True
+                    continue  # skip the line containing start phrase
+
+                # Check if line matches any end phrase
+                if start_found and any(end.lower() in line.lower() for end in q_ends):
+                    end_found = True
+                    break
+
+                if start_found:
+                    lines_between.append(line)
+
+            if end_found:
+                break
+
+    if not start_found:
+        return [f"Start question not found. Tried: {q_starts[0]}"]
+    if not end_found:
+        return {"error": f"End question not found. Tried: {q_ends}"}
+    if not lines_between:
+        return {"error": "No content found between start and end questions."}
+
+    # ## #@ print("#######",lines_between)
+    output_rows = []
+    for line in lines_between:
+        output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
+
+    final_11 = []
+    final_12 = []
+    for f in output_rows:
+        if len(f) == 11:
+            final_11.append(f)
+        elif len(f) == 12:
+            final_12.append(f)
+
     myout = []
     for row in output_rows:
         data = dict(zip(keys, row))
@@ -238,7 +238,7 @@ def  Details_of_minimum(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -267,6 +267,34 @@ def  Details_of_remuneration(pdf_file):
         "Gross Wages paid to females"
     ]
 
+    keys = [
+        "category",
+        "2023-24 Male Number",
+        "2023-24 Male Median remuneration/ salary/ wages of respective category",
+        "2023-24 Female Number",
+        "2023-24 Female Median remuneration/ salary/ wages of respective category",
+        "2022-23 Male Number",
+        "2022-23 Male Median remuneration/ salary/ wages of respective category",
+        "2022-23 Female Number",
+        "2022-23 Female Median remuneration/ salary/ wages of respective category",
+
+    ]
+
+    keys_3 = [
+        "S.no",
+        "category",
+        "2023-24 Male Number",
+        "2023-24 Male Median remuneration/ salary/ wages of respective category",
+        "2023-24 Female Number",
+        "2023-24 Female Median remuneration/ salary/ wages of respective category",
+        "2022-23 Male Number",
+        "2022-23 Male Median remuneration/ salary/ wages of respective category",
+        "2022-23 Female Number",
+        "2022-23 Female Median remuneration/ salary/ wages of respective category",
+
+        
+    ]
+    
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[12:]:
             pil_image = page.to_image(resolution=300).original
@@ -293,7 +321,7 @@ def  Details_of_remuneration(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -304,43 +332,25 @@ def  Details_of_remuneration(pdf_file):
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
 
-    final_5 = []
-    final_6 = []
+    final_9 = []
+    final_10 = []
     for f in output_rows:
-        if len(f) == 5:
-            final_5.append(f)
-        elif len(f) == 6:
-            final_6.append(f)
+        if len(f) == 9:
+            final_9.append(f)
+        elif len(f) == 10:
+            final_10.append(f)
 
-    keys = [
-        "category",
-        "Male (Number)",
-        "Male (Median remuneration/ salary/ wages of respective category)",
-        "Female (Number)",
-        "Female (Median remuneration/salary/ wages of respective category)"
-    ]
-
-    keys_3 = [
-        "S.no",
-        "category",
-        "Male (Number)",
-        "Male (Median remuneration/ salary/ wages of respective category)",
-        "Female (Number)",
-        "Female (Median remuneration/salary/ wages of respective category)"
-        
-    ]
-    
     myout = []
     for row in output_rows:
         data = dict(zip(keys, row))
         myout.append(data)
 
-    if len(final_5) > len(final_6):
-        for row in final_5:
+    if len(final_9) > len(final_10):
+        for row in final_9:
             data = dict(zip(keys, row))
             myout.append(data)
-    elif len(final_6) > len(final_5):
-        for row in final_6:
+    elif len(final_10) > len(final_9):
+        for row in final_10:
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
@@ -349,7 +359,7 @@ def  Details_of_remuneration(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -358,109 +368,108 @@ def  Details_of_remuneration(pdf_file):
 #@ print("************")
 
 
+# def  Gross_wages_paid(pdf_file):
+#     start_found = False
+#     end_found = False
+#     lines_between = []
+#     custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
 
-def  Gross_wages_paid(pdf_file):
-    start_found = False
-    end_found = False
-    lines_between = []
-    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
+#     # Define multiple possible start and end strings
+#     q_starts = [
+#         "Gross Wages paid to females",
+#         "total wages paid by the entity",
+#         "Gross Wages paid to females"
 
-    # Define multiple possible start and end strings
-    q_starts = [
-        "Gross Wages paid to females",
-        "total wages paid by the entity",
-        "Gross Wages paid to females"
+#     ]
+#     q_ends = [
+#         "Do you have a focal point (Individual/ Committee)",
+#         "Do you have a focal",
+#         "caused or contributed to by the business"
 
-    ]
-    q_ends = [
-        "Do you have a focal point (Individual/ Committee)",
-        "Do you have a focal",
-        "caused or contributed to by the business"
+#     ]
 
-    ]
+#     with pdfplumber.open(pdf_file) as pdf:
+#         for page in pdf.pages[12:]:
+#             pil_image = page.to_image(resolution=300).original
+#             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
-    with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:]:
-            pil_image = page.to_image(resolution=300).original
-            text = pytesseract.image_to_string(pil_image, config=custom_config)
+#             if not text:
+#                 continue
 
-            if not text:
-                continue
+#             for line in text.splitlines():
+#                 # Check if line matches any start phrase
+#                 if not start_found and any(start.lower() in line.lower() for start in q_starts):
+#                     start_found = True
+#                     continue  # skip the line containing start phrase
 
-            for line in text.splitlines():
-                # Check if line matches any start phrase
-                if not start_found and any(start.lower() in line.lower() for start in q_starts):
-                    start_found = True
-                    continue  # skip the line containing start phrase
+#                 # Check if line matches any end phrase
+#                 if start_found and any(end.lower() in line.lower() for end in q_ends):
+#                     end_found = True
+#                     break
 
-                # Check if line matches any end phrase
-                if start_found and any(end.lower() in line.lower() for end in q_ends):
-                    end_found = True
-                    break
+#                 if start_found:
+#                     lines_between.append(line)
 
-                if start_found:
-                    lines_between.append(line)
+#             if end_found:
+#                 break
 
-            if end_found:
-                break
+#     if not start_found:
+#         return [f"Start question not found. Tried: {q_starts[0]}"]
+#     if not end_found:
+#         return {"error": f"End question not found. Tried: {q_ends}"}
+#     if not lines_between:
+#         return {"error": "No content found between start and end questions."}
 
-    if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
-    if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
-    if not lines_between:
-        return {"error": "No content found between start and end questions."}
+#     # ## #@ print("#######",lines_between)
+#     output_rows = []
+#     for line in lines_between:
+#         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
 
-    # ## #@ print("#######",lines_between)
-    output_rows = []
-    for line in lines_between:
-        output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
+#     final_3 = []
+#     final_4 = []
+#     for f in output_rows:
+#         if len(f) == 3:
+#             final_3.append(f)
+#         elif len(f) == 4:
+#             final_4.append(f)
 
-    final_3 = []
-    final_4 = []
-    for f in output_rows:
-        if len(f) == 3:
-            final_3.append(f)
-        elif len(f) == 4:
-            final_4.append(f)
+#     keys = [
+#         "Category",
+#         "FY 2024-25(Current Financial Year)",
+#         "FY 2023-24(Previous Financial Year)"
+#     ]
 
-    keys = [
-        "Category",
-        "FY 2024-25(Current Financial Year)",
-        "FY 2023-24(Previous Financial Year)"
-    ]
-
-    keys_3 = [
-        "S.no",
-        "Category",
-        "FY 2024-25(Current Financial Year)",
-        "FY 2023-24(Previous Financial Year)"
+#     keys_3 = [
+#         "S.no",
+#         "Category",
+#         "FY 2024-25(Current Financial Year)",
+#         "FY 2023-24(Previous Financial Year)"
         
-    ]
+#     ]
     
-    myout = []
-    for row in output_rows:
-        data = dict(zip(keys, row))
-        myout.append(data)
+#     myout = []
+#     for row in output_rows:
+#         data = dict(zip(keys, row))
+#         myout.append(data)
 
-    if len(final_3) > len(final_4):
-        for row in final_3:
-            data = dict(zip(keys, row))
-            myout.append(data)
-    elif len(final_4) > len(final_3):
-        for row in final_4:
-            data = dict(zip(keys_3, row))
-            myout.append(data)
-    else:
-        return lines_between
-
-
-
-    if not myout:
-        return None
+#     if len(final_3) > len(final_4):
+#         for row in final_3:
+#             data = dict(zip(keys, row))
+#             myout.append(data)
+#     elif len(final_4) > len(final_3):
+#         for row in final_4:
+#             data = dict(zip(keys_3, row))
+#             myout.append(data)
+#     else:
+#         return lines_between
 
 
-    return myout
+
+#     if not myout:
+#         return "Not Applicable"
+
+
+#     return myout
 
 #@ print(Gross_wages_paid("C:/Users/coda/Documents/ncc.pdf"))
 #@ print("************")
@@ -639,7 +648,7 @@ def  Number_of_Complaints(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -698,7 +707,7 @@ def  Number_of_Complaints(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -723,7 +732,18 @@ def  Complaints_filed_under(pdf_file):
         "Mechanisms to prevent adverse consequences to the complainant in discrimination",
         "Mechanisms to prevent adverse consequences",
         "discrimination and harassment cases"
+    ]
+    keys = [
+        "Category",
+        "FY 2024-25(Current Financial Year)",
+        "FY 2023-24(Previous Financial Year)"
+    ]
 
+    keys_3 = [
+        "S.no",
+        "Category",
+        "FY 2024-25(Current Financial Year)",
+        "FY 2023-24(Previous Financial Year)"
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
@@ -752,7 +772,7 @@ def  Complaints_filed_under(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -771,18 +791,6 @@ def  Complaints_filed_under(pdf_file):
         elif len(f) == 4:
             final_4.append(f)
 
-    keys = [
-        "Category",
-        "FY 2024-25(Current Financial Year)",
-        "FY 2023-24(Previous Financial Year)"
-    ]
-
-    keys_3 = [
-        "S.no",
-        "Category",
-        "FY 2024-25(Current Financial Year)",
-        "FY 2023-24(Previous Financial Year)"
-    ]
     
     myout = []
     for row in output_rows:
@@ -803,7 +811,7 @@ def  Complaints_filed_under(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -920,7 +928,7 @@ def  Do_human_rights_requirements(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -930,7 +938,7 @@ def  Do_human_rights_requirements(pdf_file):
     if lines_between:
         return lines_between
     else:
-        return None
+        return "Not Applicable"
 
 
 #@ print(Do_human_rights_requirements("C:/Users/coda/Documents/ncc.pdf"))
@@ -954,9 +962,17 @@ def Assessments(pdf_file):
         "Provide details of any corrective actions taken or underway",
         "Provide details of any corrective actions",
         "concerns arising from the assessments at Question 9 above"
-
+    ]
+    keys = [
+        "Category",
+        "% of your plants and offices that were assessed (by entity or statutory authorities or third parties)"
     ]
 
+    keys_3 = [
+        "S.no",
+        "Category",
+        "% of your plants and offices that were assessed (by entity or statutory authorities or third parties)"
+    ]
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[12:]:
             pil_image = page.to_image(resolution=300).original
@@ -983,7 +999,7 @@ def Assessments(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1002,17 +1018,7 @@ def Assessments(pdf_file):
         elif len(f) == 3:
             final_3.append(f)
 
-    keys = [
-        "Category",
-        "% of your plants and offices that were assessed (by entity or statutory authorities or third parties)"
-    ]
 
-    keys_3 = [
-        "S.no",
-        "Category",
-        "% of your plants and offices that were assessed (by entity or statutory authorities or third parties)"
-
-    ]
     
     myout = []
     for row in output_rows:
@@ -1033,7 +1039,7 @@ def Assessments(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -1309,10 +1315,20 @@ def  Details_on_assessment_value_chain(pdf_file):
         "Provide details of any corrective actions taken or underway",
         "Provide details of any corrective actions",
         "from the assessments at Question 4 above"
-
-
     ]
 
+
+    keys = [
+        "Category",
+        "% of value chain partners (by value of business done with such partners) that were assessed"
+    ]
+
+    keys_3 = [
+        "S.no",
+        "Category",
+        "% of value chain partners (by value of business done with such partners) that were assessed"   
+    ]
+    
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[12:]:
             pil_image = page.to_image(resolution=300).original
@@ -1339,7 +1355,7 @@ def  Details_on_assessment_value_chain(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1358,18 +1374,6 @@ def  Details_on_assessment_value_chain(pdf_file):
         elif len(f) == 3:
             final_3.append(f)
 
-    keys = [
-        "Category",
-        "% of value chain partners (by value of business done with such partners) that were assessed"
-    ]
-
-    keys_3 = [
-        "S.no",
-        "Category",
-        "% of value chain partners (by value of business done with such partners) that were assessed"
-        
-    ]
-    
     myout = []
     for row in output_rows:
         data = dict(zip(keys, row))
@@ -1389,7 +1393,7 @@ def  Details_on_assessment_value_chain(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -1461,3 +1465,68 @@ def Provide_details_of_any(pdf_path):
 
 #@ print(Provide_details_of_any("C:/Users/coda/Documents/ncc.pdf"))
 #@ print("************")
+
+
+
+
+# def Describe_the_internal_mechanisms(pdf_path):
+    with pdfplumber.open(pdf_path) as pdf:
+        # ## #@ print("file opend")
+        question="Describe the internal mechanisms in place to redress "
+        question_2="Describe the internal mechanisms in place"
+        question_3="grievances related to human rights issues"
+        for i, page in enumerate(pdf.pages[-28:]):
+            text = page.extract_text()
+            if text and question in text or question_2 in text  or question_3 in text:
+                # ## #@ print(f"Question found on page {i}")
+                image = page.to_image(resolution=300).original  # 300 DPI is usually enough
+
+                # Run Tesseract with config to preserve whitespaces
+                custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
+                ocr_text = pytesseract.image_to_string(image, config=custom_config)
+                # # ## #@ print(ocr_text)
+                lines = ocr_text.splitlines()
+                sec_quest="Number of Complaints on the following made by employees and workers"
+                sec_quest_2="Number of Complaints on the following made by employees and workers" 
+                sec_quest_3="following made by employees and workers"
+                list=[]     
+                for i, line in enumerate(lines):
+                    # ## #@ print(i,line)
+                    if question.lower() in line.lower():
+                        # ## #@ print("***q1")
+                        list=lines[i:]
+                        break
+                    elif question_2.lower() in line.lower():
+                        # ## #@ print("***q2")
+                        list=lines[i:]
+                        break
+                    elif question_3.lower() in line.lower():
+                        # ## #@ print("****q3")
+                        list=lines[i:]
+                        break
+                # ## #@ print("405 **",list)
+                finallist=[]
+                
+                for i,selist in enumerate(list):
+                    # ## #@ print("*",i,selist)
+                    if sec_quest.lower() in selist.lower():
+                        # ## #@ print("#########",i,selist)
+                        finallist=list[:i]
+                        break
+                    elif sec_quest_2.lower() in selist.lower():
+                        # ## #@ print("### sec_2")
+                        finallist=list[:i]
+                        break
+                    elif sec_quest_3.lower() in selist.lower():
+                        # ## #@ print("&& sec3")
+                        finallist=list[:i]
+                        break
+                    else :
+                        finallist=list
+                # ## #@ print("finallist",finallist)
+                return finallist                       
+
+#@ print(Describe_the_internal_mechanisms("C:/Users/coda/Documents/ncc.pdf"))
+#@ print("************")
+
+

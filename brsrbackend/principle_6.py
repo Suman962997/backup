@@ -66,7 +66,7 @@ def  Details_of_total_energy(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -105,7 +105,7 @@ def  Details_of_total_energy(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -234,7 +234,7 @@ def  Provide_details_of_the_following(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -272,7 +272,7 @@ def  Provide_details_of_the_following(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -339,7 +339,7 @@ def  Provide_the_following_details(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -378,7 +378,7 @@ def  Provide_the_following_details(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -496,7 +496,7 @@ def  Please_provide_details(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -549,7 +549,7 @@ def  Please_provide_details(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -603,7 +603,7 @@ def  Provide_details_of_greenhouse(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -656,7 +656,7 @@ def  Provide_details_of_greenhouse(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -709,7 +709,7 @@ def  Does_the_entity_have_any_project(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -783,7 +783,7 @@ def  Provide_details_related(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -822,7 +822,7 @@ def  Provide_details_related(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -950,7 +950,7 @@ def  If_the_entity_has_operations(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -990,7 +990,7 @@ def  If_the_entity_has_operations(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -1064,7 +1064,7 @@ def  Details_of_environmental(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1103,7 +1103,7 @@ def  Details_of_environmental(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -1174,7 +1174,7 @@ def  Is_the_entity_compliant(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1213,7 +1213,7 @@ def  Is_the_entity_compliant(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -1221,6 +1221,8 @@ def  Is_the_entity_compliant(pdf_file):
 #@ print(Is_the_entity_compliant("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
+
+# Leadership Indicators
 
 
 
@@ -1244,17 +1246,15 @@ def  Water_withdrawal(pdf_file):
     ]
     keys = [
         "Parameter",
-        "Unit (Metric tonnes of CO2 equivalent)",
-        "FY 2024-25(Current Financial Year)",
-        "FY 2023-24(Previous Financial Year)"
+        "FY 2023-2024",
+        "FY 2022-2023"
     ]
 
     keys_3 = [
         "S.no",
         "Parameter",
-        "Unit (Metric tonnes of CO2 equivalent)",
-        "FY 2024-25(Current Financial Year)",
-        "FY 2023-24(Previous Financial Year)"   
+        "FY 2023-2024",
+        "FY 2022-2023"
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
@@ -1283,7 +1283,7 @@ def  Water_withdrawal(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1294,13 +1294,13 @@ def  Water_withdrawal(pdf_file):
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
 
+    final_3 = []
     final_4 = []
-    final_5 = []
     for f in output_rows:
-        if len(f) ==4:
+        if len(f) ==3:
+            final_3.append(f)
+        elif len(f) ==4:
             final_4.append(f)
-        elif len(f) ==5:
-            final_5.append(f)
 
     
     myout = []
@@ -1308,12 +1308,12 @@ def  Water_withdrawal(pdf_file):
     #     data = dict(zip(keys, row))
     #     myout.append(data)
 
-    if len(final_4) > len(final_5):
-        for row in final_4:
+    if len(final_3) > len(final_4):
+        for row in final_3:
             data = dict(zip(keys, row))
             myout.append(data)
-    elif len(final_5) > len(final_4):
-        for row in final_5:
+    elif len(final_4) > len(final_3):
+        for row in final_4:
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
@@ -1322,7 +1322,7 @@ def  Water_withdrawal(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -1342,15 +1342,15 @@ def  Please_provide_details(pdf_file):
 
     # Define multiple possible start and end strings
     q_starts = [
-        "Please provide details of total Scope 3 emissions & its intensity, in the following format",
         "Please provide details of total Scope 3 emissions",
+        "Please provide details of total Scope 3",
         "Scope 3 emissions & its intensity"
 
     ]
     q_ends = [
         "With respect to the ecologically sensitive areas reported",
         "With respect to the ecologically",
-        "Essential Indicators above, provide details of significant"
+        "provide details of significant"
     ]
     keys = [
         "Parameter",
@@ -1394,7 +1394,7 @@ def  Please_provide_details(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1433,7 +1433,7 @@ def  Please_provide_details(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -1490,7 +1490,7 @@ def  With_respect_to_the_ecologically(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1568,7 +1568,7 @@ def  If_the_entity_has_undertaken(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1607,7 +1607,7 @@ def  If_the_entity_has_undertaken(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -1662,7 +1662,7 @@ def  Does_the_entity_have_a_business(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1724,7 +1724,7 @@ def  Disclose_any_significant(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1785,7 +1785,7 @@ def  Percentage_of_value_chain(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:

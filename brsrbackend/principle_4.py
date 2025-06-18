@@ -11,8 +11,8 @@ import fun
 
 def  Describe_the_processes(pdf_path):
     with pdfplumber.open(pdf_path) as pdf:
-        # # #@ ("file opend")
-        print("PRINCIPLE 4")
+        # # ("file opend")
+        #@ print("PRINCIPLE 4")
 
         question="Describe the processes for identifying key stakeholder groups of the entity"
         question_2="Describe the processes for identifying"
@@ -20,56 +20,56 @@ def  Describe_the_processes(pdf_path):
         for i, page in enumerate(pdf.pages[10:]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
-                # # #@ (f"Question found on page {i}")
+                # # (f"Question found on page {i}")
                 image = page.to_image(resolution=300).original  # 300 DPI is usually enough
 
                 # Run Tesseract with config to preserve whitespaces
                 custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
                 ocr_text = pytesseract.image_to_string(image, config=custom_config)
-                # # #@ (ocr_text)
+                # # (ocr_text)
                 lines = ocr_text.splitlines()
                 sec_quest="List stakeholder groups identified as key for your entity and the frequency of engagement with each stakeholder group"
                 sec_quest_2="List stakeholder groups identified as key for " 
                 sec_quest_3=" engagement with each stakeholder group"
                 list=[]     
                 for i, line in enumerate(lines):
-                    # # #@ (i,line)
+                    # # (i,line)
                     if question.lower() in line.lower():
-                        # # #@ ("***q1")
+                        # # ("***q1")
                         list=lines[i:]
                         break
                     elif question_2.lower() in line.lower():
-                        # # #@ ("***q2")
+                        # # ("***q2")
                         list=lines[i:]
                         break
                     elif question_3.lower() in line.lower():
-                        # # #@ ("****q3")
+                        # # ("****q3")
                         list=lines[i:]
                         break
-                # # #@ ("405 **",list)
+                # # ("405 **",list)
                 finallist=[]
                 
                 for i,selist in enumerate(list):
-                    # # #@ ("*",i,selist)
+                    # # ("*",i,selist)
                     if sec_quest.lower() in selist.lower():
-                        # # #@ ("#########",i,selist)
+                        # # ("#########",i,selist)
                         finallist=list[:i]
                         break
                     elif sec_quest_2.lower() in selist.lower():
-                        # # #@ ("### sec_2")
+                        # # ("### sec_2")
                         finallist=list[:i]
                         break
                     elif sec_quest_3.lower() in selist.lower():
-                        # # #@ ("&& sec3")
+                        # # ("&& sec3")
                         finallist=list[:i]
                         break
                     else :
                         finallist=list
-                # # #@ ("finallist",finallist)
-                return str(finallist)                       
+                # # ("finallist",finallist)
+                return finallist                       
 
-#@ (Describe_the_processes("C:/Users/coda/Documents/narendra.pdf"))
-#@ ("************")
+#@ print(Describe_the_processes("C:/Users/coda/Documents/bse.pdf"))
+#@ print("************")
 
 
 
@@ -82,20 +82,21 @@ def List_stakeholder(pdf_file):
 
     # Define multiple possible start and end strings
     q_starts = [
-        "List stakeholder groups identified as key for your entity and the frequency",
         "List stakeholder groups identified",
-        "with each stakeholder group"
+        "List stakeholder groups",
+        "each stakeholder group"
 
     ]
     q_ends = [
-        "Provide the processes for consultation between stakeholders and the Board",
-        "Provide the processes for consultation between",
+        "PRINCIPLE 5",
+        "Provide the processes",
         "provided to the Board"
     ]
     keys = [
+        
         "Stakeholder Group",
         "Whether identified as Vulnerable & Marginalized Group (Yes/No)",
-        "Channels of communication(Email, SMS, Newspaper, Pamphlets, Advertisement, Community Meetings, Notice Board, Website), Other	",
+        "Channels of communication(Email, SMS, Newspaper, Pamphlets, Advertisement, Community Meetings, Notice Board, Website), Other",
         "Frequency of engagement(Annually/ Half yearly/ Quarterly / others – please specify)",
         "Purpose and scope of engagement including key topics and concerns raised during such engagement",
         
@@ -105,7 +106,7 @@ def List_stakeholder(pdf_file):
         "S.no",
         "Stakeholder Group",
         "Whether identified as Vulnerable & Marginalized Group (Yes/No)",
-        "Channels of communication(Email, SMS, Newspaper, Pamphlets, Advertisement, Community Meetings, Notice Board, Website), Other	",
+        "Channels of communication(Email, SMS, Newspaper, Pamphlets, Advertisement, Community Meetings, Notice Board, Website), Other",
         "Frequency of engagement(Annually/ Half yearly/ Quarterly / others – please specify)",
         "Purpose and scope of engagement including key topics and concerns raised during such engagement",
         
@@ -137,13 +138,13 @@ def List_stakeholder(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
-    # # #@ ("#######",lines_between)
+    # # ("#######",lines_between)
     output_rows = []
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
@@ -176,201 +177,201 @@ def List_stakeholder(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
 
-#@ (List_stakeholder("C:/Users/coda/Documents/narendra.pdf"))
-#@ ("************")
+#@ print(List_stakeholder("C:/Users/coda/Documents/bse.pdf"))
+#@ print("************")
 
 
 
 def Provide_the_processes(pdf_path):
     with pdfplumber.open(pdf_path) as pdf:
-        # # #@ ("file opend")
+        # # ("file opend")
         question="Provide the processes for consultation between stakeholders and the Board on economic"
         question_2="Provide the processes for consultation between stakeholders" 
         question_3="how is feedback from such consultations provided to the Board"
         for i, page in enumerate(pdf.pages[10:]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
-                # # #@ (f"Question found on page {i}")
+                # # (f"Question found on page {i}")
                 image = page.to_image(resolution=300).original  # 300 DPI is usually enough
 
                 # Run Tesseract with config to preserve whitespaces
                 custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
                 ocr_text = pytesseract.image_to_string(image, config=custom_config)
-                # # # #@ (ocr_text)
+                # # # (ocr_text)
                 lines = ocr_text.splitlines()
                 sec_quest="Whether stakeholder consultation is used to support the identification and management of environmental, and social topics (Yes / No). If so, provide details of instances as to how the inputs received from stakeholders on these topics were incorporated into policies and activities of the entity"
                 sec_quest_2="Whether stakeholder consultation is used to support the identification"
                 sec_quest_3="stakeholders on these topics were incorporated into policies and activities"
                 list=[]     
                 for i, line in enumerate(lines):
-                    # # #@ (i,line)
+                    # # (i,line)
                     if question.lower() in line.lower():
-                        # # #@ ("***q1")
+                        # # ("***q1")
                         list=lines[i:]
                         break
                     elif question_2.lower() in line.lower():
-                        # # #@ ("***q2")
+                        # # ("***q2")
                         list=lines[i:]
                         break
                     elif question_3.lower() in line.lower():
-                        # # #@ ("****q3")
+                        # # ("****q3")
                         list=lines[i:]
                         break
-                # # #@ ("405 **",list)
+                # # ("405 **",list)
                 finallist=[]
                 
                 for i,selist in enumerate(list):
-                    # # #@ ("*",i,selist)
+                    # # ("*",i,selist)
                     if sec_quest.lower() in selist.lower():
-                        # # #@ ("#########",i,selist)
+                        # # ("#########",i,selist)
                         finallist=list[:i]
                         break
                     elif sec_quest_2.lower() in selist.lower():
-                        # # #@ ("### sec_2")
+                        # # ("### sec_2")
                         finallist=list[:i]
                         break
                     elif sec_quest_3.lower() in selist.lower():
-                        # # #@ ("&& sec3")
+                        # # ("&& sec3")
                         finallist=list[:i]
                         break
                     else :
                         finallist=list
-                # # #@ ("finallist",finallist)
+                # # ("finallist",finallist)
                 return finallist                       
 
-#@ (Provide_the_processes("C:/Users/coda/Documents/narendra.pdf"))
-#@ ("************")
+#@ print(Provide_the_processes("C:/Users/coda/Documents/bse.pdf"))
+#@ print("************")
 
 
 
 
 def Whether_stakeholder_consultation(pdf_path):
     with pdfplumber.open(pdf_path) as pdf:
-        # # #@ ("file opend")
+        # # ("file opend")
         question="Whether stakeholder consultation is used to support the identification and management of environmental"
         question_2="Whether stakeholder consultation is used"
         question_3="incorporated into policies and activities of the entity"
         for i, page in enumerate(pdf.pages[10:]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
-                # # #@ (f"Question found on page {i}")
+                # # (f"Question found on page {i}")
                 image = page.to_image(resolution=300).original  # 300 DPI is usually enough
 
                 # Run Tesseract with config to preserve whitespaces
                 custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
                 ocr_text = pytesseract.image_to_string(image, config=custom_config)
-                # # # #@ (ocr_text)
+                # # # (ocr_text)
                 lines = ocr_text.splitlines()
                 sec_quest="Provide details of instances of engagement with, and actions taken to, address the concerns of vulnerable/ marginalized stakeholder groups"
                 sec_quest_2="Provide details of instances of engagement" 
                 sec_quest_3=" address the concerns of vulnerable/ marginalized stakeholder groups"
                 list=[]     
                 for i, line in enumerate(lines):
-                    # # #@ (i,line)
+                    # # (i,line)
                     if question.lower() in line.lower():
-                        # # #@ ("***q1")
+                        # # ("***q1")
                         list=lines[i:]
                         break
                     elif question_2.lower() in line.lower():
-                        # # #@ ("***q2")
+                        # # ("***q2")
                         list=lines[i:]
                         break
                     elif question_3.lower() in line.lower():
-                        # # #@ ("****q3")
+                        # # ("****q3")
                         list=lines[i:]
                         break
-                # # #@ ("405 **",list)
+                # # ("405 **",list)
                 finallist=[]
                 
                 for i,selist in enumerate(list):
-                    # # #@ ("*",i,selist)
+                    # # ("*",i,selist)
                     if sec_quest.lower() in selist.lower():
-                        # # #@ ("#########",i,selist)
+                        # # ("#########",i,selist)
                         finallist=list[:i]
                         break
                     elif sec_quest_2.lower() in selist.lower():
-                        # # #@ ("### sec_2")
+                        # # ("### sec_2")
                         finallist=list[:i]
                         break
                     elif sec_quest_3.lower() in selist.lower():
-                        # # #@ ("&& sec3")
+                        # # ("&& sec3")
                         finallist=list[:i]
                         break
                     else :
                         finallist=list
-                # # #@ ("finallist",finallist)
+                # # ("finallist",finallist)
                 return finallist                       
 
-#@ (Whether_stakeholder_consultation("C:/Users/coda/Documents/narendra.pdf"))
-#@ ("************")
+#@ print(Whether_stakeholder_consultation("C:/Users/coda/Documents/bse.pdf"))
+#@ print("************")
 
 
 
 
 def Provide_details_of_instances (pdf_path):
     with pdfplumber.open(pdf_path) as pdf:
-        # # #@ ("file opend")
+        # # ("file opend")
         question="Provide details of instances of engagement with, and actions taken to, address the concerns"
         question_2="Provide details of instances of engagement with, and actions taken to"
         question_3="vulnerable/ marginalized stakeholder groups"
         for i, page in enumerate(pdf.pages[10:]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
-                # # #@ (f"Question found on page {i}")
+                # # (f"Question found on page {i}")
                 image = page.to_image(resolution=300).original  # 300 DPI is usually enough
 
                 # Run Tesseract with config to preserve whitespaces
                 custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
                 ocr_text = pytesseract.image_to_string(image, config=custom_config)
-                # # # #@ (ocr_text)
+                # # # (ocr_text)
                 lines = ocr_text.splitlines()
                 sec_quest="Principle 5:"
                 sec_quest_2="Businesses should respect and promote human rights." 
                 sec_quest_3="Businesses should respect"
                 list=[]     
                 for i, line in enumerate(lines):
-                    # # #@ (i,line)
+                    # # (i,line)
                     if question.lower() in line.lower():
-                        # # #@ ("***q1")
+                        # # ("***q1")
                         list=lines[i:]
                         break
                     elif question_2.lower() in line.lower():
-                        # # #@ ("***q2")
+                        # # ("***q2")
                         list=lines[i:]
                         break
                     elif question_3.lower() in line.lower():
-                        # # #@ ("****q3")
+                        # # ("****q3")
                         list=lines[i:]
                         break
-                # # #@ ("405 **",list)
+                # # ("405 **",list)
                 finallist=[]
                 
                 for i,selist in enumerate(list):
-                    # # #@ ("*",i,selist)
+                    # # ("*",i,selist)
                     if sec_quest.lower() in selist.lower():
-                        # # #@ ("#########",i,selist)
+                        # # ("#########",i,selist)
                         finallist=list[:i]
                         break
                     elif sec_quest_2.lower() in selist.lower():
-                        # # #@ ("### sec_2")
+                        # # ("### sec_2")
                         finallist=list[:i]
                         break
                     elif sec_quest_3.lower() in selist.lower():
-                        # # #@ ("&& sec3")
+                        # # ("&& sec3")
                         finallist=list[:i]
                         break
                     else :
                         finallist=list
-                # # #@ ("finallist",finallist)
+                # # ("finallist",finallist)
                 return finallist                       
 
-#@ (Provide_details_of_instances("C:/Users/coda/Documents/narendra.pdf"))
-#@ ("************")
+#@ print(Provide_details_of_instances("C:/Users/coda/Documents/bse.pdf"))
+#@ print("************")
 
 
 

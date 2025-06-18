@@ -8,8 +8,6 @@ import fun
 
 
 
-
-
                         ###### PRINCIPLE IX #########
                         
                         
@@ -59,7 +57,7 @@ def  Describe_the_mechanisms(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -69,7 +67,7 @@ def  Describe_the_mechanisms(pdf_file):
     if lines_between:
         return lines_between
     else:
-        return None
+        return "Not Applicable"
 
 #@ print(Describe_the_mechanisms("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
@@ -130,7 +128,7 @@ def  Turnover_products(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -169,13 +167,14 @@ def  Turnover_products(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
 
 #@ print(Turnover_products("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
+
 
 
 def  Number_consumer(pdf_file):
@@ -243,7 +242,7 @@ def  Number_consumer(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -283,7 +282,7 @@ def  Number_consumer(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
@@ -311,6 +310,7 @@ def  Details_of_instances_of_product(pdf_file):
         "risks related to data privacy"        
     ]
     keys = [
+        "category",
         "Number",
         "Reasons for recall"
         
@@ -318,6 +318,7 @@ def  Details_of_instances_of_product(pdf_file):
 
     keys_3 = [
         "S.no",
+        "category",
         "Number",
         "Reasons for recall"
     ]
@@ -347,7 +348,7 @@ def  Details_of_instances_of_product(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -387,15 +388,13 @@ def  Details_of_instances_of_product(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
 
 #@ print(Details_of_instances_of_product("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
-
-
 
 
 def  Does_the_entity_have_a_framework(pdf_file):
@@ -407,7 +406,7 @@ def  Does_the_entity_have_a_framework(pdf_file):
     # Define multiple possible start and end strings
     q_starts = [
         "Does the entity have a framework/policy",
-        " risks related to data privacy",
+        "risks related to data privacy",
         "available, provide weblink of the policy"
     ]
     q_ends = [
@@ -442,7 +441,7 @@ def  Does_the_entity_have_a_framework(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -452,7 +451,7 @@ def  Does_the_entity_have_a_framework(pdf_file):
     if lines_between:
         return lines_between
     else:
-        return None
+        return "Not Applicable"
 
 #@ print(Does_the_entity_have_a_framework("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
@@ -504,7 +503,7 @@ def  Provide_details_of_any_corrective(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -514,10 +513,12 @@ def  Provide_details_of_any_corrective(pdf_file):
     if lines_between:
         return lines_between
     else:
-        return None
+        return "Not Applicable"
 
 #@ print(Provide_details_of_any_corrective("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
+
+
 
 def  Provide_the_following_information(pdf_file):
     start_found = False
@@ -528,12 +529,12 @@ def  Provide_the_following_information(pdf_file):
     # Define multiple possible start and end strings
     q_starts = [
         "Provide the following information relating to data breaches",
-        "relating to data breaches",
+        "informationrelating to data breaches",
         "relating to data breaches"
 
     ]
     q_ends = [
-        "Channels / platforms where information",
+        "Channels/platforms where information",
         "products and services of the entity",
         "provide web link"
     ]
@@ -564,7 +565,7 @@ def  Provide_the_following_information(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -574,9 +575,9 @@ def  Provide_the_following_information(pdf_file):
     if lines_between:
         return lines_between
     else:
-        return None
+        return "Not Applicable"
 
-#@ print(Provide_the_following_information("C:/Users/coda/Documents/ppap.pdf"))
+#@ print(Provide_the_following_information("C:/Users/coda/Documents/titan.pdf"))
 #@ print("************")
 
 
@@ -589,8 +590,8 @@ def  Channels_platforms(pdf_file):
 
     # Define multiple possible start and end strings
     q_starts = [
-        "Channels / platforms where information on products",
-        "Channels / platforms where information",
+        "Channels/platforms where information",
+        "on products and services of the entity",
         "provide web link"
 
     ]
@@ -626,7 +627,7 @@ def  Channels_platforms(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -636,9 +637,9 @@ def  Channels_platforms(pdf_file):
     if lines_between:
         return lines_between
     else:
-        return None
+        return "Not Applicable"
 
-#@ print(Channels_platforms("C:/Users/coda/Documents/ppap.pdf"))
+#@ print(Channels_platforms("C:/Users/coda/Documents/titan.pdf"))
 #@ print("************")
 
 
@@ -688,7 +689,7 @@ def  Steps_taken(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -698,10 +699,11 @@ def  Steps_taken(pdf_file):
     if lines_between:
         return lines_between
     else:
-        return None
+        return "Not Applicable"
 
 #@ print(Steps_taken("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
+
 
 
 def  Mechanisms_place(pdf_file):
@@ -749,7 +751,7 @@ def  Mechanisms_place(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -759,7 +761,7 @@ def  Mechanisms_place(pdf_file):
     if lines_between:
         return lines_between
     else:
-        return None
+        return "Not Applicable"
 
 #@ print(Mechanisms_place("C:/Users/coda/Documents/ppap.pdf"))
 #@ print("************")
@@ -827,189 +829,187 @@ def Does_the_entity_display_product_information(pdf_path):
 #@ print("************")
 
 
-def Provide_the_following_information(pdf_path):
-    with pdfplumber.open(pdf_path) as pdf:
-        #("file opend")
-        question="Provide the following information relating to data breaches"
-        question_2="Provide the following information relating"
-        question_3="data breaches"
-        for i, page in enumerate(pdf.pages[-6:]):
-            text = page.extract_text()
-            if text and question in text or question_2 in text  or question_3 in text:
-                #(f"Question found on page {i}")
-                image = page.to_image(resolution=300).original  # 300 DPI is usually enough
+# def Provide_the_following_information(pdf_path):
+#     with pdfplumber.open(pdf_path) as pdf:
+#         #("file opend")
+#         question="Provide the following information relating to data breaches"
+#         question_2="Provide the following information relating"
+#         question_3="data breaches"
+#         for i, page in enumerate(pdf.pages[-6:]):
+#             text = page.extract_text()
+#             if text and question in text or question_2 in text  or question_3 in text:
+#                 #(f"Question found on page {i}")
+#                 image = page.to_image(resolution=300).original  # 300 DPI is usually enough
 
-                # Run Tesseract with config to preserve whitespaces
-                custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
-                ocr_text = pytesseract.image_to_string(image, config=custom_config)
-                # # #(ocr_text)
-                lines = ocr_text.splitlines()
-                sec_quest="Number of instances of data breaches along-with impact"
-                sec_quest_2="Number of instances " 
-                sec_quest_3="along-with impact"
-                list=[]     
-                for i, line in enumerate(lines):
-                    # #(i,line)
-                    if question.lower() in line.lower():
-                        #("***q1")
-                        list=lines[i:]
-                        break
-                    elif question_2.lower() in line.lower():
-                        #("***q2")
-                        list=lines[i:]
-                        break
-                    elif question_3.lower() in line.lower():
-                        #("****q3")
-                        list=lines[i:]
-                        break
-                # #("405 **",list)
-                finallist=[]
+#                 # Run Tesseract with config to preserve whitespaces
+#                 custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
+#                 ocr_text = pytesseract.image_to_string(image, config=custom_config)
+#                 # # #(ocr_text)
+#                 lines = ocr_text.splitlines()
+#                 sec_quest="Number of instances of data breaches along-with impact"
+#                 sec_quest_2="Number of instances " 
+#                 sec_quest_3="along-with impact"
+#                 list=[]     
+#                 for i, line in enumerate(lines):
+#                     # #(i,line)
+#                     if question.lower() in line.lower():
+#                         #("***q1")
+#                         list=lines[i:]
+#                         break
+#                     elif question_2.lower() in line.lower():
+#                         #("***q2")
+#                         list=lines[i:]
+#                         break
+#                     elif question_3.lower() in line.lower():
+#                         #("****q3")
+#                         list=lines[i:]
+#                         break
+#                 # #("405 **",list)
+#                 finallist=[]
                 
-                for i,selist in enumerate(list):
-                    # #("*",i,selist)
-                    if sec_quest.lower() in selist.lower():
-                        #("#########",i,selist)
-                        finallist=list[:i]
-                        break
-                    elif sec_quest_2.lower() in selist.lower():
-                        #("### sec_2")
-                        finallist=list[:i]
-                        break
-                    elif sec_quest_3.lower() in selist.lower():
-                        #("&& sec3")
-                        finallist=list[:i]
-                        break
-                    else :
-                        finallist=list
-                # #("finallist",finallist)
-                return finallist                       
+#                 for i,selist in enumerate(list):
+#                     # #("*",i,selist)
+#                     if sec_quest.lower() in selist.lower():
+#                         #("#########",i,selist)
+#                         finallist=list[:i]
+#                         break
+#                     elif sec_quest_2.lower() in selist.lower():
+#                         #("### sec_2")
+#                         finallist=list[:i]
+#                         break
+#                     elif sec_quest_3.lower() in selist.lower():
+#                         #("&& sec3")
+#                         finallist=list[:i]
+#                         break
+#                     else :
+#                         finallist=list
+#                 # #("finallist",finallist)
+#                 return finallist                       
 
-#@ print(Provide_the_following_information("C:/Users/coda/Documents/ppap.pdf"))
-#@ print("************")
+# #@ print(Provide_the_following_information("C:/Users/coda/Documents/ppap.pdf"))
+# #@ print("************")
 
 
 
-def Number_of_instances(pdf_path):
-    with pdfplumber.open(pdf_path) as pdf:
-        #("file opend")
-        question="Number of instances of data breaches along-with impact"
-        question_2="Number of instances of data breaches "
-        question_3="along-with impact"
-        for i, page in enumerate(pdf.pages[-6:]):
-            text = page.extract_text()
-            if text and question in text or question_2 in text  or question_3 in text:
-                #(f"Question found on page {i}")
-                image = page.to_image(resolution=300).original  # 300 DPI is usually enough
+# def Number_of_instances(pdf_path):
+#     with pdfplumber.open(pdf_path) as pdf:
+#         #("file opend")
+#         question="Number of instances of data breaches along-with impact"
+#         question_2="Number of instances of data breaches "
+#         question_3="along-with impact"
+#         for i, page in enumerate(pdf.pages[-6:]):
+#             text = page.extract_text()
+#             if text and question in text or question_2 in text  or question_3 in text:
+#                 #(f"Question found on page {i}")
+#                 image = page.to_image(resolution=300).original  # 300 DPI is usually enough
 
-                # Run Tesseract with config to preserve whitespaces
-                custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
-                ocr_text = pytesseract.image_to_string(image, config=custom_config)
-                # # #(ocr_text)
-                lines = ocr_text.splitlines()
-                sec_quest="Percentage of data breaches involving personally identifiable information of customers"
-                sec_quest_2="Percentage of data breaches " 
-                sec_quest_3="information of customers"
-                list=[]     
-                for i, line in enumerate(lines):
-                    # #(i,line)
-                    if question.lower() in line.lower():
-                        #("***q1")
-                        list=lines[i:]
-                        break
-                    elif question_2.lower() in line.lower():
-                        #("***q2")
-                        list=lines[i:]
-                        break
-                    elif question_3.lower() in line.lower():
-                        #("****q3")
-                        list=lines[i:]
-                        break
-                # #("405 **",list)
-                finallist=[]
+#                 # Run Tesseract with config to preserve whitespaces
+#                 custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
+#                 ocr_text = pytesseract.image_to_string(image, config=custom_config)
+#                 # # #(ocr_text)
+#                 lines = ocr_text.splitlines()
+#                 sec_quest="Percentage of data breaches involving personally identifiable information of customers"
+#                 sec_quest_2="Percentage of data breaches " 
+#                 sec_quest_3="information of customers"
+#                 list=[]     
+#                 for i, line in enumerate(lines):
+#                     # #(i,line)
+#                     if question.lower() in line.lower():
+#                         #("***q1")
+#                         list=lines[i:]
+#                         break
+#                     elif question_2.lower() in line.lower():
+#                         #("***q2")
+#                         list=lines[i:]
+#                         break
+#                     elif question_3.lower() in line.lower():
+#                         #("****q3")
+#                         list=lines[i:]
+#                         break
+#                 # #("405 **",list)
+#                 finallist=[]
                 
-                for i,selist in enumerate(list):
-                    # #("*",i,selist)
-                    if sec_quest.lower() in selist.lower():
-                        #("#########",i,selist)
-                        finallist=list[:i]
-                        break
-                    elif sec_quest_2.lower() in selist.lower():
-                        #("### sec_2")
-                        finallist=list[:i]
-                        break
-                    elif sec_quest_3.lower() in selist.lower():
-                        #("&& sec3")
-                        finallist=list[:i]
-                        break
-                    else :
-                        finallist=list
-                # #("finallist",finallist)
-                return finallist                       
+#                 for i,selist in enumerate(list):
+#                     # #("*",i,selist)
+#                     if sec_quest.lower() in selist.lower():
+#                         #("#########",i,selist)
+#                         finallist=list[:i]
+#                         break
+#                     elif sec_quest_2.lower() in selist.lower():
+#                         #("### sec_2")
+#                         finallist=list[:i]
+#                         break
+#                     elif sec_quest_3.lower() in selist.lower():
+#                         #("&& sec3")
+#                         finallist=list[:i]
+#                         break
+#                     else :
+#                         finallist=list
+#                 # #("finallist",finallist)
+#                 return finallist                       
 
-#@ print(Number_of_instances("C:/Users/coda/Documents/ppap.pdf"))
-#@ print("************")
-
-
+# #@ print(Number_of_instances("C:/Users/coda/Documents/ppap.pdf"))
+# #@ print("************")
 
 
-def Percentage_data_breaches(pdf_path):
-    with pdfplumber.open(pdf_path) as pdf:
-        #("file opend")
-        question="Percentage of data breaches involving personally identifiable information of customers"
-        question_2="Percentage of data breaches involving "
-        question_3="identifiable information of customers"
-        for i, page in enumerate(pdf.pages[-6:]):
-            text = page.extract_text()
-            if text and question in text or question_2 in text  or question_3 in text:
-                #(f"Question found on page {i}")
-                image = page.to_image(resolution=300).original  # 300 DPI is usually enough
 
-                # Run Tesseract with config to preserve whitespaces
-                custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
-                ocr_text = pytesseract.image_to_string(image, config=custom_config)
-                # # #(ocr_text)
-                lines = ocr_text.splitlines()
-                sec_quest="last"
-                sec_quest_2="dc d" 
-                sec_quest_3="cdcd"
-                list=[]     
-                for i, line in enumerate(lines):
-                    # #(i,line)
-                    if question.lower() in line.lower():
-                        #("***q1")
-                        list=lines[i:]
-                        break
-                    elif question_2.lower() in line.lower():
-                        #("***q2")
-                        list=lines[i:]
-                        break
-                    elif question_3.lower() in line.lower():
-                        #("****q3")
-                        list=lines[i:]
-                        break
-                # #("405 **",list)
-                finallist=[]
+
+# def Percentage_data_breaches(pdf_path):
+#     with pdfplumber.open(pdf_path) as pdf:
+#         #("file opend")
+#         question="Percentage of data breaches involving personally identifiable information of customers"
+#         question_2="Percentage of data breaches involving "
+#         question_3="identifiable information of customers"
+#         for i, page in enumerate(pdf.pages[-6:]):
+#             text = page.extract_text()
+#             if text and question in text or question_2 in text  or question_3 in text:
+#                 #(f"Question found on page {i}")
+#                 image = page.to_image(resolution=300).original  # 300 DPI is usually enough
+
+#                 # Run Tesseract with config to preserve whitespaces
+#                 custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
+#                 ocr_text = pytesseract.image_to_string(image, config=custom_config)
+#                 # # #(ocr_text)
+#                 lines = ocr_text.splitlines()
+#                 sec_quest="last"
+#                 sec_quest_2="dc d" 
+#                 sec_quest_3="cdcd"
+#                 list=[]     
+#                 for i, line in enumerate(lines):
+#                     # #(i,line)
+#                     if question.lower() in line.lower():
+#                         #("***q1")
+#                         list=lines[i:]
+#                         break
+#                     elif question_2.lower() in line.lower():
+#                         #("***q2")
+#                         list=lines[i:]
+#                         break
+#                     elif question_3.lower() in line.lower():
+#                         #("****q3")
+#                         list=lines[i:]
+#                         break
+#                 # #("405 **",list)
+#                 finallist=[]
                 
-                for i,selist in enumerate(list):
-                    # #("*",i,selist)
-                    if sec_quest.lower() in selist.lower():
-                        #("#########",i,selist)
-                        finallist=list[:i]
-                        break
-                    elif sec_quest_2.lower() in selist.lower():
-                        #("### sec_2")
-                        finallist=list[:i]
-                        break
-                    elif sec_quest_3.lower() in selist.lower():
-                        #("&& sec3")
-                        finallist=list[:i]
-                        break
-                    else :
-                        finallist=list
-                # #("finallist",finallist)
-                return finallist                       
+#                 for i,selist in enumerate(list):
+#                     # #("*",i,selist)
+#                     if sec_quest.lower() in selist.lower():
+#                         #("#########",i,selist)
+#                         finallist=list[:i]
+#                         break
+#                     elif sec_quest_2.lower() in selist.lower():
+#                         #("### sec_2")
+#                         finallist=list[:i]
+#                         break
+#                     elif sec_quest_3.lower() in selist.lower():
+#                         #("&& sec3")
+#                         finallist=list[:i]
+#                         break
+#                     else :
+#                         finallist=list
+#                 # #("finallist",finallist)
+#                 return finallist                       
 
-#@ print(Percentage_data_breaches("C:/Users/coda/Documents/ppap.pdf"))
-#@ print("************")
-
-
+# #@ print(Percentage_data_breaches("C:/Users/coda/Documents/ppap.pdf"))
+# #@ print("************")

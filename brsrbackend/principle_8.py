@@ -70,7 +70,7 @@ def  Details_of_Social_Impact(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -106,14 +106,13 @@ def  Details_of_Social_Impact(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
 
-#@ print(Details_of_Social_Impact("C:/Users/coda/Documents/ppap.pdf"))
+#@ print(Details_of_Social_Impact("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
-
 
 def  Provide_information_on_project(pdf_file):
     start_found = False
@@ -123,38 +122,39 @@ def  Provide_information_on_project(pdf_file):
 
     # Define multiple possible start and end strings
     q_starts = [
-        "Provide information on project(s) for which ongoing Rehabilitation and Resettlement",
+        "Provide information on project(s) for which ongoing",
         "Provide information on project",
-        "your entity, in the following format"
+        "Rehabilitation and Resettlement"
+        
     ]
     q_ends = [
-        "Describe the mechanisms to receive and redress grievances of the community",
-        "Describe the mechanisms to receive and redress grievances of the community",
+        "Describe the mechanisms to receive",
+        "receive and redress grievances",
         "grievances of the community"
     ]
-
     keys = [
         "Name of Project for which R&R is ongoing",
         "State",
         "District",
         "No. of Project Affected Families (PAFs)",
         "% of PAFs covered by R&R",
-        "Amounts paid to PAFs in the FY (In INR)",
+        "Amounts paid to PAFs in the FY (In INR)"
+
     ]
-    keys_3=[
-        "S.No.",
+    keys_3 = [
+        "S.No",
         "Name of Project for which R&R is ongoing",
         "State",
         "District",
         "No. of Project Affected Families (PAFs)",
         "% of PAFs covered by R&R",
-        "Amounts paid to PAFs in the FY (In INR)",
-        
+        "Amounts paid to PAFs in the FY (In INR)"
+
     ]
 
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[15:-2]:
+        for page in pdf.pages[15:-4]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -179,7 +179,7 @@ def  Provide_information_on_project(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -197,29 +197,30 @@ def  Provide_information_on_project(pdf_file):
             final_6.append(f)
         elif len(f) == 7:
             final_7.append(f)
+
+
     myout = []
-    # for row in output_rows:
+    # for row in final_5:
     #     data = dict(zip(keys, row))
     #     myout.append(data)
 
-    if len(final_6) > len(final_7):
-        for row in final_6:
+    if len(final_7) > len(final_6):
+        for row in final_7:
             data = dict(zip(keys, row))
             myout.append(data)
-    elif len(final_7) > len(final_6):
-        for row in final_7:
+    else:
+        for row in output_rows:
             data = dict(zip(keys_3, row))
             myout.append(data)
-    else:
-        return lines_between
+
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
 
-#@ print(Provide_information_on_project("C:/Users/coda/Documents/ppap.pdf"))
+#@ print(Provide_information_on_project("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -268,7 +269,7 @@ def  Describe_the_mechanisms_to_receive(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -278,9 +279,9 @@ def  Describe_the_mechanisms_to_receive(pdf_file):
     if lines_between:
         return lines_between
     else :
-        return None
+        return "Not Applicable"
 
-#@ print(Describe_the_mechanisms_to_receive("C:/Users/coda/Documents/ppap.pdf"))
+#@ print(Describe_the_mechanisms_to_receive("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -342,7 +343,7 @@ def  Percentage_of_input_material(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -379,12 +380,12 @@ def  Percentage_of_input_material(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
 
-#@ print(Percentage_of_input_material("C:/Users/coda/Documents/ppap.pdf"))
+#@ print(Percentage_of_input_material("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 def  Job_creation_in_smaller_towns(pdf_file):
@@ -405,14 +406,16 @@ def  Job_creation_in_smaller_towns(pdf_file):
         "Essential Indicators above"
     ]
     keys = [
-        "Details of negative social impact identified",
-        "Corrective action taken"
+            "Location",
+            "FY 2024-25Current Financial Year",
+            "FY 2023-24Previous Financial Year"
     ]
 
     keys_3 = [
-        "S.No.",
-        "Details of negative social impact identified",
-        "Corrective action taken"
+            "S.No.",
+            "Location",
+            "FY 2024-25Current Financial Year",
+            "FY 2023-24Previous Financial Year"
     ]
     
 
@@ -442,7 +445,7 @@ def  Job_creation_in_smaller_towns(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -453,13 +456,13 @@ def  Job_creation_in_smaller_towns(pdf_file):
     for line in lines_between:
         output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
 
-    final_2 = []
     final_3 = []
+    final_4 = []
     for f in output_rows:
-        if len(f) == 2:
-            final_2.append(f)
-        elif len(f) == 3:
+        if len(f) == 3:
             final_3.append(f)
+        elif len(f) == 4:
+            final_4.append(f)
 
     
 
@@ -468,12 +471,12 @@ def  Job_creation_in_smaller_towns(pdf_file):
     #     data = dict(zip(keys, row))
     #     myout.append(data)
 
-    if len(final_2) > len(final_3):
-        for row in final_2:
+    if len(final_3) > len(final_4):
+        for row in final_3:
             data = dict(zip(keys, row))
             myout.append(data)
-    elif len(final_3) > len(final_2):
-        for row in final_3:
+    elif len(final_4) > len(final_3):
+        for row in final_4:
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
@@ -482,11 +485,11 @@ def  Job_creation_in_smaller_towns(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
-#@ print(Job_creation_in_smaller_towns("C:/Users/coda/Documents/ppap.pdf"))
+#@ print(Job_creation_in_smaller_towns("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -547,7 +550,7 @@ def  Provide_details_of_actions_taken(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -562,7 +565,7 @@ def  Provide_details_of_actions_taken(pdf_file):
     final_3 = []
     for f in output_rows:
         if len(f) == 2:
-            final_3.append(f)
+            final_2.append(f)
         elif len(f) == 3:
             final_3.append(f)
 
@@ -586,11 +589,11 @@ def  Provide_details_of_actions_taken(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
-#@ print(Provide_details_of_actions_taken("C:/Users/coda/Documents/ppap.pdf"))
+#@ print(Provide_details_of_actions_taken("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -650,7 +653,7 @@ def  Provide_the_following_information(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -690,12 +693,12 @@ def  Provide_the_following_information(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
 
-#@ print(Provide_the_following_information("C:/Users/coda/Documents/ppap.pdf"))
+#@ print(Provide_the_following_information("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 def  Do_you_have_a_preferential(pdf_file):
@@ -743,7 +746,7 @@ def  Do_you_have_a_preferential(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -753,8 +756,8 @@ def  Do_you_have_a_preferential(pdf_file):
     if lines_between:
         return lines_between
     else:
-        return None
-#@ print(Do_you_have_a_preferential("C:/Users/coda/Documents/ppap.pdf"))
+        return "Not Applicable"
+#@ print(Do_you_have_a_preferential("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -804,7 +807,7 @@ def  From_which_marginalized(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -814,11 +817,10 @@ def  From_which_marginalized(pdf_file):
     if lines_between:
         return lines_between
     else:
-        return None
+        return "Not Applicable"
 
-#@ print(From_which_marginalized("C:/Users/coda/Documents/ppap.pdf"))
+#@ print(From_which_marginalized("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
-
 
 def  What_percentage_of_total_procurement(pdf_file):
     start_found = False
@@ -838,17 +840,7 @@ def  What_percentage_of_total_procurement(pdf_file):
         "properties owned or acquired",
         "based on traditional knowledge"
     ]
-    keys = [
-        "Particulars",
-        "FY 2023-24 (Current Financial Year)",
-        "FY 2022-23 (Previous Financial year)"
-    ]
-    keys_3 = [
-        "S.no",
-        "Particulars",
-        "FY 2023-24 (Current Financial Year)",
-        "FY 2022-23 (Previous Financial year)"
-    ]
+
     with pdfplumber.open(pdf_file) as pdf:
         for page in pdf.pages[10:]:
             pil_image = page.to_image(resolution=300).original
@@ -875,50 +867,20 @@ def  What_percentage_of_total_procurement(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
     # #@ print("#######",lines_between)
-    output_rows = []
-    for line in lines_between:
-        output_rows.append(re.split(r'\s{2,}|\s*\|\s*', line))
-
-    final_3 = []
-    final_4 = []
-    for f in output_rows:
-        if len(f) == 3:
-            final_3.append(f)
-        elif len(f) == 4:
-            final_4.append(f)
-
-
-    
-    myout = []
-    if len(final_3) > len(final_4):
-        for row in final_3:
-            data = dict(zip(keys, row))
-            myout.append(data)
-    elif len(final_4) > len(final_3):
-        for row in final_4:
-            data = dict(zip(keys_3, row))
-            myout.append(data)
-    else:
+    if lines_between:
         return lines_between
+    else:
+        return "Not Applicable"
 
-
-
-    if not myout:
-        return None
-
-
-    return myout
-
-#@ print(What_percentage_of_total_procurement("C:/Users/coda/Documents/ppap.pdf"))
+#@ print(What_percentage_of_total_procurement("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
-
 
 def  Details_of_the_benefits_derived(pdf_file):
     start_found = False
@@ -928,28 +890,30 @@ def  Details_of_the_benefits_derived(pdf_file):
 
     # Define multiple possible start and end strings
     q_starts = [
-        "Details of the benefits derived ",
-        "properties owned or acquired",
-        "based on traditional knowledge"
+        "Details of the benefits derived and shared from the intellectual",
+        "owned or acquired by your entity",
+        "based on traditional knowledge:"
 
     ]
     q_ends = [
         "Details of corrective actions taken or underway",
-        "adverse order in intellectual property related",
-        "usage of traditional knowledge is involved"
-        
+        "adverse order in intellectual property",
+        "traditional knowledge is involved"
+                
     ]
     keys = [
-        "Intellectual Property based on traditional knowledge",
+        "Intellectual property based on traditional knowledge",
         "Owned/Acquired (Yes/No)",
-        "Benefit shared (Yes / No)",
+        "Benefit Shared (Yes/No)",
         "Basis of calculating benefit share"
+        
+
     ]
     keys_3 = [
         "S.no",
-        "Intellectual Property based on traditional knowledge",
+        "Intellectual property based on traditional knowledge",
         "Owned/Acquired (Yes/No)",
-        "Benefit shared (Yes / No)",
+        "Benefit Shared (Yes/No)",
         "Basis of calculating benefit share"
     ]
     
@@ -979,7 +943,7 @@ def  Details_of_the_benefits_derived(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1005,7 +969,7 @@ def  Details_of_the_benefits_derived(pdf_file):
             data = dict(zip(keys, row))
             myout.append(data)
     elif len(final_5) > len(final_4):
-        for row in final_4:
+        for row in final_5:
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
@@ -1014,12 +978,12 @@ def  Details_of_the_benefits_derived(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
 
-#@ print(Details_of_the_benefits_derived("C:/Users/coda/Documents/ppap.pdf"))
+#@ print(Details_of_the_benefits_derived("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -1081,7 +1045,7 @@ def  Details_of_corrective_actions_taken(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1116,12 +1080,12 @@ def  Details_of_corrective_actions_taken(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
 
-#@ print(Details_of_corrective_actions_taken("C:/Users/coda/Documents/ppap.pdf"))
+#@ print(Details_of_corrective_actions_taken("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
 
 
@@ -1182,7 +1146,7 @@ def  Details_of_beneficiaries(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"Start question not found. Tried: {q_starts}"}
+        return [f"Start question not found. Tried: {q_starts[0]}"]
     if not end_found:
         return {"error": f"End question not found. Tried: {q_ends}"}
     if not lines_between:
@@ -1217,7 +1181,7 @@ def  Details_of_beneficiaries(pdf_file):
 
 
     if not myout:
-        return None
+        return "Not Applicable"
 
 
     return myout
