@@ -3,7 +3,6 @@ import pytesseract
 from PIL import Image
 import io
 import re
-import fun
 import time
 
                             #  PRINCIPLE I 
@@ -44,7 +43,7 @@ def  Percentage_coverage_by_training(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[6:16]:
+        for page in pdf.pages[6:-4]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -70,9 +69,9 @@ def  Percentage_coverage_by_training(pdf_file):
 
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -99,7 +98,7 @@ def  Percentage_coverage_by_training(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -109,7 +108,7 @@ def  Percentage_coverage_by_training(pdf_file):
 
     return myout
 
-#@ print(Percentage_coverage_by_training("C:/Users/coda/Documents/tata.pdf"))
+#@ print(Percentage_coverage_by_training("C:/Users/coda/Documents/deigeo.pdf"))
 #@ print("************")
 
 def  Details_of_fines(pdf_file):
@@ -128,11 +127,11 @@ def  Details_of_fines(pdf_file):
     q_ends = [
         "Monetary",
         "Non-Monetary",
-        "Of the instances disclosed in Question 2 above, details"
+        "Of the instances disclosed in Question 2"
     ]
     
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[6:16]:
+        for page in pdf.pages[6:-4]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -158,18 +157,19 @@ def  Details_of_fines(pdf_file):
 
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
     if lines_between:
-        return lines_between
+        answer_text = "\n".join(lines_between)
+        return answer_text
     else:
         return "Not Applicable"
 
-#@ print(Details_of_fines("C:/Users/coda/Documents/tata.pdf"))
+#@ print(Details_of_fines("C:/Users/coda/Documents/deigeo.pdf"))
 #@ print("************")
 
 def  Monetary(pdf_file):
@@ -213,7 +213,7 @@ def  Monetary(pdf_file):
 
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[6:16]:
+        for page in pdf.pages[6:-4]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -239,9 +239,9 @@ def  Monetary(pdf_file):
 
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -269,7 +269,7 @@ def  Monetary(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -279,7 +279,7 @@ def  Monetary(pdf_file):
 
     return myout
 
-#@ print(Monetary("C:/Users/coda/Documents/tata.pdf"))
+#@ print(Monetary("C:/Users/coda/Documents/deigeo.pdf"))
 #@ print("************")
 
 
@@ -297,7 +297,7 @@ def  Non_Monetary(pdf_file):
 
     ]
     q_ends = [
-     "Of the instances disclosed in Question 2 above", 
+     "Of the instances disclosed in Question 2", 
      "Of the instances disclosed",
      "Revision preferred in cases where monetary or non-monetary"   
     ]
@@ -322,7 +322,7 @@ def  Non_Monetary(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[6:16]:
+        for page in pdf.pages[6:-4]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -347,9 +347,9 @@ def  Non_Monetary(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -378,7 +378,7 @@ def  Non_Monetary(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -388,7 +388,7 @@ def  Non_Monetary(pdf_file):
 
     return myout
 
-#@ print(Non_Monetary("C:/Users/coda/Documents/tata.pdf"))
+#@ print(Non_Monetary("C:/Users/coda/Documents/deigeo.pdf"))
 #@ print("************")
 
 
@@ -400,7 +400,7 @@ def  Of_the_instances_disclosed(pdf_file):
 
     # Define multiple possible start and end strings
     q_starts = [
-     "Of the instances disclosed in Question 2 above"   
+     "Of the instances disclosed in Question 2",
      "Of the instances disclosed",
      "monetary or non-monetary"   
     ]
@@ -423,7 +423,7 @@ def  Of_the_instances_disclosed(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[6:16]:
+        for page in pdf.pages[6:-4]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -449,9 +449,9 @@ def  Of_the_instances_disclosed(pdf_file):
 
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -480,7 +480,7 @@ def  Of_the_instances_disclosed(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -490,7 +490,7 @@ def  Of_the_instances_disclosed(pdf_file):
 
     return myout
 
-#@ print(Of_the_instances_disclosed("C:/Users/coda/Documents/tata.pdf"))
+#@ print(Of_the_instances_disclosed("C:/Users/coda/Documents/deigeo.pdf"))
 #@ print("************")
 
 
@@ -513,7 +513,7 @@ def  Does_the_entity_have_an_anti(pdf_file):
     ]
     
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[6:16]:
+        for page in pdf.pages[6:-4]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -539,18 +539,19 @@ def  Does_the_entity_have_an_anti(pdf_file):
 
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
     if lines_between:
-        return lines_between
+        answer_text = "\n".join(lines_between)
+        return answer_text
     else:
         return "Not Applicable"
 
-#@ print(Does_the_entity_have_an_anti("C:/Users/coda/Documents/tata.pdf"))
+#@ print(Does_the_entity_have_an_anti("C:/Users/coda/Documents/deigeo.pdf"))
 #@ print("************")
 
 
@@ -586,7 +587,7 @@ def  Number_of_Directors(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[6:16]:
+        for page in pdf.pages[6:-4]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -612,9 +613,9 @@ def  Number_of_Directors(pdf_file):
 
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -643,7 +644,7 @@ def  Number_of_Directors(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -653,7 +654,7 @@ def  Number_of_Directors(pdf_file):
 
     return myout
 
-#@ print(Number_of_Directors("C:/Users/coda/Documents/tata.pdf"))
+#@ print(Number_of_Directors("C:/Users/coda/Documents/deigeo.pdf"))
 #@ print("************")
 
 
@@ -698,7 +699,7 @@ def  Details_of_complaints(pdf_file):
 
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[6:16]:
+        for page in pdf.pages[6:-4]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -722,9 +723,9 @@ def  Details_of_complaints(pdf_file):
             if end_found:
                 break
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -753,7 +754,7 @@ def  Details_of_complaints(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -763,7 +764,7 @@ def  Details_of_complaints(pdf_file):
 
     return myout
 
-#@ print(Details_of_complaints("C:/Users/coda/Documents/tata.pdf"))
+#@ print(Details_of_complaints("C:/Users/coda/Documents/deigeo.pdf"))
 #@ print("************")
 
 
@@ -775,7 +776,7 @@ def Provide_details_of_any_corrective(pdf_path):
         question="Provide details of any corrective action taken or underway"
         question_2="Provide details of any corrective"
         question_3="fines / penalties / action taken"
-        for i, page in enumerate(pdf.pages[6:16]):
+        for i, page in enumerate(pdf.pages[6:-4]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
                 #(f"Question found on page {i}")
@@ -825,7 +826,7 @@ def Provide_details_of_any_corrective(pdf_path):
                  #("finallist",finallist)
                 return finallist                      
 
-#@ print(Provide_details_of_any_corrective("C:/Users/coda/Documents/tata.pdf"))
+#@ print(Provide_details_of_any_corrective("C:/Users/coda/Documents/deigeo.pdf"))
 #@ print("************")
 
 
@@ -864,7 +865,7 @@ def  Number_of_days_of_accounts(pdf_file):
 
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[6:16]:
+        for page in pdf.pages[6:-4]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -890,9 +891,9 @@ def  Number_of_days_of_accounts(pdf_file):
 
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -921,7 +922,7 @@ def  Number_of_days_of_accounts(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -931,7 +932,7 @@ def  Number_of_days_of_accounts(pdf_file):
 
     return myout
 
-#@ print(Number_of_days_of_accounts("C:/Users/coda/Documents/tata.pdf"))
+#@ print(Number_of_days_of_accounts("C:/Users/coda/Documents/deigeo.pdf"))
 #@ print("************")
 
 
@@ -970,7 +971,7 @@ def  Provide_details_of_concentration_of_purchases(pdf_file):
         "FY 2022-2023"
     ]
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[6:16]:
+        for page in pdf.pages[6:-4]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -996,9 +997,9 @@ def  Provide_details_of_concentration_of_purchases(pdf_file):
 
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -1026,7 +1027,7 @@ def  Provide_details_of_concentration_of_purchases(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -1074,7 +1075,7 @@ def  Awareness_programmes_conducted(pdf_file):
 
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[6:16]:
+        for page in pdf.pages[6:-4]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -1099,9 +1100,9 @@ def  Awareness_programmes_conducted(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -1130,7 +1131,7 @@ def  Awareness_programmes_conducted(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -1140,7 +1141,7 @@ def  Awareness_programmes_conducted(pdf_file):
 
     return myout
 
-#@ print(Awareness_programmes_conducted("C:/Users/coda/Documents/tata.pdf"))
+#@ print(Awareness_programmes_conducted("C:/Users/coda/Documents/deigeo.pdf"))
 #@ print("************")
 
 
@@ -1165,7 +1166,7 @@ def   Does_the_entity_have_processes(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[6:16]:
+        for page in pdf.pages[6:-4]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -1190,17 +1191,18 @@ def   Does_the_entity_have_processes(pdf_file):
                 break
 
     if not start_found:
-        return {"error": f"End question not found. Tried: {q_starts}"}        
+        return {"error": f"End question not found:{q_starts}"}        
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
     # #@ print("#######",lines_between)
     if lines_between:
-        return lines_between
+        answer_text = "\n".join(lines_between)
+        return answer_text
     else:
         return "Not Applicable"
 
-#@ print(Does_the_entity_have_processes("C:/Users/coda/Documents/tata.pdf"))
+#@ print(Does_the_entity_have_processes("C:/Users/coda/Documents/deigeo.pdf"))
 #@ print("************")

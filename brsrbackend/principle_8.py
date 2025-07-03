@@ -3,7 +3,6 @@ import pytesseract
 from PIL import Image
 import io
 import re
-import fun
 
                                 ###### PRINCIPLE VIII #######
 
@@ -45,7 +44,7 @@ def  Details_of_Social_Impact(pdf_file):
 
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[15:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -70,9 +69,9 @@ def  Details_of_Social_Impact(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -154,7 +153,7 @@ def  Provide_information_on_project(pdf_file):
 
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[15:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -179,9 +178,9 @@ def  Provide_information_on_project(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -269,15 +268,16 @@ def  Describe_the_mechanisms_to_receive(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
     # #@ print("#######",lines_between)
     if lines_between:
-        return lines_between
+        answer_text = "\n".join(lines_between)
+        return answer_text
     else :
         return "Not Applicable"
 
@@ -343,9 +343,9 @@ def  Percentage_of_input_material(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -420,7 +420,7 @@ def  Job_creation_in_smaller_towns(pdf_file):
     
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[-12:]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -445,9 +445,9 @@ def  Job_creation_in_smaller_towns(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -480,7 +480,7 @@ def  Job_creation_in_smaller_towns(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -525,7 +525,7 @@ def  Provide_details_of_actions_taken(pdf_file):
     
     
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[-12:]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -550,9 +550,9 @@ def  Provide_details_of_actions_taken(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -584,7 +584,7 @@ def  Provide_details_of_actions_taken(pdf_file):
             data = dict(zip(keys_4, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -653,9 +653,9 @@ def  Provide_the_following_information(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -688,7 +688,7 @@ def  Provide_the_following_information(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -746,15 +746,16 @@ def  Do_you_have_a_preferential(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
     # #@ print("#######",lines_between)
     if lines_between:
-        return lines_between
+        answer_text = "\n".join(lines_between)
+        return answer_text
     else:
         return "Not Applicable"
 #@ print(Do_you_have_a_preferential("C:/Users/coda/Documents/bse.pdf"))
@@ -807,15 +808,16 @@ def  From_which_marginalized(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
     # #@ print("#######",lines_between)
     if lines_between:
-        return lines_between
+        answer_text = "\n".join(lines_between)
+        return answer_text
     else:
         return "Not Applicable"
 
@@ -867,15 +869,16 @@ def  What_percentage_of_total_procurement(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
     # #@ print("#######",lines_between)
     if lines_between:
-        return lines_between
+        answer_text = "\n".join(lines_between)
+        return answer_text
     else:
         return "Not Applicable"
 
@@ -943,9 +946,9 @@ def  Details_of_the_benefits_derived(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -973,7 +976,7 @@ def  Details_of_the_benefits_derived(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -1045,9 +1048,9 @@ def  Details_of_corrective_actions_taken(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -1075,7 +1078,7 @@ def  Details_of_corrective_actions_taken(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -1146,9 +1149,9 @@ def  Details_of_beneficiaries(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -1176,7 +1179,7 @@ def  Details_of_beneficiaries(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 

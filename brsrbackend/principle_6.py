@@ -3,7 +3,6 @@ import pytesseract
 from PIL import Image
 import io
 import re
-import fun
 
                                 ###### PRINCIPLE VI #######
                                 
@@ -41,7 +40,7 @@ def  Details_of_total_energy(pdf_file):
     ]
     
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:-4-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -66,9 +65,9 @@ def  Details_of_total_energy(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -100,7 +99,7 @@ def  Details_of_total_energy(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -209,7 +208,7 @@ def  Provide_details_of_the_following(pdf_file):
 
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -234,9 +233,9 @@ def  Provide_details_of_the_following(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -267,7 +266,7 @@ def  Provide_details_of_the_following(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -314,7 +313,7 @@ def  Provide_the_following_details(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -339,9 +338,9 @@ def  Provide_the_following_details(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -373,7 +372,7 @@ def  Provide_the_following_details(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -471,7 +470,7 @@ def  Please_provide_details(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -496,9 +495,9 @@ def  Please_provide_details(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -544,7 +543,7 @@ def  Please_provide_details(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -578,7 +577,7 @@ def  Provide_details_of_greenhouse(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -603,9 +602,9 @@ def  Provide_details_of_greenhouse(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -651,7 +650,7 @@ def  Provide_details_of_greenhouse(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -684,7 +683,7 @@ def  Does_the_entity_have_any_project(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -709,15 +708,16 @@ def  Does_the_entity_have_any_project(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
     ## #@ print("#######",lines_between)
     if lines_between:
-        return lines_between
+        answer_text = "\n".join(lines_between)
+        return answer_text
     else:
         None
 #@ print(Does_the_entity_have_any_project("C:/Users/coda/Documents/bse.pdf"))
@@ -758,7 +758,7 @@ def  Provide_details_related(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -783,9 +783,9 @@ def  Provide_details_related(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -817,7 +817,7 @@ def  Provide_details_related(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -925,7 +925,7 @@ def  If_the_entity_has_operations(pdf_file):
         "Whether the conditions of environmental approval / clearance are being complied with? (Y/N) If no, the reasons thereof and corrective action taken, if any"
         ]
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -950,9 +950,9 @@ def  If_the_entity_has_operations(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -985,7 +985,7 @@ def  If_the_entity_has_operations(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -1039,7 +1039,7 @@ def  Details_of_environmental(pdf_file):
         ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -1064,9 +1064,9 @@ def  Details_of_environmental(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -1098,7 +1098,7 @@ def  Details_of_environmental(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -1149,7 +1149,7 @@ def  Is_the_entity_compliant(pdf_file):
         ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -1174,9 +1174,9 @@ def  Is_the_entity_compliant(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -1208,7 +1208,7 @@ def  Is_the_entity_compliant(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -1258,7 +1258,7 @@ def  Water_withdrawal(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -1283,9 +1283,9 @@ def  Water_withdrawal(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -1317,7 +1317,7 @@ def  Water_withdrawal(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -1369,7 +1369,7 @@ def  Please_provide_details(pdf_file):
         ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -1394,9 +1394,9 @@ def  Please_provide_details(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -1428,7 +1428,7 @@ def  Please_provide_details(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -1465,7 +1465,7 @@ def  With_respect_to_the_ecologically(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -1490,16 +1490,17 @@ def  With_respect_to_the_ecologically(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
     ## #@ print("#######",lines_between)
 
     if lines_between:
-        return lines_between
+        answer_text = "\n".join(lines_between)
+        return answer_text
     else:
         None
 #@ print(With_respect_to_the_ecologically("C:/Users/coda/Documents/bse.pdf"))
@@ -1543,7 +1544,7 @@ def  If_the_entity_has_undertaken(pdf_file):
         ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -1568,9 +1569,9 @@ def  If_the_entity_has_undertaken(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -1602,7 +1603,7 @@ def  If_the_entity_has_undertaken(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -1637,7 +1638,7 @@ def  Does_the_entity_have_a_business(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -1662,16 +1663,17 @@ def  Does_the_entity_have_a_business(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
     ## #@ print("#######",lines_between)
 
     if lines_between:
-        return lines_between
+        answer_text = "\n".join(lines_between)
+        return answer_text
     else:
         None
 
@@ -1699,7 +1701,7 @@ def  Disclose_any_significant(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -1724,16 +1726,17 @@ def  Disclose_any_significant(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
     ## #@ print("#######",lines_between)
 
     if lines_between:
-        return lines_between
+        answer_text = "\n".join(lines_between)
+        return answer_text
     else:
         None
 
@@ -1760,7 +1763,7 @@ def  Percentage_of_value_chain(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[12:-4]:
+        for page in pdf.pages[12:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -1785,16 +1788,17 @@ def  Percentage_of_value_chain(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
     ## #@ print("#######",lines_between)
 
     if lines_between:
-        return lines_between
+        answer_text = "\n".join(lines_between)
+        return answer_text
     else:
         None
 

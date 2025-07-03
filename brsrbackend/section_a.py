@@ -4,8 +4,7 @@ from PIL import Image
 import io
 import re
 import pandas as pd
-import fun
-
+# 
                                         ######## PART II #########
 
 def  Details_of_business(pdf_file):
@@ -68,9 +67,9 @@ def  Details_of_business(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -100,7 +99,7 @@ def  Details_of_business(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -171,9 +170,9 @@ def  Products_Services(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -203,7 +202,7 @@ def  Products_Services(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -263,9 +262,9 @@ def  Number_of_locations_where(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -308,7 +307,7 @@ def  Number_of_locations_where(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -367,9 +366,9 @@ def  Number_of_locations(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -408,7 +407,7 @@ def  Number_of_locations(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -467,15 +466,16 @@ def  What_is_the_contribution(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
     ## #@ print("#######",lines_between)
     if lines_between:
-        return lines_between
+        answer_text = "\n".join(lines_between)
+        return answer_text
     else:
         return "Not Applicable"
 
@@ -529,15 +529,16 @@ def  A_brief_on_types(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
     ## #@ print("#######",lines_between)
     if lines_between:
-        return lines_between
+        answer_text = "\n".join(lines_between)
+        return answer_text
     else:
         return "Not Applicable"
 
@@ -613,9 +614,9 @@ def  Employees_and_workers(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -646,7 +647,7 @@ def  Employees_and_workers(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -705,9 +706,9 @@ def  Differently_abled_employees(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -757,7 +758,7 @@ def  Differently_abled_employees(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -830,9 +831,9 @@ def  Participation_Inclusion(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -865,7 +866,7 @@ def  Participation_Inclusion(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -955,9 +956,9 @@ def  Turnover_rate(pdf_file):
 
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -988,7 +989,7 @@ def  Turnover_rate(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -1065,9 +1066,9 @@ def  Names_of_holding(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -1099,7 +1100,7 @@ def  Names_of_holding(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -1157,15 +1158,16 @@ def  Do_any_other_entity(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
     ## #@ print("#######",lines_between)
     if lines_between:
-        return lines_between
+        answer_text = "\n".join(lines_between)
+        return answer_text
     else:
         return "Not Applicable"
 
@@ -1419,9 +1421,9 @@ def   Complaints_Grievances(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -1453,7 +1455,7 @@ def   Complaints_Grievances(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -1506,7 +1508,7 @@ def  Please_indicate_material(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages:
+        for page in pdf.pages[:18]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -1531,9 +1533,9 @@ def  Please_indicate_material(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -1566,7 +1568,7 @@ def  Please_indicate_material(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 

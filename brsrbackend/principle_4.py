@@ -3,7 +3,6 @@ import pytesseract
 from PIL import Image
 import io
 import re
-import fun
 
                                                     ###### PRINCIPLE IV #########
 
@@ -17,7 +16,7 @@ def  Describe_the_processes(pdf_path):
         question="Describe the processes for identifying key stakeholder groups of the entity"
         question_2="Describe the processes for identifying"
         question_3="stakeholder groups of the entity"
-        for i, page in enumerate(pdf.pages[10:]):
+        for i, page in enumerate(pdf.pages[10:-2]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
                 # # (f"Question found on page {i}")
@@ -113,7 +112,7 @@ def List_stakeholder(pdf_file):
     ]
     
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[10:]:
+        for page in pdf.pages[10:-2]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -138,9 +137,9 @@ def List_stakeholder(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -172,7 +171,7 @@ def List_stakeholder(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -193,7 +192,7 @@ def Provide_the_processes(pdf_path):
         question="Provide the processes for consultation between stakeholders and the Board on economic"
         question_2="Provide the processes for consultation between stakeholders" 
         question_3="how is feedback from such consultations provided to the Board"
-        for i, page in enumerate(pdf.pages[10:]):
+        for i, page in enumerate(pdf.pages[10:-2]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
                 # # (f"Question found on page {i}")
@@ -256,7 +255,7 @@ def Whether_stakeholder_consultation(pdf_path):
         question="Whether stakeholder consultation is used to support the identification and management of environmental"
         question_2="Whether stakeholder consultation is used"
         question_3="incorporated into policies and activities of the entity"
-        for i, page in enumerate(pdf.pages[10:]):
+        for i, page in enumerate(pdf.pages[10:-2]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
                 # # (f"Question found on page {i}")
@@ -319,7 +318,7 @@ def Provide_details_of_instances (pdf_path):
         question="Provide details of instances of engagement with, and actions taken to, address the concerns"
         question_2="Provide details of instances of engagement with, and actions taken to"
         question_3="vulnerable/ marginalized stakeholder groups"
-        for i, page in enumerate(pdf.pages[10:]):
+        for i, page in enumerate(pdf.pages[10:-2]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
                 # # (f"Question found on page {i}")

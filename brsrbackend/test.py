@@ -1,17 +1,16 @@
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException
+from fastapi.responses import JSONResponse
+from google.api_core.exceptions import ResourceExhausted
+from fastapi.middleware.cors import CORSMiddleware
+from Extract_keys import KEYS_TO_EXTRACT_A
+from dotenv import load_dotenv, dotenv_values 
 import json
 import pdfplumber
 import docx
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException
-from fastapi.responses import JSONResponse
 import google.generativeai as genai
-from google.api_core.exceptions import ResourceExhausted
 import uvicorn
-from fastapi.middleware.cors import CORSMiddleware
 import os
-from Extract_keys import KEYS_TO_EXTRACT_A
-# Configure Gemini
 import time
-import fun
 import section_a
 import section_b
 import principle_1
@@ -25,9 +24,9 @@ import principle_8
 import principle_9
 import section_b
 
-genai.configure(api_key="AIzaSyAZ7GTHvo3ttXPQtEHVtEsRemUMuXzTpTI" )
+load_dotenv()
 
-
+genai.configure(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 app = FastAPI()
@@ -393,7 +392,7 @@ def parse_brsr_text_section_b(file_path):
                 
                 "questionAnswer":section_b.Web_Link_of_Policies(file_path),
               },
-                  {
+              {
                 "questionNo": "4",
                 "question": "Whether the entity has translated the policy into procedures. (Yes / No)",
                 
@@ -461,11 +460,6 @@ def parse_brsr_text_section_b(file_path):
                 "question": "Frequency(Annually/ Half yearly/ Quarterly/ Any other – please specify)",
                 "questionAnswer":section_b.Frequency_Annually(file_path),
               },
-              # {
-              #   "questionNo": "6",
-              #   "question": "Compliance with statutory requirements of relevance to the principles and rectification of any non-compliances",
-              #   "questionAnswer":section_b.Compliance_with_statutory(file_path),
-              # },
               {
                 "questionNo": "6",
                 "question": "Has the entity carried out independent assessment/ evaluation of the working of its policies by an external agency? (Yes/No). If yes, provide name of the agency.",
@@ -476,8 +470,6 @@ def parse_brsr_text_section_b(file_path):
               {
                 "questionNo": "7",
                 "question": "If answer to question (1) above is “No” i.e. not all Principles are covered by a policy, reasons to be stated, as below:",
-                
-                # "questionAnswer":json_merge["If answer to question (1) above is “No” i.e. not all Principles are covered by a policy, reasons to be stated, as below:"]
                 "questionAnswer":section_b.If_answer_to_question(file_path),
               },
               {
@@ -485,7 +477,6 @@ def parse_brsr_text_section_b(file_path):
                 "question": "Upstream (Suppliers & Logistics Partners)",                
                 "questionAnswer":"",
               },
-
               {
                 "questionNo": "9",
                 "question": "Downstream (Distributors & Customers)",                
@@ -671,11 +662,6 @@ def parse_brsr_text_section_c3(file_path):
                 "question":"Details of measures for the well-being of workers:",
                 "questionAnswer":principle_3.well_being_of_Workers(file_path),#json_merge["Details of retirement benefits, for Current and Previous FY"],
               },
-              # {
-              #   "questionNo": "3",
-              #   "question":"Spending on measures towards well-being of employees and workers (including permanent and other than permanent) in the following format –",
-              #   "questionAnswer":principle_3.Spending_on_measures_towards(file_path),#json_merge["Details of retirement benefits, for Current and Previous FY"],
-              # },
               {
                 "questionNo": "3",
                 "question": "Details of retirement benefits, for Current and Previous FY",
@@ -1394,7 +1380,6 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
           }
         return principles[principlestr]
       principle_fun=principlefun(principleKey)         
-      principle_fun=principlefun(principleKey)   
       start_time = time.time()  # ⏱ Start time
       content = await file.read()
       temp_path = f"temp_{file.filename}"
@@ -1426,6 +1411,7 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
     else:
       return "SECTION NOT FOUND !"
     
+
 
 
 if __name__ == "__main__":

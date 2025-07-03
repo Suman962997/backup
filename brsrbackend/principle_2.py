@@ -3,7 +3,6 @@ import pytesseract
 from PIL import Image
 import io
 import re
-import fun
 
 
 
@@ -46,7 +45,7 @@ def  Percentage_of_R_and_D(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[7:16]:
+        for page in pdf.pages[6:-3]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -71,9 +70,9 @@ def  Percentage_of_R_and_D(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -106,7 +105,7 @@ def  Percentage_of_R_and_D(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -125,7 +124,7 @@ def  Does_the_entity_have_procedures(pdf_path):
         question="Does the entity have procedures in place for sustainable sourcing"
         question_2="Does the entity have procedures"
         question_3="for sustainable sourcing"
-        for i, page in enumerate(pdf.pages[7:16]):
+        for i, page in enumerate(pdf.pages[6:-3]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
                 #(f"Question found on page {i}")
@@ -174,7 +173,7 @@ def  Does_the_entity_have_procedures(pdf_path):
                     else :
                         finallist=list
                  #("finallist",finallist)
-                return finallist                       
+                return "\n".join(finallist)                   
 
 #@ print(Does_the_entity_have_procedures("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
@@ -185,7 +184,7 @@ def  b_If_yes_what_percentage(pdf_path):
         question="If yes, what percentage of inputs were sourced sustainably"
         question_2="If yes, what percentage"
         question_3="were sourced sustainably"
-        for i, page in enumerate(pdf.pages[7:16]):
+        for i, page in enumerate(pdf.pages[6:-3]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
                 #(f"Question found on page {i}")
@@ -234,7 +233,7 @@ def  b_If_yes_what_percentage(pdf_path):
                     else :
                         finallist=list
                  #("finallist",finallist)
-                return finallist                       
+                return "\n".join(finallist)                   
 
 #@ print(b_If_yes_what_percentage("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
@@ -246,7 +245,7 @@ def  Describe_the_processes_in_place(pdf_path,):
         question="Describe the processes in place to safely reclaim your products for reusing"
         question_2="Describe the processes in place"
         question_3="E-waste (c) Hazardous waste and (d) other waste."
-        for i, page in enumerate(pdf.pages[7:16]):
+        for i, page in enumerate(pdf.pages[6:-3]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
                 #(f"Question found on page {i}")
@@ -295,7 +294,7 @@ def  Describe_the_processes_in_place(pdf_path,):
                     else :
                         finallist=list
                  #("finallist",finallist)
-                return finallist                       
+                return "\n".join(finallist)                   
 
 #@ print(Describe_the_processes_in_place("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
@@ -306,7 +305,7 @@ def Whether_Extended_Producer_Responsibility_EPR(pdf_path):
         question="Whether Extended Producer Responsibility (EPR) is applicable"
         question_2="Whether Extended Producer"
         question_3="Whether Extended Producer Responsibility (EPR)"
-        for i, page in enumerate(pdf.pages[7:16]):
+        for i, page in enumerate(pdf.pages[6:-3]):
             text = page.extract_text()
             if text and question in text or question_2 in text  or question_3 in text:
                 #(f"Question found on page {i}")
@@ -355,7 +354,7 @@ def Whether_Extended_Producer_Responsibility_EPR(pdf_path):
                     else :
                         finallist=list
                  #("finallist",finallist)
-                return finallist                       
+                return "\n".join(finallist)                   
 
 #@ print(Whether_Extended_Producer_Responsibility_EPR("C:/Users/coda/Documents/bse.pdf"))
 #@ print("************")
@@ -404,7 +403,7 @@ def  Has_the_entity_conducted_Life(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[8:18]:
+        for page in pdf.pages[6:-3]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -429,9 +428,9 @@ def  Has_the_entity_conducted_Life(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -461,7 +460,7 @@ def  Has_the_entity_conducted_Life(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -508,7 +507,7 @@ def  If_there_are_any_significant_social(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[7:20]:
+        for page in pdf.pages[6:-3]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -533,9 +532,9 @@ def  If_there_are_any_significant_social(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -568,7 +567,7 @@ def  If_there_are_any_significant_social(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -614,7 +613,7 @@ def  Percentage_of_recycled(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[7:22]:
+        for page in pdf.pages[6:-3]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -639,9 +638,9 @@ def  Percentage_of_recycled(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -674,7 +673,7 @@ def  Percentage_of_recycled(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -729,7 +728,7 @@ def  Of_the_products_and_packaging(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[8:20]:
+        for page in pdf.pages[6:-3]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -754,9 +753,9 @@ def  Of_the_products_and_packaging(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -789,7 +788,7 @@ def  Of_the_products_and_packaging(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -835,7 +834,7 @@ def  Reclaimed_products(pdf_file):
     ]
 
     with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages[8:22]:
+        for page in pdf.pages[6:-3]:
             pil_image = page.to_image(resolution=300).original
             text = pytesseract.image_to_string(pil_image, config=custom_config)
 
@@ -860,9 +859,9 @@ def  Reclaimed_products(pdf_file):
                 break
 
     if not start_found:
-        return [f"Start question not found. Tried: {q_starts[0]}"]
+        return [f"Start question not found:{q_starts[0]}"]
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -895,7 +894,7 @@ def  Reclaimed_products(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 

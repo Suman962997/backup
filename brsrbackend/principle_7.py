@@ -3,11 +3,10 @@ import pytesseract
 from PIL import Image
 import io
 import re
-import fun
 
 
 
-                                ###### PRINCIPLE VII #######
+                                ###### PRINCIPLE VI12:-2-4I #######
                                 
 def Number_of_affiliations(pdf_path):
     with pdfplumber.open(pdf_path) as pdf:
@@ -128,7 +127,7 @@ def  List_the_top_10_trade(pdf_file):
     if not start_found:
         return {"error": f"Start question not found. Tried: {q_starts}"}
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -160,7 +159,7 @@ def  List_the_top_10_trade(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -234,7 +233,7 @@ def  Provide_details_of_corrective_action(pdf_file):
     if not start_found:
         return {"error": f"Start question not found. Tried: {q_starts}"}
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -267,7 +266,7 @@ def  Provide_details_of_corrective_action(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
@@ -347,7 +346,7 @@ def  Details_of_public_policy(pdf_file):
     if not start_found:
         return {"error": f"Start question not found. Tried: {q_starts}"}
     if not end_found:
-        return {"error": f"End question not found. Tried: {q_ends}"}
+        return None
     if not lines_between:
         return {"error": "No content found between start and end questions."}
 
@@ -379,7 +378,7 @@ def  Details_of_public_policy(pdf_file):
             data = dict(zip(keys_3, row))
             myout.append(data)
     else:
-        return lines_between
+        return "\n".join(lines_between)
 
 
 
