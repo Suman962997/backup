@@ -9,7 +9,7 @@ def get_entity_name(data):
         for part in section.get("parts", []):
             for question in part.get("questions", []):
                 if question.get("question", "").strip().lower() == "name of the listed entity":
-                    filename=question.get("questionAnswer",None)
+                    filename=question.get("questionAnswer","Not Applicable")
     if filename is None:
         filename="new_brsr"
             

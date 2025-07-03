@@ -1,7 +1,6 @@
-# models.py
-
-from sqlalchemy.orm import declarative_base, relationship
-from sqlalchemy import Column, Integer, String, ForeignKey, Text
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String, Text, ForeignKey
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -9,7 +8,7 @@ class Section(Base):
     __tablename__ = "sections"
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(255))
-    section = Column(String(100))
+    section = Column(String(50))
     parts = relationship("Part", back_populates="section")
 
 class Part(Base):
