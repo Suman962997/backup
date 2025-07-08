@@ -10,7 +10,7 @@ from sqlalchemy.orm import declarative_base, relationship,Session
 from sqlalchemy import Column, Integer, String, ForeignKey, Text
 import os
 import tkinter as tk
-from models import Base, Section, Part, Question
+from models import Base, Section, Category, Question
 from database import engine, SessionLocal
 from typing import Dict
 import pdf
@@ -39,7 +39,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("/submit/" )
+@app.post("/Get_pdf/" )
 async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db)):
     if texts:
         print("datas####")
@@ -51,9 +51,9 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
     { 
      "title": "GENERAL DISCLOSURES",
      "section": "SECTION A",
-     "parts": [
+     "Categories": [
           { "partRoman":"I",
-        "partNo": "one",
+        "CategorieNo": "one",
         "subtitle": "Details of the listed entity",
         "questions": [
           {
@@ -134,7 +134,7 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
           }]
       },
           { "partRoman":"II",
-            "partNo": "two",
+            "CategorieNo": "two",
             "subtitle": "Products / Services",
             "questions": [
               {
@@ -150,7 +150,7 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
               }]
             },
           { "partRoman":"III",
-            "partNo": "three",
+            "CategorieNo": "three",
             "subtitle": "Operations",
             "questions": [
               {
@@ -176,7 +176,7 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
             ]
           },
           { "partRoman":"IV",
-            "partNo": "four",
+            "CategorieNo": "four",
             "subtitle": "Employees",
             "questions": [
               {
@@ -202,7 +202,7 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
             ]
           },
           { "partRoman":"V",
-            "partNo": "five",
+            "CategorieNo": "five",
             "subtitle": "Holding, Subsidiary and Associate Companies (including joint ventures)",
             "questions": [
               {
@@ -213,7 +213,7 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
             ]
           },
           {"partRoman":"VI",
-            "partNo": "six",
+            "CategorieNo": "six",
             "subtitle": "CSR Details",
             "questions": [
             {
@@ -234,7 +234,7 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
             ]
           },
           { "partRoman":"VII",
-            "partNo": "seven",
+            "CategorieNo": "seven",
             "subtitle": "Transparency and Disclosures Compliances",
             "questions": [
               {
@@ -254,9 +254,9 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
     {
       "title": "MANAGEMENT AND PROCESS DISCLOSURES",
         "section": "SECTION B",
-        "parts": [
+        "Categories": [
           { "partRoman":"I",
-            "partNo": "one",
+            "CategorieNo": "one",
             "subtitle": "Policy and management processes",
             "questions": [
               {
@@ -309,7 +309,7 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
             ]
           },
           {  "partRoman":"II",
-            "partNo":"two",
+            "CategorieNo":"two",
             "subtitle": "Governance, leadership and oversight",
             "questions": [
               {
@@ -365,12 +365,12 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
               ]},]
         },
     {
-        "title": "Principle wise performance disclosure",
+        "title": "PRINCIPLE WISE PERFORMANCE DISCLOSURE ",
         "section": "SECTION C",
-        "parts": [
+        "Categories": [
             {
             "partRoman":"PRINCIPLE I",
-            "partNo": "one",
+            "CategorieNo": "one",
             "subtitle": "Businesses should conduct and govern themselves with integrity, and in a manner that is Ethical, Transparent and Accountable",
             "questions": [
               {
@@ -440,7 +440,7 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
               }]},
             {
             "partRoman":"PRINCIPLE II",
-            "partNo": "two",
+            "CategorieNo": "two",
             "subtitle": "Businesses should provide goods and services in a manner that is sustainable and safe",
             "questions": [
               {
@@ -501,7 +501,7 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
             },
             {
             "partRoman":"PRINCIPLE III",
-            "partNo": "three",
+            "CategorieNo": "three",
             "subtitle": "Businesses should respect and promote the well-being of all employees, including those in their value chains",
             "questions": [
               {
@@ -632,7 +632,7 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
             },
             {
             "partRoman":"PRINCIPLE IV",
-            "partNo": "four",
+            "CategorieNo": "four",
             "subtitle": "Businesses should respect the interests of and be responsive to all its stakeholders",
             "questions": [
               {
@@ -663,7 +663,7 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
             },
             {
             "partRoman":"PRINCIPLE V",
-            "partNo": "five",
+            "CategorieNo": "five",
             "subtitle": " Businesses should respect and promote human rights",
             "questions": [
               {
@@ -749,7 +749,7 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
             },
             {  
           "partRoman":"PRINCIPLE VI",
-          "partNo": "six",
+          "CategorieNo": "six",
           "subtitle": "Businesses should respect and make efforts to protect and restore",
           "questions": [
             {
@@ -887,7 +887,7 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
           },
             {
           "partRoman":"PRINCIPLE VII",
-          "partNo": "seven",
+          "CategorieNo": "seven",
           "subtitle": " Businesses, when engaging in influencing public and regulatory policy, should do so in a manner that is responsible and transparent",
           "questions": [
             {
@@ -914,7 +914,7 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
           },
             {
             "partRoman":"PRINCIPLE VIII",
-            "partNo": "eight",
+            "CategorieNo": "eight",
             "subtitle": "Businesses should promote inclusive growth and equitable development",
             "questions": [
               {
@@ -993,7 +993,7 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
             },
             {
             "partRoman":"PRINCIPLE IX",
-            "partNo": "nine",
+            "CategorieNo": "nine",
             "subtitle": "Businesses should engage with and provide value to their consumers in a responsible manner",
             "questions": [
               {
@@ -1072,28 +1072,41 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
 
         filename=pdf.get_entity_name(data)
         print("filename",filename)
-        # section = Section(title=data["title"], section=data["section"])
-        # db.add(section)
-        # db.flush()  # Get section.id before commit
+        # Save Section A, B, C 
+        for section_data in data["sections"]:
+            section = Section(title=section_data["title"], section=section_data["section"])
+            db.add(section)
+            db.flush()  # so we can use section.id
 
-        # # 2. Save parts and questions
-        # for part in data["parts"]:
-        #     db_part = Part(part_no=part["partNo"], subtitle=part["subtitle"], section_id=section.id)
-        #     db.add(db_part)
-        #     db.flush()
+            for category in section_data["Categories"]:
+                db_part = Category(part_no=category["CategorieNo"], subtitle=category["subtitle"], section_id=section.id)
+                db.add(db_part)
+                db.flush()
 
-        #     for q in part["questions"]:
-        #         db_question = Question(
-        #             question_no=q["questionNo"],
-        #             question=q["question"],
-        #             answer=q["questionAnswer"],
-        #             part_id=db_part.id
-        #         )
-        #         db.add(db_question)
+                for q in category["questions"]:
+                    answer = q["questionAnswer"]
+                    if isinstance(answer, list):
+                        answer = json.dumps(answer)  # convert list to string
+                    
+                    db_question = Question(
+                        question_no=q["questionNo"],
+                        question=q["question"],
+                        answer=answer,
+                        part_id=db_part.id
+                    )
+                    db.add(db_question)
 
-        # db.commit()
-        print("*****",data,"******")
-        return pdf.create_pdf(data,filename)
+        db.commit()
+        print("*****", data, "******")
+        return "DONE"
+
+@app.get("/Get_pdf/")
+def get_pdf():
+
+  # pdf.create_pdf(data, filename + '_brsr')  
+  return f'This is get method'
+  
+
 
 if __name__ == "__main__":
-    uvicorn.run("create:app", host="0.0.0.0", port=5000, reload=False, log_level="debug" )
+  uvicorn.run("create:app", host="0.0.0.0", port=5000, reload=False, log_level="debug")

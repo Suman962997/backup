@@ -4,7 +4,7 @@ from PIL import Image
 import io
 import re
 import pandas as pd
-# 
+
                                         ######## PART II #########
 
 def  Details_of_business(pdf_file):
