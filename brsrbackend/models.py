@@ -1,7 +1,15 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy import Column, Integer, String, Text, DateTime
+from datetime import datetime
 
 Base = declarative_base()
+
+# Registry model to store table creation order
+class TableRegistry(Base):
+    __tablename__ = "table_registry"
+    id = Column(Integer, primary_key=True, index=True)
+    table_name = Column(String(100), unique=True, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
 def create_pdf_model(table_name: str):
     class_attrs = {
@@ -14,7 +22,7 @@ def create_pdf_model(table_name: str):
         "question_no": Column(String(50)),
         "question": Column(Text),
         "answer": Column(Text),
-        "__table_args__": {'extend_existing': True},  # Optional: avoids errors if already declared
+        "created_at": Column(DateTime, default=datetime.utcnow),
+        "__table_args__": {'extend_existing': True},
     }
-
     return type("PDFTable", (Base,), class_attrs)
