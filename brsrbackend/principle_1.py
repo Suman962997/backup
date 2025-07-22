@@ -5,6 +5,9 @@ import io
 import re
 import time
 
+
+
+custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
                             #  PRINCIPLE I 
 
 def  Percentage_coverage_by_training(pdf_file):
@@ -12,7 +15,6 @@ def  Percentage_coverage_by_training(pdf_file):
     start_found = False
     end_found = False
     lines_between = []
-    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
 
     # Define multiple possible start and end strings
     q_starts = [
@@ -115,7 +117,6 @@ def  Details_of_fines(pdf_file):
     start_found = False
     end_found = False
     lines_between = []
-    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
 
     # Define multiple possible start and end strings
     q_starts = [
@@ -176,7 +177,6 @@ def  Monetary(pdf_file):
     start_found = False
     end_found = False
     lines_between = []
-    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
 
     # Define multiple possible start and end strings
     q_starts = [
@@ -287,7 +287,6 @@ def  Non_Monetary(pdf_file):
     start_found = False
     end_found = False
     lines_between = []
-    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
 
     # Define multiple possible start and end strings
     q_starts = [
@@ -396,7 +395,6 @@ def  Of_the_instances_disclosed(pdf_file):
     start_found = False
     end_found = False
     lines_between = []
-    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
 
     # Define multiple possible start and end strings
     q_starts = [
@@ -498,7 +496,6 @@ def  Does_the_entity_have_an_anti(pdf_file):
     start_found = False
     end_found = False
     lines_between = []
-    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
 
     # Define multiple possible start and end strings
     q_starts = [
@@ -559,7 +556,6 @@ def  Number_of_Directors(pdf_file):
     start_found = False
     end_found = False
     lines_between = []
-    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
 
     # Define multiple possible start and end strings
     q_starts = [
@@ -663,7 +659,6 @@ def  Details_of_complaints(pdf_file):
     start_found = False
     end_found = False
     lines_between = []
-    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
 
     # Define multiple possible start and end strings
     q_starts = [
@@ -783,7 +778,6 @@ def Provide_details_of_any_corrective(pdf_path):
                 image = page.to_image(resolution=300).original  #
 
                  #
-                custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
                 ocr_text = pytesseract.image_to_string(image, config=custom_config)
                   #(ocr_text)
                 lines = ocr_text.splitlines()
@@ -835,7 +829,6 @@ def  Number_of_days_of_accounts(pdf_file):
     start_found = False
     end_found = False
     lines_between = []
-    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
 
     # Define multiple possible start and end strings
     q_starts = [
@@ -941,7 +934,6 @@ def  Provide_details_of_concentration_of_purchases(pdf_file):
     start_found = False
     end_found = False
     lines_between = []
-    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
 
     # Define multiple possible start and end strings
     q_starts = [
@@ -1046,7 +1038,6 @@ def  Awareness_programmes_conducted(pdf_file):
     start_found = False
     end_found = False
     lines_between = []
-    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
 
     # Define multiple possible start and end strings
     q_starts = [
@@ -1150,7 +1141,6 @@ def   Does_the_entity_have_processes(pdf_file):
     start_found = False
     end_found = False
     lines_between = []
-    custom_config = r'--oem 3 --psm 6 -c preserve_interword_spaces=1'
 
     # Define multiple possible start and end strings
     q_starts = [

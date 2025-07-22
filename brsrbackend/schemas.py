@@ -1,17 +1,11 @@
-from typing import List
 from pydantic import BaseModel
+from typing import Optional
 
-# Pydantic schema for response
-class PDFDataSchema(BaseModel):
-    id: int
-    section: str
-    title: str
-    categoryNo: str
-    subtitle: str
-    question_no: str
-    question: str
-    answer: str
-    created_at: datetime
-
-    class Config:
-        orm_mode = True
+class PDFTableUpdate(BaseModel):
+    section: Optional[str]
+    title: Optional[str]
+    categoryNo: Optional[str]
+    subtitle: Optional[str]
+    question_no: Optional[str]
+    question: Optional[str]
+    answer: Optional[str]

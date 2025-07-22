@@ -8,6 +8,7 @@ Base = declarative_base()
 class TableRegistry(Base):
     __tablename__ = "table_registry"
     id = Column(Integer, primary_key=True, index=True)
+    section=Column(String(50))
     table_name = Column(String(100), unique=True, index=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
@@ -26,3 +27,5 @@ def create_pdf_model(table_name: str):
         "__table_args__": {'extend_existing': True},
     }
     return type("PDFTable", (Base,), class_attrs)
+
+

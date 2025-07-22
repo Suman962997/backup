@@ -1,15 +1,16 @@
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException,Depends,APIRouter
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException,Depends,APIRouter, Body
+from fastapi.responses import JSONResponse,FileResponse
 from google.api_core.exceptions import ResourceExhausted
 from fastapi.middleware.cors import CORSMiddleware
 from Extract_keys import KEYS_TO_EXTRACT_A
 from dotenv import load_dotenv, dotenv_values 
-from typing import Dict,List,Optional,Any
+from typing import Dict,List,Optional,Any,Union
 from database import engine, SessionLocal
-from sqlalchemy import Column, Integer, String, ForeignKey, Text,text,inspect
+from sqlalchemy import Column, Integer, String, ForeignKey, Text,text,inspect,desc
 from sqlalchemy.orm import declarative_base, relationship,Session
 from models import Base,create_pdf_model,TableRegistry  # Import if not already done
 from pydantic import BaseModel
+from schemas import PDFTableUpdate
 import json
 import pdfplumber
 import docx
@@ -271,13 +272,11 @@ def parse_brsr_text_section_a(file_path,json_merge):
                 "questionNo": "1",
                 "question":"Details of business activities (accounting for 90% of the turnover):",
                 "questionAnswer":section_a.Details_of_business(file_path),
-                # "questionAnswer":json_merge["Details of business activities (accounting for 90% of the turnover)"]
 
               },
               {
                 "questionNo": "2",
                 "question": "Products/Services sold by the entity (accounting for 90% of the entity’s Turnover):",
-                # "questionAnswer":json_merge["Products/Services sold by the entity (accounting for 90% of the entity’s Turnover):"]
                 "questionAnswer":section_a.Products_Services(file_path)
 
               }
@@ -1440,12 +1439,17 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
     else:
       return "SECTION NOT FOUND !"
     
-router=APIRouter()
+class SubmitRequest(BaseModel):
+    texts: Union[Dict[str, Any], list]  # Accepts a dictionary or a list
+    sectionfind: str
 
-@app.post("/create_pdf/" )
-async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db)):
+@app.post("/submit/" )
+async def extract_document(payload:SubmitRequest,db: Session = Depends(get_db)):
+    texts=payload.texts
     if texts:
         print("datas####")
+        sectionfind=payload.sectionfind
+        print("section find",sectionfind)
         texts = {k.lower(): v for k, v in texts.items()}
     
         # print(texts)
@@ -2478,12 +2482,13 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
         table_name = filename
 
         PDFTable = create_pdf_model(table_name)
-
+        sectionfind=sectionfind
+        print("THis is section ###$$",sectionfind)
         # Track table creation order
         Base.metadata.create_all(bind=db.get_bind(), tables=[TableRegistry.__table__])
         existing = db.query(TableRegistry).filter_by(table_name=table_name).first()
         if not existing:
-            registry_entry = TableRegistry(table_name=table_name)
+            registry_entry = TableRegistry(table_name=table_name,section=sectionfind)
             db.add(registry_entry)
             db.commit()
 
@@ -2525,45 +2530,11 @@ async def extract_document(texts: Dict[str, Any], db: Session = Depends(get_db))
                     db.add(record)
 
         db.commit()
-        return {"status": "DONE"}
+        return filename
 
 
 
-@app.get("/download_pdf/")
-def get_last_table_data(db: Session = Depends(get_db)):
-    # Step 1: Get last registered table name
-    last_entry = db.query(TableRegistry).order_by(TableRegistry.created_at.desc()).first()
-    if not last_entry:
-        return {"message": "No table entries found"}
 
-    table_name = last_entry.table_name
-
-    # Step 2: Check if table exists in DB
-    inspector = inspect(db.get_bind())
-    if not inspector.has_table(table_name):
-        return {"message": f"Table '{table_name}' does not exist in the database"}
-
-    # Step 3: Dynamically create model for the table
-    PDFTable = create_pdf_model(table_name)
-
-    # Step 4: Query all rows
-    rows = db.query(PDFTable).all()
-
-    # Step 5: Convert rows to list of dicts
-    data = []
-    for row in rows:
-        row_dict = row.__dict__
-        row_dict.pop("_sa_instance_state", None)
-        data.append(row_dict)
-    # filename=pdf.get_entity_name(data)
-    filename=table_name
-    print("pdf name",filename)
-    pdf.create_pdf(data,filename)
-    # print("@@@@",data)
-    return data
-
-
-# router = APIRouter()
 
 @app.get("/report_list/", response_model=ReportListResponse)
 def get_all_table_datas(db: Session = Depends(get_db)):
@@ -2571,34 +2542,187 @@ def get_all_table_datas(db: Session = Depends(get_db)):
     Returns all dynamically created table names from table_registry.
     """
     tables = db.query(TableRegistry).order_by(TableRegistry.created_at.asc()).all()
-    name = [table.table_name for table in tables]
-    len_table=len(name)
-    created_date = [table.created_at for table in tables]    
-    period = ["FY 2024 -2026" for i in range(0,len_table)]
-    progress = [pdf.random_number() for i in range(0,len_table)]
-    status = ["Saved" for i in range(0,len_table)]
-    
-    
-    return ReportListResponse(
-        name=name,
-        created_date=created_date,
-        period=period,
-        progress=progress,
-        status=status
-    )
+
+    if tables:
+        name = [table.table_name for table in tables]
+        len_table = len(name)
+        created_date = [table.created_at for table in tables]    
+        period = ["FY 2024 -2026" for _ in range(len_table)]
+        progress = [pdf.random_number() for _ in range(len_table)]
+        status = ["Saved" for _ in range(len_table)]
+
+        return ReportListResponse(
+            name=name,
+            created_date=created_date,
+            period=period,
+            progress=progress,
+            status=status
+        )
+    else:
+        return None
 
     
-    # return ReportListResponse(
-    #     name=["DEMO","jik"],
-    #     created_date=["27/4/2003","32/9/0989"],
-    #     period=["23233","dw3232"],
-    #     progress=[45,88],
-    #     status=["YES","No"]
-    # )
+
+
+@app.get("/edit_pdf_report_get/{raw_table_name}")
+def edit_pdf_report_get(raw_table_name:str,db:Session=Depends(get_db)):
+  PDFTable=create_pdf_model(raw_table_name)
+  if raw_table_name not in Base.metadata.tables:
+    return {"message":f"pdf not exist !"}
+  inspector=inspect(db.get_bind())
+  if not inspector.has_table(raw_table_name):
+    return {"message":f"Table '{raw_table_name}'dos not exist in the database!"}
+  rows=db.query(PDFTable).all()
+  table_entry = db.query(TableRegistry).filter(TableRegistry.table_name == raw_table_name).first()
+
+  data=[]
+  section=table_entry.section
+  for row in rows:
+    row_dict=row.__dict__.copy()
+    row_dict.pop("_sa_instance_state", None)
+    data.append(row_dict)
+    
+  return {"section":section,"data":data}
 
 
 
 
+
+@app.put("/edit_pdf_report_put")
+async def edit_pdf_report_put(raw_dict: Dict, db: Session = Depends(get_db)):
+    print("Received:", raw_dict)
+
+    texts = raw_dict.get("texts", {})
+    sectionfind = raw_dict.get("sectionfind")
+    currentsection = raw_dict.get("currentsection")
+    filename = raw_dict.get("indexName")
+
+    if not filename:
+        raise HTTPException(status_code=400, detail="indexName (filename) is required")
+
+    PDFTable = create_pdf_model(filename)
+
+    # Check if table is in SQLAlchemy Base
+    if filename not in Base.metadata.tables:
+        raise HTTPException(status_code=404, detail=f"Table model for '{filename}' does not exist.")
+
+    # Check if table exists in actual DB
+    inspector = inspect(db.get_bind())
+    if not inspector.has_table(filename):
+        raise HTTPException(status_code=404, detail=f"Table '{filename}' does not exist in the database.")
+
+    # Get section info from registry
+    table_entry = db.query(TableRegistry).filter(TableRegistry.table_name == filename).first()
+    if not table_entry:
+        raise HTTPException(status_code=404, detail="Table metadata not found in registry.")
+
+    section = table_entry.section
+    print("Table name:", table_entry.table_name)
+    print("Section:", section)
+    print("Starting updates...")
+
+    # Update each matching record
+    updated_count = 0
+    for question_text, new_answer in texts.items():
+        record = db.query(PDFTable).filter(PDFTable.question == question_text).first()
+        if record:
+            record.answer = new_answer
+            updated_count += 1
+
+    db.commit()
+    return filename
+
+
+
+
+@app.get("/download_pdf_report/{raw_table_name}")
+def download_pdf_report(raw_table_name: str, db: Session = Depends(get_db)):
+
+    # Step 1: Dynamically create model
+    PDFTable = create_pdf_model(raw_table_name)
+
+    # Step 2: Check if model is in metadata
+    if raw_table_name not in Base.metadata.tables:
+        return {"message": f"Model for table '{raw_table_name}' is not registered"}
+
+    # Step 3: Check if table exists in the database
+    inspector = inspect(db.get_bind())
+    if not inspector.has_table(raw_table_name):
+        return {"message": f"Table '{raw_table_name}' does not exist in the database"}
+
+    # Step 4: Query all rows
+    rows = db.query(PDFTable).all()
+
+    # Step 5: Convert to list of dicts
+    data = []
+    for row in rows:
+        row_dict = row.__dict__.copy()
+        row_dict.pop("_sa_instance_state", None)
+        data.append(row_dict)
+
+    # Step 6: Create PDF (optional)
+    print("pdf name:", raw_table_name)
+    pdf_path=pdf.create_pdf(data, raw_table_name)
+    
+    return FileResponse(
+    path=pdf_path,
+    filename=os.path.basename(pdf_path),
+    media_type="application/pdf",
+    headers={"Content-Disposition": f"attachment; filename={os.path.basename(pdf_path)}"}
+)
+
+
+
+# @app.delete("/delete_pdf_report/{raw_table_name}")
+# async def delete_pdf_report(raw_table_name:Any,db:Session=Depends(get_db)):
+#   print("YHISSJ",raw_table_name)
+
+#   if raw_table_name not in Base.metadata.tables:
+#       return {"message": f"Model for table '{raw_table_name}' is not registered"}  
+#   inspector = inspect(db.get_bind())
+#   if not inspector.has_table(raw_table_name):
+#       raise HTTPException(status_code=404, detail=f"Table '{raw_table_name}' does not exist in the database.")
+
+#   table_entry = db.query(TableRegistry).filter(TableRegistry.table_name == raw_table_name).first()
+#   if not table_entry:
+#       raise HTTPException(status_code=404, detail="Table metadata not found in registry.")
+
+#   section = table_entry.section
+#   print("Table name:", table_entry.table_name)
+#   print("Section:", section)
+#   print("Starting updates...")
+#   db.delete(table_entry)
+#   db.commit()
+
+#   return raw_table_name
+
+
+@app.delete("/delete_pdf_report/{raw_table_name}")
+def delete_pdf_report(raw_table_name: str, db: Session = Depends(get_db)):
+    # Step 1: Check if the table is registered in table_registry
+    registry_entry = db.query(TableRegistry).filter_by(table_name=raw_table_name).first()
+    if not registry_entry:
+        raise HTTPException(status_code=404, detail=f"Table '{raw_table_name}' not found in registry.")
+
+    # Step 2: Check if the table exists in the actual database
+    inspector = inspect(db.get_bind())
+    if not inspector.has_table(raw_table_name):
+        raise HTTPException(status_code=404, detail=f"Table '{raw_table_name}' does not exist in the database.")
+
+    # Step 3: Dynamically create model
+    PDFTable = create_pdf_model(raw_table_name)
+
+    # Step 4: Drop the table
+    try:
+        PDFTable.__table__.drop(bind=db.get_bind())
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete table '{raw_table_name}': {str(e)}")
+
+    # Step 5: Remove the table entry from table_registry
+    db.delete(registry_entry)
+    db.commit()
+
+    return raw_table_name
 
 if __name__ == "__main__":
     uvicorn.run("test:app", host="0.0.0.0", port=1000, reload=False, log_level="debug" )

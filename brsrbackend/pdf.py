@@ -12,7 +12,6 @@ def random_number():
     return ram_num
 
 def get_entity_name(data: dict) -> str:
-    # print("Received data $$$$$", data)
     filename = None
 
     sections = data.get("sections", [])
@@ -38,7 +37,6 @@ def get_entity_name(data: dict) -> str:
 
 
 def create_pdf(json_data: list, pdf_name: str):
-    print("json data$$$$",json_data)
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(name='Question', fontSize=11, spaceAfter=6, leading=14))
     styles.add(ParagraphStyle(name='Answer', fontSize=11, textColor=colors.darkblue, leftIndent=10, leading=14))
@@ -131,6 +129,7 @@ def create_pdf(json_data: list, pdf_name: str):
 
     doc.build(elements)
     print(f"✅ PDF created successfully at: {output_path}")
+    return output_path
     # c=canvas.Canvas(filename=pdf_name)
     # c.save()
 
