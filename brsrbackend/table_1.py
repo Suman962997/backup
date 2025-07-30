@@ -1,18 +1,23 @@
 import os
 import re
+import json
 from typing import List, Dict
-from fastapi import FastAPI, Response
+from fastapi import FastAPI
 from dotenv import load_dotenv
 from llama_parse import LlamaParse
-import json
 import uvicorn
+from difflib import SequenceMatcher
+
 
 app = FastAPI()
 load_dotenv()
 
+def similarity(a: str, b: str) -> float:
+    return SequenceMatcher(None, a.lower(), b.lower()).ratio()
+
 
 def extract_text_from_pdf(pdf_path: str) -> str:
-    parser = LlamaParse(api_key=os.getenv("llama"), result_type="markdown")  # preserves table structure
+    parser = LlamaParse(api_key=os.getenv("llama"), result_type="markdown")
     with open(pdf_path, "rb") as f:
         docs = parser.load_data(f, extra_info={"file_name": os.path.basename(pdf_path)})
     return "\n".join([doc.text for doc in docs])
@@ -25,26 +30,23 @@ def extract_tables_with_questions(text: str) -> List[Dict[str, str]]:
     current_question = None
     current_table = []
 
-    for i, line in enumerate(lines):
-        # Detect table rows
-        if re.match(r"^\s*\|.*\|\s*$", line):
+    for line in lines:
+        if re.match(r"^\s*\|.*\|\s*$", line):  # Detect markdown table rows
             current_table.append(line)
-
         else:
-            # Save the completed table
             if current_table:
-                tables_with_questions.append({
-                    "question": current_question or "Unknown Question",
-                    "answer": "\n".join(current_table)
-                })
+                if len(current_table) >= 2:  # Minimum: header + 1 row
+                    tables_with_questions.append({
+                        "question": current_question or "Unknown Question",
+                        "answer": "\n".join(current_table)
+                    })
                 current_table = []
 
-            # Detect a new potential question (non-empty and not a table)
-            if line.strip() and not line.strip().startswith('|'):
+            if line.strip() and not line.strip().startswith("|"):
                 current_question = line.strip()
 
-    # In case there's a table at the end
-    if current_table:
+    # Catch any table at EOF
+    if current_table and len(current_table) >= 2:
         tables_with_questions.append({
             "question": current_question or "Unknown Question",
             "answer": "\n".join(current_table)
@@ -53,16 +55,12 @@ def extract_tables_with_questions(text: str) -> List[Dict[str, str]]:
     return tables_with_questions
 
 
-
-# Step 3: Convert markdown table to structured JSON
 def markdown_table_to_json(table: str) -> List[Dict[str, str]]:
     lines = table.strip().splitlines()
     if len(lines) < 2:
         return []
 
     headers = [cell.strip() for cell in lines[0].strip("|").split("|")]
-
-    # Skip the markdown separator row
     data_rows = lines[2:] if re.match(r'^\s*\|?\s*-+', lines[1]) else lines[1:]
 
     json_data = []
@@ -70,68 +68,58 @@ def markdown_table_to_json(table: str) -> List[Dict[str, str]]:
         if not row.strip().startswith("|"):
             continue
         values = [cell.strip() for cell in row.strip("|").split("|")]
-
         if len(values) < len(headers):
             values += [""] * (len(headers) - len(values))
-
-        row_dict = dict(zip(headers, values))
-        json_data.append(row_dict)
-
+        json_data.append(dict(zip(headers, values)))
     return json_data
 
-
-# Step 4: Match provided questions to the best table
 def match_questions_to_tables(tables: List[Dict[str, str]], questions: List[str]) -> Dict[str, List[Dict[str, str]]]:
     matched = {}
-    for question in questions:
-        best_table = None
-        best_score = 0
-        question_words = set(re.findall(r'\w+', question.lower()))
+    for user_question in questions:
+        best_match = None
+        best_score = 0.0
 
         for item in tables:
-            table_question = item["question"]
-            table_markdown = item["answer"]
-
-            # Use header words for matching
-            lines = table_markdown.strip().splitlines()
-            if len(lines) < 2:
-                continue
-
-            headers = [h.strip().lower() for h in lines[0].strip("|").split("|")]
-            header_words = set(" ".join(headers).split())
-
-            score = len(question_words.intersection(header_words))
+            extracted_question = item["question"]
+            score = similarity(user_question, extracted_question)
 
             if score > best_score:
                 best_score = score
-                best_table = table_markdown
+                best_match = item
 
-        if best_table:
-            matched[question] = markdown_table_to_json(best_table)
+        # Optional threshold to avoid bad matches
+        if best_match and best_score > 0.6:
+            matched[user_question] = markdown_table_to_json(best_match["answer"])
         else:
-            matched[question] = [{"error": "Expected columns not found or no matching table found."}]
+            matched[user_question] = [{"error": "No good match found for this question."}]
 
     return matched
 
+
 @app.get("/llama_parse/")
 async def llama_parse_function():
-    # 📌 Add your questions here
     questions = [
-        "Number of locations where plants and/or operations/offices of the entity are situated",
         "Details of business activities, products and services (accounting for 90% of the turnover)",
         "Products/Services sold by the entity (accounting for 90% of the entity’s Turnover)",
+        "Number of locations where plants and/or operations/offices of the entity are situated",
+        "Number of locations",
+        "Employees and workers (including differently abled):",
+        "Differently abled Employees and workers:",
+        "Participation/Inclusion/Representation of women",
+        "Turnover rate for permanent employees and workers (Disclose trends for the past 3 years)",
+        "How many products have undergone a carbon footprint assessment?",
+        "Complaints/Grievances on any of the principles (Principles 1 to 9) under the National Guidelines on Responsible Business Conduct:",
+        "Please indicate material responsible business conduct and sustainability issues pertaining to environmental and social matters that present a risk or an opportunity to your business, rationale for identifying the same, approach to adapt or mitigate the risk along-with its financial implications, as per the following format."
     ]
 
-    # 📌 Set your PDF path here
     pdf_path = r"C:\Users\coda\Documents\titan.pdf"
 
-    # ✅ Pipeline
-    extracted_text = extract_text_from_pdf(pdf_path)
-    tables = extract_tables_with_questions(extracted_text)
+    text = extract_text_from_pdf(pdf_path)
+    tables = extract_tables_with_questions(text)
     results = match_questions_to_tables(tables, questions)
 
-    return tables
+    return results
 
 
 if __name__ == "__main__":
-    uvicorn.run("table_1:app", host="0.0.0.0", port=2000, reload=False, log_level="debug")
+    uvicorn.run("table_1:app", host="0.0.0.0", port=2000, reload=False)
