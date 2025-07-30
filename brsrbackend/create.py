@@ -1189,15 +1189,6 @@ def get_all_table_datas(db: Session = Depends(get_db)):
         status=status
     )
 
-    
-    # return ReportListResponse(
-    #     name=["DEMO","jik"],
-    #     created_date=["27/4/2003","32/9/0989"],
-    #     period=["23233","dw3232"],
-    #     progress=[45,88],
-    #     status=["YES","No"]
-    # )
-
 
 
 
