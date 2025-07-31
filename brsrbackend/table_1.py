@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 from llama_parse import LlamaParse
 import uvicorn
 from difflib import SequenceMatcher
-
+import time
+import sec_a
 
 app = FastAPI()
 load_dotenv()
@@ -24,6 +25,7 @@ def extract_text_from_pdf(pdf_path: str) -> str:
 
 
 def extract_tables_with_questions(text: str) -> List[Dict[str, str]]:
+    # print(text)
     tables_with_questions = []
     lines = text.splitlines()
 
@@ -44,9 +46,9 @@ def extract_tables_with_questions(text: str) -> List[Dict[str, str]]:
 
             if line.strip() and not line.strip().startswith("|"):
                 current_question = line.strip()
-
     # Catch any table at EOF
     if current_table and len(current_table) >= 2:
+        
         tables_with_questions.append({
             "question": current_question or "Unknown Question",
             "answer": "\n".join(current_table)
@@ -96,8 +98,134 @@ def match_questions_to_tables(tables: List[Dict[str, str]], questions: List[str]
     return matched
 
 
-@app.get("/llama_parse/")
-async def llama_parse_function():
+
+def fuzzy_get(result: Dict[str, List[Dict[str, str]]], target_question: str, threshold: float = 0.5):
+    best_key = None
+    best_score = 0.0
+    for key in result.keys():
+        score = similarity(key, target_question)
+        if score > best_score:
+            best_score = score
+            best_key = key
+    if best_score >= threshold:
+        return result.get(best_key)
+    return None
+
+
+##################################QUESTIONS#############################################
+
+
+def table(result: Dict[str, List[Dict[str, str]]],qdict:Dict):
+    question=qdict.get("question",None)
+    column=qdict.get("columns",None)
+    # print("result",result)
+    print("question",question)
+    print("column",column)
+    
+    table_json =result.get(question, None)
+    column =column
+
+    if not table_json:
+        return []
+
+    filtered_table = []
+    for row in table_json:
+        filtered_row = {}
+        for canonical_col, aliases in column.items():
+            for alias in aliases:
+                if alias in row:
+                    filtered_row[canonical_col] = row[alias]
+                    break
+            else:
+                filtered_row[canonical_col] = ""  # default if none found
+        filtered_table.append(filtered_row)
+
+    return filtered_table
+
+# def Products_Services(result: Dict[str, List[Dict[str, str]]]):
+#     table_json = result.get("Products/Services sold by the entity (accounting for 90% of the entity’s Turnover)", None)
+
+#     column = {
+#     "Product/Service": ["Product/Service", "Product-Service"],
+#     "NIC Code":["NIC Code"],
+#     "% of total Turnover contributed":["% of total Turnover contributed"],
+#     }
+
+#     if not table_json:
+#         return []
+
+#     filtered_table = []
+#     for row in table_json:
+#         filtered_row = {}
+#         for canonical_col, aliases in column.items():
+#             for alias in aliases:
+#                 if alias in row:
+#                     filtered_row[canonical_col] = row[alias]
+#                     break
+#             else:
+#                 filtered_row[canonical_col] = ""  # default if none found
+#         filtered_table.append(filtered_row)
+
+#     return filtered_table
+
+# def Number_of_locations_where(result: Dict[str, List[Dict[str, str]]]):
+#     table_json = result.get("Number of locations where plants and/or operations/offices of the entity are situated", None)
+
+#     column = {
+#         "Location": ["Location", "Locations"],
+#         "No. of plants": ["No. of plants", "Number of plants"],
+#         "No. of offices": ["No. of offices", "Number of offices"],
+#         "Total": ["Total", "Total*"]
+#     }
+
+#     if not table_json:
+#         return []
+
+#     filtered_table = []
+#     for row in table_json:
+#         filtered_row = {}
+#         for canonical_col, aliases in column.items():
+#             for alias in aliases:
+#                 if alias in row:
+#                     filtered_row[canonical_col] = row[alias]
+#                     break
+#             else:
+#                 filtered_row[canonical_col] = ""  # default if none found
+#         filtered_table.append(filtered_row)
+
+#     return filtered_table
+
+# def Number_of_locations(result: Dict[str, List[Dict[str, str]]]):
+#     table_json = result.get("Number of locations", None)
+
+#     column = {
+#         "Location": ["Location", "Locations"],
+#         "Number": ["Total", "Total*","Number"]
+#     }
+
+#     if not table_json:
+#         return []
+
+#     filtered_table = []
+#     for row in table_json:
+#         filtered_row = {}
+#         for canonical_col, aliases in column.items():
+#             for alias in aliases:
+#                 if alias in row:
+#                     filtered_row[canonical_col] = row[alias]
+#                     break
+#             else:
+#                 filtered_row[canonical_col] = ""  # default if none found
+#         filtered_table.append(filtered_row)
+
+#     return filtered_table
+
+
+
+# @app.get("/llama_parse/")
+def llama_parse_function(pdf_path:str):
+    start_time = time.time()  # ⏱ Start time 
+    
     questions = [
         "Details of business activities, products and services (accounting for 90% of the turnover)",
         "Products/Services sold by the entity (accounting for 90% of the entity’s Turnover)",
@@ -107,19 +235,42 @@ async def llama_parse_function():
         "Differently abled Employees and workers:",
         "Participation/Inclusion/Representation of women",
         "Turnover rate for permanent employees and workers (Disclose trends for the past 3 years)",
-        "How many products have undergone a carbon footprint assessment?",
+        "Names of holding / subsidiary / associate companies / joint ventures",
         "Complaints/Grievances on any of the principles (Principles 1 to 9) under the National Guidelines on Responsible Business Conduct:",
         "Please indicate material responsible business conduct and sustainability issues pertaining to environmental and social matters that present a risk or an opportunity to your business, rationale for identifying the same, approach to adapt or mitigate the risk along-with its financial implications, as per the following format."
     ]
 
-    pdf_path = r"C:\Users\coda\Documents\titan.pdf"
+    # pdf_path = r"C:\Users\coda\Documents\titan.pdf"
 
     text = extract_text_from_pdf(pdf_path)
     tables = extract_tables_with_questions(text)
     results = match_questions_to_tables(tables, questions)
 
+    # print(Details_of_business(results))
+    # print('******************')
+    # print(Products_Services(results))
+    # print('******************')
+    # print(Number_of_locations_where(results))
+    # print('******************')
+    # print(Number_of_locations(results))
+    # print('******************')
+
+    end_time = time.time()  # End time
+    total_seconds = end_time - start_time
+    minutes = int(total_seconds // 60)
+    seconds = int(total_seconds % 60)
+    print(f"\n⏱ Execution Time: {minutes} minutes, {seconds} seconds")        # if os.path.exists(temp_path):
+
     return results
 
 
-if __name__ == "__main__":
-    uvicorn.run("table_1:app", host="0.0.0.0", port=2000, reload=False)
+
+    
+        
+        
+
+
+
+
+# if __name__ == "__main__":
+#     uvicorn.run("table_1:app", host="0.0.0.0", port=2000, reload=False)
