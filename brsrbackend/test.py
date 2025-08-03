@@ -2,7 +2,8 @@ from fastapi import FastAPI, UploadFile, File, Form, HTTPException,Depends,APIRo
 from fastapi.responses import JSONResponse,FileResponse
 from google.api_core.exceptions import ResourceExhausted
 from fastapi.middleware.cors import CORSMiddleware
-from Extract_keys import KEYS_TO_EXTRACT_A
+# from Extract_keys import KEYS_TO_EXTRACT_A,KEYS_TO_EXTRACT_B,KEYS_TO_EXTRACT_C1
+import Extract_keys
 from dotenv import load_dotenv, dotenv_values 
 from typing import Dict,List,Optional,Any,Union
 from database import engine, SessionLocal
@@ -31,24 +32,38 @@ import principle_8
 import principle_9
 import section_b
 import pdf
+import table_1
+import table_2
+import table_3
+import sec_a
+import sec_b
+import sec_c
 
 
 
+
+
+class ReportItem(BaseModel):
+    name: str
+    created_date: Any  # or datetime if created_at is a datetime object
+    period: str
+    progress: int
+    status: str
+    section: str
 
 class ReportListResponse(BaseModel):
-    name: List[Any]=None
-    created_date: List[Any] = None
-    period: List[Any] = None
-    progress: List[Any] = None
-    status: List[Any] = None
+    reports: List[ReportItem]
 
-
+class SubmitRequest(BaseModel):
+    texts: Union[Dict[str, Any], list]  # Accepts a dictionary or a list
+    sectionfind: str
+    brsrfilename:Any
 
 
 
 load_dotenv()
 
-genai.configure(api_key=os.getenv("OPENAI_API_KEY"))
+genai.configure(api_key=os.getenv("KIKI"))
 
 
 app = FastAPI()
@@ -64,7 +79,7 @@ app = FastAPI(title="Document Extractor API" )
 app.add_middleware(
     CORSMiddleware,
     # allow_origins=["http://localhost:3000"],
-    allow_origins=["http://192.168.2.72:3000","http://localhost:3000"],
+    allow_origins=["http://192.168.2.118:3000","http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -115,13 +130,13 @@ def chunk_text(text,max_tokens=3000):
 
 
 
-# def extract_fields_with_gemini_a(text_chunk: str) -> dict:
+def extract_fields_with_gemini_a(text_chunk: str) -> dict:
     # print(text_chunk)
     model = genai.GenerativeModel("gemini-2.0-flash" )
     prompt = f"""
 You are an expert in information extraction. Extract the following details from the provided text and return them in valid JSON format with keys exactly as listed below. Only return the JSON — no extra commentary.
 
-{KEYS_TO_EXTRACT_A}
+{Extract_keys.KEYS_TO_EXTRACT_A}
 
 TEXT:
 {text_chunk}
@@ -138,16 +153,53 @@ TEXT:
 
 
 
-def extract_fields_with_gemini_a(text_chunk: str) -> dict:
+def extract_fields_with_gemini_b(text_chunk: str) -> dict:
     # print(text_chunk)
     model = genai.GenerativeModel("gemini-2.0-flash" )
     prompt = f"""
 You are an expert in information extraction. Extract the following details from the provided text and return them in valid JSON format with keys exactly as listed below. Only return the JSON — no extra commentary.
 
-{KEYS_TO_EXTRACT_A}
+{Extract_keys.KEYS_TO_EXTRACT_B}
 
 TEXT:
 {text_chunk}
+"""
+    try:
+        response = model.generate_content(prompt)
+        # print(response.text)
+        parsed = extract_json_from_text(response.text)
+        return parsed if parsed else {}
+    except ResourceExhausted:
+        raise HTTPException(status_code=429, detail="Gemini API quota exceeded." )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+
+def extract_fields_with_gemini_c(text_chunk: str,principle_key:str) -> dict:
+    print("This is key",principle_key)
+    def extract_key_fun_c(principle_key):
+      extract_key_fun_c={
+      "principle_1":Extract_keys.KEYS_TO_EXTRACT_C1,
+      "principle_2":Extract_keys.KEYS_TO_EXTRACT_C2,
+      "principle_3":Extract_keys.KEYS_TO_EXTRACT_C3,
+      "principle_4":Extract_keys.KEYS_TO_EXTRACT_C4,
+      "principle_5":Extract_keys.KEYS_TO_EXTRACT_C5
+      }
+      return extract_key_fun_c[principle_key]
+    extract_section_key=extract_key_fun_c(principle_key)
+
+    print(extract_section_key)
+    # print(text_chunk)
+    model = genai.GenerativeModel("gemini-2.0-flash" )
+    prompt = f"""
+You are an expert in information extraction. Extract the following details from the provided text and return them in valid JSON format with keys exactly as listed below. Only return the JSON — no extra commentary.
+
+{extract_section_key}
+
+TEXT:
+{text_chunk}
+
 """
     try:
         response = model.generate_content(prompt)
@@ -172,11 +224,10 @@ def merge_results(results):
 
     
 def parse_brsr_text_section_a(file_path,json_merge):
-  print("sucessfully file sent",file_path)
-  
-  
+  print("sucessfully file sent",file_path,type(file_path))
+  result=table_1.llama_parse_function(file_path)
+  print("*****",result)
   return {
-        
     "data": 
       {
         "title": "GENERAL DISCLOSURES",
@@ -271,13 +322,13 @@ def parse_brsr_text_section_a(file_path,json_merge):
               {
                 "questionNo": "1",
                 "question":"Details of business activities (accounting for 90% of the turnover):",
-                "questionAnswer":section_a.Details_of_business(file_path),
+                "questionAnswer":table_1.table(result,sec_a.Details_of_business),
 
               },
               {
                 "questionNo": "2",
                 "question": "Products/Services sold by the entity (accounting for 90% of the entity’s Turnover):",
-                "questionAnswer":section_a.Products_Services(file_path)
+                "questionAnswer":table_1.table(result,sec_a.Products_Services),
 
               }
             ]
@@ -288,23 +339,23 @@ def parse_brsr_text_section_a(file_path,json_merge):
             "questions": [
               {
                 "questionNo": "1",
-                "question": "Number of locations where plants and offices of the entity are situated:",
-                "questionAnswer":section_a.Number_of_locations_where(file_path),
+                "question": "Number of locations where plants and/or operations/offices of the entity are situated",
+                "questionAnswer":table_1.table(result,sec_a.Number_of_locations_where),
               },
               {
                 "questionNo": "2",
                 "question": "Number of locations",
-                "questionAnswer":section_a.Number_of_locations(file_path),
+                "questionAnswer":table_1.table(result,sec_a.Number_of_locations),
               },
               {
                 "questionNo": "3",
                 "question": "What is the contribution of exports as a percentage of the total turnover of the entity?",
-                "questionAnswer":section_a.What_is_the_contribution(file_path),
+                "questionAnswer":json_merge["What is the contribution of exports as a percentage of the total turnover of the entity?"],
               },
               {
                 "questionNo": "4",
                 "question":"A brief on types of customers",
-                "questionAnswer":section_a.A_brief_on_types(file_path),
+                "questionAnswer":json_merge["A brief on types of customers"],
               },
             ]
           },
@@ -315,22 +366,22 @@ def parse_brsr_text_section_a(file_path,json_merge):
               {
               "questionNo": "1",
               "question": "Employees and workers (including differently abled):",
-              "questionAnswer":section_a.Employees_and_workers(file_path),
+              "questionAnswer":table_1.table(result,sec_a.Employees_and_workers),
               },
               {
               "questionNo": "2",
               "question": "Differently abled Employees and workers:",
-              "questionAnswer":section_a.Differently_abled_employees(file_path),
+              "questionAnswer":table_1.table(result,sec_a.Differently_abled_Employees),
               },
               {
                 "questionNo": "3",
                 "question": "Participation/Inclusion/Representation of women",
-                "questionAnswer":section_a.Participation_Inclusion(file_path),#json_merge["Participation/Inclusion/Representation of women"]
+                "questionAnswer":table_1.table(result,sec_a.Participation_Inclusion),
               },
               {
                 "questionNo": "4",
                 "question": "Turnover rate for permanent employees and workers (Disclose trends for the past 3 years)",
-                "questionAnswer":section_a.Turnover_rate(file_path),#json_merge["Turnover rate for permanent employees and workers (Disclose trends for the past 3 years)"]
+                "questionAnswer":table_1.table(result,sec_a.Turnover_rate_for_permanent),
               }
             ]
           },
@@ -340,8 +391,8 @@ def parse_brsr_text_section_a(file_path,json_merge):
             "questions": [
               {
                 "questionNo": "1",
-                "question": "How many products have undergone a carbon footprint assessment?",
-                "questionAnswer":section_a.Names_of_holding(file_path),#json_merge["How many products have undergone a carbon footprint assessment?"]
+                "question": "Names of holding/subsidiary/associate companies/joint ventures",
+                "questionAnswer":table_1.table(result,sec_a.Names_of_holding),
               }
             ]
           },
@@ -352,17 +403,17 @@ def parse_brsr_text_section_a(file_path,json_merge):
             {
             "questionNo": "1",
             "question": "Whether CSR is applicable as per section 135 of Companies Act, 2013: (Yes/No)",
-            "questionAnswer":section_a.Whether_CSR(file_path),
+            "questionAnswer":json_merge["Whether CSR is applicable as per section 135 of Companies Act, 2013: (Yes/No)"],
             },
                         {
             "questionNo": "2",
             "question": "Turnover (in Rs.)",
-            "questionAnswer":section_a.Turnover(file_path),
+            "questionAnswer":json_merge["Turnover (in Rs.)"],
             },
             {
             "questionNo": "3",
             "question": "Net worth (in Rs.)",
-            "questionAnswer":section_a.Net_worth(file_path),
+            "questionAnswer":json_merge["Net worth (in Rs.)"],
             },
             ]
           },
@@ -373,12 +424,12 @@ def parse_brsr_text_section_a(file_path,json_merge):
               {
                 "questionNo": "1",
                 "question": "Complaints/Grievances on any of the principles (Principles 1 to 9) under the National Guidelines on Responsible Business Conduct:",
-                "questionAnswer":section_a.Complaints_Grievances(file_path),
+                "questionAnswer":table_1.table(result,sec_a.Complaints_Grievances),
               },
               {
             "questionNo": "2",
             "question": "Please indicate material responsible business conduct and sustainability issues pertaining to environmental and social matters that present a risk or an opportunity to your business, rationale for identifying the same, approach to adapt or mitigate the risk along-with its financial implications, as per the following format.",
-            "questionAnswer":section_a.Please_indicate_material(file_path),
+            "questionAnswer":table_1.table(result,sec_a.Please_indicate_material),
             },
 
             ]
@@ -389,8 +440,11 @@ def parse_brsr_text_section_a(file_path,json_merge):
  }
 
 
-def parse_brsr_text_section_b(file_path):
+def parse_brsr_text_section_b(file_path,json_merge):
     print("sucessfully file sent",file_path)
+    result=table_2.llama_parse_function(file_path)
+    print("@@@@@@@@@@@@@@@",result)
+
 
     return{
       "data":
@@ -406,49 +460,49 @@ def parse_brsr_text_section_b(file_path):
                 "questionNo": "1",
                 "question": "Whether your entity’s policy/policies cover each principle and its core elements of the NGRBCs. (Yes/No)",
                 
-                "questionAnswer":section_b.Whether_your_entity(file_path),
+                "questionAnswer":table_2.table(result,sec_b.Whether_your_entity),
               },
               {
                 "questionNo": "2",
                 "question": "Has the policy been approved by the Board? (Yes/No)",
                 
-                "questionAnswer":section_b.Has_the_policy(file_path),
+                "questionAnswer":table_2.table(result,sec_b.Has_the_policy),
               },
               {
                 "questionNo": "3",
-                "question": "Web Link of the Policies, if available.",
+                "question": "Web Link of the Policies, if available",
                 
-                "questionAnswer":section_b.Web_Link_of_Policies(file_path),
+                "questionAnswer":json_merge["Web Link of the Policies, if available"],
               },
               {
                 "questionNo": "4",
                 "question": "Whether the entity has translated the policy into procedures. (Yes / No)",
                 
-                "questionAnswer":section_b.Whether_entity_translated(file_path),
+                "questionAnswer":table_2.table(result,sec_b.Whether_the_entity),
               },
               {
                 "questionNo": "5",
                 "question": "Do the enlisted policies extend to your value chain partners? (Yes/No)",
                 
-                "questionAnswer":section_b.Do_the_enlisted(file_path),
+                "questionAnswer":table_2.table(result,sec_b.Do_the_enlisted),
               },
               {
                 "questionNo": "6",
                 "question": "Name of the national and international codes/ certifications/labels/ standards (e.g. Forest Stewardship Council, Fairtrade, Rainforest Alliance,Trustea) standards (e.g. SA 8000, OHSAS, ISO, BIS) adopted by your entity and mapped to each principle.",
                 
-                "questionAnswer":section_b.Name_of_the_national(file_path),
+                "questionAnswer":table_2.table(result,sec_b.Name_of_the_national),
               },
               {
                 "questionNo": "7",
                 "question": "Specific commitments, goals and targets set by the entity with defined timelines, if any.",
                 
-                "questionAnswer":section_b.Specific_commitments(file_path),
+                "questionAnswer":table_2.table(result,sec_b.Specific_commitments),
               },
               {
                 "questionNo": "8",
                 "question": "Performance of the entity against the specific commitments, goals and targets along-with reasons in case the same are not met.",
                 
-                "questionAnswer":section_b.Performance_of_the_entity(file_path),
+                "questionAnswer":json_merge["Performance of the entity against the specific commitments, goals and targets along-with reasons in case the same are not met."],
               },
 
             ]
@@ -461,59 +515,59 @@ def parse_brsr_text_section_b(file_path):
                 "questionNo": "1",
                 "question": "Statement by director responsible for the business responsibility report, highlighting ESG related challenges, targets and achievements (listed entity has flexibility regarding the placement of this disclosure)",
                 
-                "questionAnswer":section_b.Statement_by_director(file_path),
+                "questionAnswer":json_merge["Statement by director responsible for the business responsibility report, highlighting ESG related challenges, targets and achievements (listed entity has flexibility regarding the placement of this disclosure)"],
               },
               {
                 "questionNo": "2",
                 "question": "Details of the highest authority responsible for implementation and oversight of the Business Responsibility policy (ies).",
                 
-                # "questionAnswer":json_merge["Details of the highest authority responsible for implementation and oversight of the Business Responsibility policy (ies)."]
-                "questionAnswer":section_b.Details_of_the_highest(file_path),
-
+                "questionAnswer":json_merge["Details of the highest authority responsible for implementation and oversight of the Business Responsibility policy (ies)."]
               },
               {
                 "questionNo": "3",
                 "question": "Does the entity have a specified Committee of the Board/ Director responsible for decision making on sustainability related issues? (Yes / No). If yes, provide details.",
                 
-                # "questionAnswer":json_merge["Does the entity have a specified Committee of the Board/ Director responsible for decision making on sustainability related issues? (Yes / No). If yes, provide details."]
-                "questionAnswer":section_b.Specific_commitments(file_path),
+                "questionAnswer":table_2.table(result,sec_b.Does_the_entity),
               },
               {
                 "questionNo": "4",
                 "question": "Indicate whether review was undertaken by Director / Committee of the Board/ Any other Committee",
-                "questionAnswer":section_b.Indicate_whether_review(file_path),
+                "questionAnswer":table_2.table(result,sec_b.Indicate_whether_review),
               },
               {
                 "questionNo": "5",
                 "question": "Frequency(Annually/ Half yearly/ Quarterly/ Any other – please specify)",
-                "questionAnswer":section_b.Frequency_Annually(file_path),
+                "questionAnswer":table_2.table(result,sec_b.Frequency_Annually_Half_yearly),
               },
               {
                 "questionNo": "6",
                 "question": "Has the entity carried out independent assessment/ evaluation of the working of its policies by an external agency? (Yes/No). If yes, provide name of the agency.",
                 
-                "questionAnswer":section_b.Has_the_entity_carried(file_path),
-                # "questionAnswer":json_merge["Has the entity carried out independent assessment/ evaluation of the working of its policies by an external agency? (Yes/No). If yes, provide name of the agency."]
+                "questionAnswer":table_2.table(result,sec_b.Has_the_entity_carried),
               },
               {
                 "questionNo": "7",
                 "question": "If answer to question (1) above is “No” i.e. not all Principles are covered by a policy, reasons to be stated, as below:",
-                "questionAnswer":section_b.If_answer_to_question(file_path),
+                "questionAnswer":table_2.table(result,sec_b.If_answer_to_question),
               },
               {
                 "questionNo": "8",
                 "question": "Upstream (Suppliers & Logistics Partners)",                
-                "questionAnswer":"",
+                "questionAnswer":json_merge["Upstream (Suppliers & Logistics Partners)"],
               },
               {
                 "questionNo": "9",
                 "question": "Downstream (Distributors & Customers)",                
-                "questionAnswer":"",
+                "questionAnswer":json_merge["Upstream (Suppliers & Logistics Partners)"],
               },
               ]},]}}   
 
-def parse_brsr_text_section_c1(file_path):
+def parse_brsr_text_section_c1(file_path,json_merge):
   print("sucessfully file sent",file_path)
+  result=table_3.llama_parse_function(file_path)
+  print("#####################",result)
+  
+  
   return {
     "data":[
       {
@@ -527,67 +581,67 @@ def parse_brsr_text_section_c1(file_path):
               {
                 "questionNo": "1",
                 "question": "Percentage coverage by training and awareness programmes on any of the Principles during the financial year:",
-                "questionAnswer":principle_1.Percentage_coverage_by_training(file_path),#"Percentage coverage by training and awareness programmes on"),
+                "questionAnswer":table_3.table(result,sec_c.percentage_coverage),#principle_1.Percentage_coverage_by_training(file_path),
               },
               {
               "questionNo":"2",
               "question":"Details of fines / penalties /punishment/ award/ compounding fees/ settlement amount paid in proceedings (by the entity or by directors / KMPs) with regulators/ law enforcement agencies/ judicial institutions, in the financial year, in the following format (Note: the entity shall make disclosures on the basis of materiality as specified in Regulation 30 of SEBI (Listing Obligations and Disclosure Obligations) Regulations, 2015 and as disclosed on the entity’s website",
-              "questionAnswer":principle_1.Details_of_fines(file_path)
+              "questionAnswer":"",#json_merge["Details of fines / penalties /punishment/ award/ compounding fees/ settlement amount paid in proceedings (by the entity or by directors / KMPs) with regulators/ law enforcement agencies/ judicial institutions, in the financial year, in the following format (Note: the entity shall make disclosures on the basis of materiality as specified in Regulation 30 of SEBI (Listing Obligations and Disclosure Obligations) Regulations, 2015 and as disclosed on the entity’s website"],
               },
               {
                 "questionNo": "3",
                 "question":"Monetary",
-                "questionAnswer":principle_1.Monetary(file_path)#"Percentage coverage by training and awareness programmes on"),
+                "questionAnswer":table_3.table(result,sec_c.Monetary),
               },
               {
                 "questionNo": "4",
                 "question":"Non-Monetary",
-                "questionAnswer":principle_1.Non_Monetary(file_path)#"Percentage coverage by training and awareness programmes on"),
+                "questionAnswer":table_3.table(result,sec_c.Non_Monetary),
               },
               {
                 "questionNo": "5",
                 "question": "Of the instances disclosed in Question 2 above, details of the Appeal/ Revision preferred in cases where monetary or non-monetary action has been appealed.",
-                "questionAnswer":principle_1.Of_the_instances_disclosed(file_path),#"Of the instances disclosed in Question 2 above, details of the Appeal/ Revision")
+                "questionAnswer":table_3.table(result,sec_c.Of_the_instances_disclosed),
               },
                 {
                 "questionNo": "6",
                 "question": "Does the entity have an anti-corruption or anti-bribery policy? If yes, provide details in brief and if available, provide a web-link to the policy.",
-                "questionAnswer":principle_1.Does_the_entity_have_an_anti(file_path),#"Does the entity have an anti-corruption or anti-bribery policy? If yes, provide"),
+                "questionAnswer":json_merge["Does the entity have an anti-corruption or anti-bribery policy? If yes, provide details in brief and if available, provide a web-link to the policy."],
               },
                 {
                 "questionNo": "7",
                 "question": "Number of Directors/KMPs/employees/workers against whom disciplinary action was taken by any law enforcement agency for the charges of bribery/ corruption",
-                "questionAnswer":principle_1.Number_of_Directors(file_path),#"Number of Directors/KMPs/employees/workers against whom disciplinary action was taken by any law enforcement"),
+                "questionAnswer":table_3.table(result,sec_c.Number_of_Directors),
               },
                 {
                 "questionNo": "8",
                 "question": "Details of complaints with regard to conflict of interest",
-                "questionAnswer":principle_1.Details_of_complaints(file_path),#"Details of complaints with regard to conflict of interest"),
+                "questionAnswer":table_3.table(result,sec_c.Number_of_Complaints),
               },
                 {
                 "questionNo": "9",
                 "question": "Provide details of any corrective action taken or underway on issues related to fines / penalties / action taken by regulators/ law enforcement agencies/ judicial institutions, on cases of corruption and conflicts of interest.",
-                "questionAnswer":principle_1.Provide_details_of_any_corrective(file_path),#"Provide details of any corrective action taken or underway on issues related to fines / penalties / action taken by regulators/"),
+                "questionAnswer":json_merge["Provide details of any corrective action taken or underway on issues related to fines / penalties / action taken by regulators/ law enforcement agencies/ judicial institutions, on cases of corruption and conflicts of interest."],
               },
                 {
                 "questionNo": "10",
                 "question": "Number of days of accounts payables ((Accounts payable *365) / Cost of goods/services procured) in the following format:",
-                "questionAnswer":principle_1.Number_of_days_of_accounts(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Number_of_days),#principle_1.Number_of_days_of_accounts(file_path),
               },
                 {
                 "questionNo": "11",
                 "question": "Provide details of concentration of purchases and sales with trading houses, dealers, and related parties along-with loans and advances & investments, with related parties, in the following format:",
-                "questionAnswer":principle_1.Provide_details_of_concentration_of_purchases(file_path),#"Awareness programmes conducted for value chain partners on any"),
+                "questionAnswer":table_3.table(result,sec_c.Provide_details_of_concentration),#principle_1.Provide_details_of_concentration_of_purchases(file_path),
               },
                 {
                 "questionNo": "12",
                 "question": "Awareness programmes conducted for value chain partners on any of the Principles during the financial year:",
-                "questionAnswer":principle_1.Awareness_programmes_conducted(file_path),#"Awareness programmes conducted for value chain partners on any"),
+                "questionAnswer":table_3.table(result,sec_c.Awareness_programmes),#principle_1.Awareness_programmes_conducted(file_path),
               },
                 {
                 "questionNo": "13",
                 "question": "Does the entity have processes in place to avoid/ manage conflict of interests involving members of the Board? (Yes/No) If Yes, provide details of the same.",
-                "questionAnswer":principle_1.Does_the_entity_have_processes(file_path),#"Does the entity have processes in place"),
+                "questionAnswer":json_merge["Does the entity have processes in place to avoid/ manage conflict of interests involving members of the Board? (Yes/No) If Yes, provide details of the same."],#principle_1.Does_the_entity_have_processes(file_path),
               }
 
             ]
@@ -1347,15 +1401,13 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
             
           chunks = chunk_text(text)
           results = [extract_fields_with_gemini_a(chunk) for chunk in chunks[:5]]
-          # print(results)
           merged = merge_results(results)          
           res=parse_brsr_text_section_a(temp_path,merged)
-          return res
+          return {"response":res,"brsrfilename":temp_path}  
 
           
           
       finally:
-        import os
         end_time = time.time()  # End time
         total_seconds = end_time - start_time
         minutes = int(total_seconds // 60)
@@ -1379,11 +1431,16 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
               text = extract_text_from_docx(temp_path)
 
                     
-          res=parse_brsr_text_section_b(temp_path)
-          return res          
 
+          chunks = chunk_text(text)
+          results = [extract_fields_with_gemini_b(chunk) for chunk in chunks[:5]]
+          # print(results)
+          merged = merge_results(results)          
+          res=parse_brsr_text_section_b(temp_path,merged)
+          # return res
+          return {"response":res,"brsrfilename":temp_path}  
+        
       finally:
-        import os
         end_time = time.time()  # End time
         total_seconds = end_time - start_time
         minutes = int(total_seconds // 60)
@@ -1394,6 +1451,7 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
     elif questionKey=="section_c" and principleKey==principleKey:
       print(questionKey)
       print(principleKey)
+      print(type(Extract_keys.KEYS_TO_EXTRACT_C1))
       def principlefun(principlestr):
         principles={
           "principle_1":parse_brsr_text_section_c1,
@@ -1407,7 +1465,23 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
           "principle_9":parse_brsr_text_section_c9,
           }
         return principles[principlestr]
+      # def extractkeyfun(principlestr):
+      #   extractkeyfuns={
+      #     "principle_1":"KEYS_TO_EXTRACT_C1",
+      #     "principle_2":"KEYS_TO_EXTRACT_C2",
+      #     "principle_3":"KEYS_TO_EXTRACT_C3",
+      #     "principle_4":4,
+      #     "principle_5":5,
+      #     "principle_6":"",
+      #     "principle_7":"",
+      #     "principle_8":"",
+      #     "principle_9":"",
+      #     }
+      #   return extractkeyfuns[principlestr]      
+
       principle_fun=principlefun(principleKey)         
+      # extractkey_fun=extractkeyfun(principleKey)
+      # print(extractkey_fun)         
       start_time = time.time()  # ⏱ Start time
       content = await file.read()
       temp_path = f"temp_{file.filename}"
@@ -1421,15 +1495,14 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
           else:
               text = extract_text_from_docx(temp_path)
                     
-          # chunks = chunk_text(text)
-          # results = [extract_fields_with_gemini_c(chunk) for chunk in chunks[:5]]
+          chunks = chunk_text(text)
+          results = [extract_fields_with_gemini_c(chunk,principleKey) for chunk in chunks[:5]]
           
-          # merged = merge_results(results)
-          res=principle_fun(temp_path)
+          merged = merge_results(results)
+          res=principle_fun(temp_path,merged)
           return res          
 
       finally:
-        import os
         end_time = time.time()  # End time
         total_seconds = end_time - start_time
         minutes = int(total_seconds // 60)
@@ -1439,9 +1512,6 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
     else:
       return "SECTION NOT FOUND !"
     
-class SubmitRequest(BaseModel):
-    texts: Union[Dict[str, Any], list]  # Accepts a dictionary or a list
-    sectionfind: str
 
 @app.post("/submit/" )
 async def extract_document(payload:SubmitRequest,db: Session = Depends(get_db)):
@@ -1459,7 +1529,7 @@ async def extract_document(payload:SubmitRequest,db: Session = Depends(get_db)):
      "title": "GENERAL DISCLOSURES",
      "section": "SECTION A",
      "Categories": [
-          { "partRoman":"I",
+        { "partRoman":"I",
         "categoryNo": "one",
         "subtitle": "Details of the listed entity",
         "questions": [
@@ -1490,8 +1560,8 @@ async def extract_document(payload:SubmitRequest,db: Session = Depends(get_db)):
             },
           {
             "questionNo": "6",
-            "question": "E-mail",
-            "questionAnswer":texts.get("Email","Not Applicable")
+            "question": "Email",
+            "questionAnswer":texts.get("email","Not Applicable")
           },
 
           {
@@ -1614,8 +1684,8 @@ async def extract_document(payload:SubmitRequest,db: Session = Depends(get_db)):
             "questions": [
               {
                 "questionNo": "1",
-                "question": "How many products have undergone a carbon footprint assessment?",
-                "questionAnswer":texts.get("how many products have undergone a carbon footprint assessment?","Not Applicable"),
+                "question": "Names of holding/subsidiary/associate companies/joint ventures",
+                "questionAnswer":texts.get("Names of holding/subsidiary/associate companies/joint ventures","Not Applicable"),
               }
             ]
           },
@@ -2477,7 +2547,7 @@ async def extract_document(payload:SubmitRequest,db: Session = Depends(get_db)):
         
           # 1. Save section
 
-        filename = pdf.get_entity_name(data)
+        filename =payload.brsrfilename.replace(".pdf", "")
         print("filename", filename)
         table_name = filename
 
@@ -2534,38 +2604,36 @@ async def extract_document(payload:SubmitRequest,db: Session = Depends(get_db)):
 
 
 
-
-
 @app.get("/report_list/", response_model=ReportListResponse)
-def get_all_table_datas(db: Session = Depends(get_db)):
+async def get_all_table_datas(db: Session = Depends(get_db)):
     """
     Returns all dynamically created table names from table_registry.
     """
     tables = db.query(TableRegistry).order_by(TableRegistry.created_at.asc()).all()
 
     if tables:
-        name = [table.table_name for table in tables]
-        len_table = len(name)
-        created_date = [table.created_at for table in tables]    
-        period = ["FY 2024 -2026" for _ in range(len_table)]
-        progress = [pdf.random_number() for _ in range(len_table)]
-        status = ["Saved" for _ in range(len_table)]
+        report_items = [
+            ReportItem(
+                name=table.table_name,
+                created_date=table.created_at,
+                period="FY 2024 -2026",
+                progress=pdf.random_number(),
+                status="Saved",
+                section=table.section
+            )
+            for table in tables
+        ]
 
-        return ReportListResponse(
-            name=name,
-            created_date=created_date,
-            period=period,
-            progress=progress,
-            status=status
-        )
-    else:
-        return None
+        report_list_model = ReportListResponse(reports=report_items)
+        return report_list_model
+    else:        
+      return None
 
     
 
 
 @app.get("/edit_pdf_report_get/{raw_table_name}")
-def edit_pdf_report_get(raw_table_name:str,db:Session=Depends(get_db)):
+async def edit_pdf_report_get(raw_table_name:str,db:Session=Depends(get_db)):
   PDFTable=create_pdf_model(raw_table_name)
   if raw_table_name not in Base.metadata.tables:
     return {"message":f"pdf not exist !"}
@@ -2587,11 +2655,10 @@ def edit_pdf_report_get(raw_table_name:str,db:Session=Depends(get_db)):
 
 
 
-
-@app.put("/edit_pdf_report_put")
+@app.put("/edit_pdf_report_put/")
 async def edit_pdf_report_put(raw_dict: Dict, db: Session = Depends(get_db)):
     print("Received:", raw_dict)
-
+    edited=False
     texts = raw_dict.get("texts", {})
     sectionfind = raw_dict.get("sectionfind")
     currentsection = raw_dict.get("currentsection")
@@ -2614,8 +2681,8 @@ async def edit_pdf_report_put(raw_dict: Dict, db: Session = Depends(get_db)):
     # Get section info from registry
     table_entry = db.query(TableRegistry).filter(TableRegistry.table_name == filename).first()
     if not table_entry:
-        raise HTTPException(status_code=404, detail="Table metadata not found in registry.")
-
+      raise HTTPException(status_code=404, detail="Table metadata not found in registry.")
+    edited=True
     section = table_entry.section
     print("Table name:", table_entry.table_name)
     print("Section:", section)
@@ -2630,13 +2697,13 @@ async def edit_pdf_report_put(raw_dict: Dict, db: Session = Depends(get_db)):
             updated_count += 1
 
     db.commit()
-    return filename
-
+    
+    return {"filename":filename,"edited":edited}
 
 
 
 @app.get("/download_pdf_report/{raw_table_name}")
-def download_pdf_report(raw_table_name: str, db: Session = Depends(get_db)):
+async def download_pdf_report(raw_table_name: str, db: Session = Depends(get_db)):
 
     # Step 1: Dynamically create model
     PDFTable = create_pdf_model(raw_table_name)
@@ -2673,32 +2740,8 @@ def download_pdf_report(raw_table_name: str, db: Session = Depends(get_db)):
 
 
 
-# @app.delete("/delete_pdf_report/{raw_table_name}")
-# async def delete_pdf_report(raw_table_name:Any,db:Session=Depends(get_db)):
-#   print("YHISSJ",raw_table_name)
-
-#   if raw_table_name not in Base.metadata.tables:
-#       return {"message": f"Model for table '{raw_table_name}' is not registered"}  
-#   inspector = inspect(db.get_bind())
-#   if not inspector.has_table(raw_table_name):
-#       raise HTTPException(status_code=404, detail=f"Table '{raw_table_name}' does not exist in the database.")
-
-#   table_entry = db.query(TableRegistry).filter(TableRegistry.table_name == raw_table_name).first()
-#   if not table_entry:
-#       raise HTTPException(status_code=404, detail="Table metadata not found in registry.")
-
-#   section = table_entry.section
-#   print("Table name:", table_entry.table_name)
-#   print("Section:", section)
-#   print("Starting updates...")
-#   db.delete(table_entry)
-#   db.commit()
-
-#   return raw_table_name
-
-
 @app.delete("/delete_pdf_report/{raw_table_name}")
-def delete_pdf_report(raw_table_name: str, db: Session = Depends(get_db)):
+async def delete_pdf_report(raw_table_name: str, db: Session = Depends(get_db)):
     # Step 1: Check if the table is registered in table_registry
     registry_entry = db.query(TableRegistry).filter_by(table_name=raw_table_name).first()
     if not registry_entry:
@@ -2723,6 +2766,9 @@ def delete_pdf_report(raw_table_name: str, db: Session = Depends(get_db)):
     db.commit()
 
     return raw_table_name
+
+
+
 
 if __name__ == "__main__":
     uvicorn.run("test:app", host="0.0.0.0", port=1000, reload=False, log_level="debug" )
