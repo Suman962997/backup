@@ -21,7 +21,6 @@ def extract_text_from_pdf(pdf_path: str) -> str:
 
 
 def extract_tables_with_questions(text: str) -> List[Dict[str, str]]:
-    # print(text)
     tables_with_questions = []
     lines = text.splitlines()
 
@@ -97,35 +96,6 @@ def match_questions_to_tables(tables: List[Dict[str, str]], questions: List[str]
 
 ##################################QUESTIONS#############################################
 
-
-# def table(result: Dict[str, List[Dict[str, str]]],qdict:Dict):
-#     question=qdict.get("question",None)
-#     column=qdict.get("columns",None)
-#     # print("result",result)
-#     print("question",question)
-#     print("column",column)
-    
-#     table_json =result.get(question, None)
-#     column =column
-
-#     if not table_json:
-#         return []
-
-#     filtered_table = []
-#     for row in table_json:
-#         filtered_row = {}
-#         for canonical_col, aliases in column.items():
-#             for alias in aliases:
-#                 if alias in row:
-#                     filtered_row[canonical_col] = row[alias]
-#                     break
-#             else:
-#                 filtered_row[canonical_col] = ""  # default if none found
-#         filtered_table.append(filtered_row)
-
-#     return filtered_table
-
-
 def normalize(text: str) -> str:
     """Lowercase, remove punctuation, extra whitespace."""
     return re.sub(r'\s+', ' ', re.sub(r'[^\w\s]', '', text.lower())).strip()
@@ -145,9 +115,6 @@ def fuzzy_match(target: str, candidates: List[str], threshold: float = 0.85) -> 
 def table(result: Dict[str, List[Dict[str, str]]], qdict: Dict) -> List[Dict[str, str]]:
     question = qdict.get("question", "")
     column = qdict.get("columns", {})
-
-    print("question:", question)
-    print("column:", column)
 
     # Normalize all keys in result to match against normalized question
     normalized_result = {normalize(k): v for k, v in result.items()}
@@ -181,8 +148,9 @@ def table(result: Dict[str, List[Dict[str, str]]], qdict: Dict) -> List[Dict[str
 
 
 
-def llama_parse_function(pdf_path:str):
+def llama_parse_function(pdf_path:str,section_key:int):
     start_time = time.time()  # ⏱ Start time 
+    
     
     questions_1= [
     "Percentage coverage by training and awareness programmes on any of the Principles during the financial year:",
@@ -280,12 +248,27 @@ def llama_parse_function(pdf_path:str):
         "Details of instances of product recalls on account of safety issues:",        
     ]
 
+    def section_key_fun(section):
+        question_dict={
+            1:questions_1,
+            2:questions_2,
+            3:questions_3,
+            4:questions_4,
+            5:questions_5,
+            6:questions_6,
+            7:questions_7,
+            8:questions_8,
+            9:questions_9,
+        }
+        
+        return question_dict[section]
 
-    # pdf_path = r"C:\Users\coda\Documents\titan.pdf"
 
+    question=section_key_fun(section_key)
+    print("MIMIMIMI",question)
     text = extract_text_from_pdf(pdf_path)
     tables = extract_tables_with_questions(text)
-    results = match_questions_to_tables(tables, questions_1)
+    results = match_questions_to_tables(tables, question)
 
 
     end_time = time.time()  # End time

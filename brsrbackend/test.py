@@ -184,11 +184,17 @@ def extract_fields_with_gemini_c(text_chunk: str,principle_key:str) -> dict:
       "principle_2":Extract_keys.KEYS_TO_EXTRACT_C2,
       "principle_3":Extract_keys.KEYS_TO_EXTRACT_C3,
       "principle_4":Extract_keys.KEYS_TO_EXTRACT_C4,
-      "principle_5":Extract_keys.KEYS_TO_EXTRACT_C5
+      "principle_5":Extract_keys.KEYS_TO_EXTRACT_C5,
+      "principle_6":Extract_keys.KEYS_TO_EXTRACT_C6,
+      "principle_7":Extract_keys.KEYS_TO_EXTRACT_C7,
+      "principle_8":Extract_keys.KEYS_TO_EXTRACT_C8,
+      "principle_9":Extract_keys.KEYS_TO_EXTRACT_C9,
+
       }
       return extract_key_fun_c[principle_key]
+    
     extract_section_key=extract_key_fun_c(principle_key)
-
+    
     print(extract_section_key)
     # print(text_chunk)
     model = genai.GenerativeModel("gemini-2.0-flash" )
@@ -443,7 +449,7 @@ def parse_brsr_text_section_a(file_path,json_merge):
 def parse_brsr_text_section_b(file_path,json_merge):
     print("sucessfully file sent",file_path)
     result=table_2.llama_parse_function(file_path)
-    print("@@@@@@@@@@@@@@@",result)
+    # print("@@@@@@@@@@@@@@@",result)
 
 
     return{
@@ -564,7 +570,7 @@ def parse_brsr_text_section_b(file_path,json_merge):
 
 def parse_brsr_text_section_c1(file_path,json_merge):
   print("sucessfully file sent",file_path)
-  result=table_3.llama_parse_function(file_path)
+  result=table_3.llama_parse_function(file_path,1)
   print("#####################",result)
   
   
@@ -586,7 +592,7 @@ def parse_brsr_text_section_c1(file_path,json_merge):
               {
               "questionNo":"2",
               "question":"Details of fines / penalties /punishment/ award/ compounding fees/ settlement amount paid in proceedings (by the entity or by directors / KMPs) with regulators/ law enforcement agencies/ judicial institutions, in the financial year, in the following format (Note: the entity shall make disclosures on the basis of materiality as specified in Regulation 30 of SEBI (Listing Obligations and Disclosure Obligations) Regulations, 2015 and as disclosed on the entity’s website",
-              "questionAnswer":"",#json_merge["Details of fines / penalties /punishment/ award/ compounding fees/ settlement amount paid in proceedings (by the entity or by directors / KMPs) with regulators/ law enforcement agencies/ judicial institutions, in the financial year, in the following format (Note: the entity shall make disclosures on the basis of materiality as specified in Regulation 30 of SEBI (Listing Obligations and Disclosure Obligations) Regulations, 2015 and as disclosed on the entity’s website"],
+              "questionAnswer":"",
               },
               {
                 "questionNo": "3",
@@ -649,8 +655,11 @@ def parse_brsr_text_section_c1(file_path,json_merge):
                 ]
       }]}
 
-def parse_brsr_text_section_c2(file_path):
+def parse_brsr_text_section_c2(file_path,json_merge):
   print("sucessfully file sent",file_path)
+  result=table_3.llama_parse_function(file_path,2)
+  print("#####################",result)
+  
   return {
     "data":[
       {
@@ -664,57 +673,57 @@ def parse_brsr_text_section_c2(file_path):
               {
                 "questionNo": "1",
                 "question": "Percentage of R&D and capital expenditure (capex) investments in specific technologies to improve the environmental and social impacts of product and processes to total R&D and capex investments made by the entity, respectively.",
-                "questionAnswer":principle_2.Percentage_of_R_and_D(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Percentage_of_RD),
               },
               {
                 "questionNo": "2",
                 "question": "Does the entity have procedures in place for sustainable sourcing? (Yes/No)",
-                "questionAnswer":principle_2.Does_the_entity_have_procedures(file_path),
+                "questionAnswer":json_merge["Does the entity have procedures in place for sustainable sourcing? (Yes/No)"]
               },
               {
                 "questionNo": "3",
                 "question": "If yes, what percentage of inputs were sourced sustainably?",
-                "questionAnswer":principle_2.b_If_yes_what_percentage(file_path),
+                "questionAnswer":json_merge["If yes, what percentage of inputs were sourced sustainably?"]
               },
               {
                 "questionNo": "4",
                 "question": "Describe the processes in place to safely reclaim your products for reusing, recycling and disposing at the end of life, for :",
-                "questionAnswer": principle_2.Describe_the_processes_in_place(file_path),
+                "questionAnswer":json_merge["Describe the processes in place to safely reclaim your products for reusing, recycling and disposing at the end of life, for :"],
               },
 
               {
                 "questionNo": "5",
                 "question": "Whether Extended Producer Responsibility (EPR) is applicable to the entity’s activities (Yes / No). If yes, whether the waste collection plan is in line with the Extended Producer Responsibility (EPR) plan submitted to Pollution Control Boards? If not, provide steps taken to address the same.",
-                "questionAnswer":principle_2.Whether_Extended_Producer_Responsibility_EPR(file_path),#json_merge["Whether Extended Producer Responsibility (EPR) is applicable to the entity’s activities (Yes / No). If yes, whether the waste collection plan is in line with the Extended Producer Responsibility (EPR) plan submitted to Pollution Control Boards? If not, provide steps taken to address the same."],
+                "questionAnswer":json_merge["Whether Extended Producer Responsibility (EPR) is applicable to the entity’s activities (Yes / No). If yes, whether the waste collection plan is in line with the Extended Producer Responsibility (EPR) plan submitted to Pollution Control Boards? If not, provide steps taken to address the same."]
               },
 
               {
                 "questionNo": "6",
                 "question": "Has the entity conducted Life Cycle Perspective / Assessments (LCA) for any of its products (for manufacturing industry) or for its services (for service industry)? If yes, provide details in the following format?",
-                "questionAnswer": principle_2.Has_the_entity_conducted_Life(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Has_the_entity),
               },
 
               {
                 "questionNo": "7",
                 "question": "If there are any significant social or environmental concerns and/or risks arising from production or disposal of your products / services, as identified in the Life Cycle Perspective / Assessments (LCA) or through any other means, briefly describe the same along-with action taken to mitigate the same.",
-                "questionAnswer":principle_2.If_there_are_any_significant_social(file_path),#json_merge["If there are any significant social or environmental concerns and/or risks arising from production or disposal of your products / services, as identified in the Life Cycle Perspective / Assessments (LCA) or through any other means, briefly describe the same along-with action taken to mitigate the same."],
+                "questionAnswer":table_3.table(result,sec_c.If_there_are_any),#json_merge["If there are any significant social or environmental concerns and/or risks arising from production or disposal of your products / services, as identified in the Life Cycle Perspective / Assessments (LCA) or through any other means, briefly describe the same along-with action taken to mitigate the same."],
               },
 
               {
                 "questionNo": "8",
                 "question": "Percentage of recycled or reused input material to total material (by value) used in production (for manufacturing industry) or providing services (for service industry)",
-                "questionAnswer":principle_2.Percentage_of_recycled(file_path),#json_merge["Percentage of recycled or reused input material to total material (by value) used in production (for manufacturing industry) or providing services (for service industry)"],
+                "questionAnswer":table_3.table(result,sec_c.Percentage_of_recycled),#json_merge["Percentage of recycled or reused input material to total material (by value) used in production (for manufacturing industry) or providing services (for service industry)"],
               },
 
               {
                 "questionNo": "9",
                 "question": "Of the products and packaging reclaimed at end of life of products, amount (in metric tonnes) reused, recycled, and safely disposed, as per the following format:",
-                "questionAnswer":principle_2.Of_the_products_and_packaging(file_path),#json_merge["Of the products and packaging reclaimed at end of life of products, amount (in metric tonnes) reused, recycled, and safely disposed, as per the following format:"],
+                "questionAnswer":table_3.table(result,sec_c.Of_the_products),#json_merge["Of the products and packaging reclaimed at end of life of products, amount (in metric tonnes) reused, recycled, and safely disposed, as per the following format:"],
               },
               {
                 "questionNo": "10",
                 "question": "Reclaimed products and their packaging materials (as percentage of products sold) for each product category.",
-                "questionAnswer": principle_2.Reclaimed_products(file_path),#json_merge["Reclaimed products and their packaging materials (as percentage of products sold) for each product category."],
+                "questionAnswer": table_3.table(result,sec_c.Reclaimed_products),#json_merge["Reclaimed products and their packaging materials (as percentage of products sold) for each product category."],
               },
         ]
       },
@@ -722,8 +731,11 @@ def parse_brsr_text_section_c2(file_path):
                 ]
       }]}
 
-def parse_brsr_text_section_c3(file_path):
+def parse_brsr_text_section_c3(file_path,json_merge):
   print("sucessfully file sent",file_path)
+  result=table_3.llama_parse_function(file_path,3)
+  print("#####################",result)
+
   return {
     "data":[
       {
@@ -737,135 +749,140 @@ def parse_brsr_text_section_c3(file_path):
               {
                 "questionNo": "1",
                 "question":"Details of measures for the well-being of employees:",
-                "questionAnswer":principle_3.well_being_of_employees(file_path),#json_merge["Details of retirement benefits, for Current and Previous FY"],
+                "questionAnswer":table_3.table(result,sec_c.well_being_of_employees),#json_merge["Details of retirement benefits, for Current and Previous FY"],
               },
               {
                 "questionNo": "2",
                 "question":"Details of measures for the well-being of workers:",
-                "questionAnswer":principle_3.well_being_of_Workers(file_path),#json_merge["Details of retirement benefits, for Current and Previous FY"],
+                "questionAnswer":table_3.table(result,sec_c.well_being_of_workers),
               },
               {
                 "questionNo": "3",
                 "question": "Details of retirement benefits, for Current and Previous FY",
-                "questionAnswer":principle_3.Details_retirement_benefits(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Details_of_retirement_benefits),
               },
               {
                 "questionNo": "4",
                 "question": "Accessibility of workplaces",
-                "questionAnswer":principle_3.Accessibility_of_workplaces(file_path),
+                "questionAnswer":json_merge["Accessibility of workplaces"]#principle_3.Accessibility_of_workplaces(file_path),
               },
               {
                 "questionNo": "5",
                 "question": "Does the entity have an equal opportunity policy as per the Rights of Persons with Disabilities Act, 2016? If so, provide a web-link to the policy.",
-                "questionAnswer":principle_3.Does_the_entity_have_an_equal(file_path),#json_merge["Does the entity have an equal opportunity policy as per the Rights of Persons with Disabilities Act, 2016? If so, provide a web-link to the policy."],
+                "questionAnswer":json_merge["Does the entity have an equal opportunity policy as per the Rights of Persons with Disabilities Act, 2016? If so, provide a web-link to the policy."]#principle_3.Does_the_entity_have_an_equal(file_path),#json_merge["Does the entity have an equal opportunity policy as per the Rights of Persons with Disabilities Act, 2016? If so, provide a web-link to the policy."],
               },
               {
                 "questionNo": "6",
                 "question": "Return to work and Retention rates of permanent employees and workers that took parental leave.",
-                "questionAnswer":principle_3.Return_to_work(file_path),#json_merge["Return to work and Retention rates of permanent employees and workers that took parental leave."],
+                "questionAnswer":table_3.table(result,sec_c.Return_to_work),#json_merge["Return to work and Retention rates of permanent employees and workers that took parental leave."],
               },
               {
                 "questionNo": "7",
                 "question": "Is there a mechanism available to receive and redress grievances for the following categories of employees and worker? If yes, give details of the mechanism in brief",
-                "questionAnswer":principle_3.Is_there_mechanism(file_path),#json_merge["Is there a mechanism available to receive and redress grievances for the following categories of employees and worker? If yes, give details of the mechanism in brief"],
+                "questionAnswer":table_3.table(result,sec_c.Is_there_mechanism),#json_merge["Is there a mechanism available to receive and redress grievances for the following categories of employees and worker? If yes, give details of the mechanism in brief"],
               },
               {
                 "questionNo": "8",
                 "question": "Membership of employees and worker in association(s) or Unions recognised by the listed entity:",
-                "questionAnswer":principle_3.Membership_of_employees(file_path),#json_merge["Membership of employees and worker in association(s) or Unions recognised by the listed entity:"],
+                "questionAnswer":table_3.table(result,sec_c.Membership_employees),#json_merge["Membership of employees and worker in association(s) or Unions recognised by the listed entity:"],
               },
               {
                 "questionNo": "9",
                 "question": "Details of training given to employees and workers:",
-                "questionAnswer":principle_3.Details_of_training(file_path),#json_merge["Details of training given to employees and workers:"],
+                "questionAnswer":table_3.table(result,sec_c.Details_of_training),#json_merge["Details of training given to employees and workers:"],
               },
               {
                 "questionNo": "10",
                 "question": "Details of performance and career development reviews of employees and workers:",
-                "questionAnswer":principle_3.Details_of_performance(file_path),#json_merge["Details of performance and career development reviews of employees and workers:"],
+                "questionAnswer":table_3.table(result,sec_c.Details_of_performance),#json_merge["Details of performance and career development reviews of employees and workers:"],
               },
               {
                 "questionNo": "11",
                 "question":"Whether an occupational health and safety management system has been implemented by the entity? (Yes/ No). If yes, the coverage such system?",
-                "questionAnswer":principle_3.a_Whether_an_occupational(file_path),#json_merge["Details of performance and career development reviews of employees and workers:"],
+                "questionAnswer":json_merge["Whether an occupational health and safety management system has been implemented by the entity? (Yes/ No). If yes, the coverage such system?"]#principle_3.a_Whether_an_occupational(file_path),#json_merge["Details of performance and career development reviews of employees and workers:"],
               },
               {
                 "questionNo": "12",
                 "question":"What are the processes used to identify work-related hazards and assess risks on a routine and non-routine basis by the entity?",
-                "questionAnswer":principle_3.b_What_are_the_processes(file_path),#json_merge["Details of performance and career development reviews of employees and workers:"],
+                "questionAnswer":json_merge["What are the processes used to identify work-related hazards and assess risks on a routine and non-routine basis by the entity?"]#principle_3.b_What_are_the_processes(file_path),#json_merge["Details of performance and career development reviews of employees and workers:"],
               },
               {
                 "questionNo": "13",
                 "question":"Whether you have processes for workers to report the work related hazards and to remove themselves from such risks. (Y/N)",
-                "questionAnswer":principle_3.c_Whether_you_have_processes_for_workers(file_path),#json_merge["Details of performance and career development reviews of employees and workers:"],
+                "questionAnswer":json_merge["Whether you have processes for workers to report the work related hazards and to remove themselves from such risks. (Y/N)"]
               },
               {
                 "questionNo": "14",
                 "question":"Do the employees/ worker of the entity have access to non-occupational medical and healthcare services? (Yes/ No)",
-                "questionAnswer":principle_3.d_Do_the_employees_workers(file_path),#json_merge["Details of performance and career development reviews of employees and workers:"],
+                "questionAnswer":json_merge["Do the employees/ worker of the entity have access to non-occupational medical and healthcare services? (Yes/ No)"]
               },
               {
                 "questionNo": "15",
                 "question": "Details of safety related incidents, in the following format:",
-                "questionAnswer":principle_3.Details_safety_related(file_path),#json_merge["Details of safety related incidents, in the following format:"],
+                "questionAnswer":table_3.table(result,sec_c.Details_of_safety),
               },
               {
                 "questionNo": "16",
                 "question": "Describe the measures taken by the entity to ensure a safe and healthy work place",
-                "questionAnswer":principle_3.Describe_the_measures(file_path),#json_merge["Describe the measures taken by the entity to ensure a safe and healthy work place"],
+                "questionAnswer":json_merge["Describe the measures taken by the entity to ensure a safe and healthy work place"],
               },
               {
                 "questionNo": "17",
                 "question": "Number of Complaints on the following made by employees and workers:",
-                "questionAnswer":principle_3.Number_of_Complaints(file_path),#json_merge["Number of Complaints on the following made by employees and workers:"],
+                "questionAnswer":table_3.table(result,sec_c.Number_of_Complaints),
               },
               {
                 "questionNo": "18",
                 "question": "Assessments for the year:",
-                "questionAnswer":principle_3.Assessments_for_the_year(file_path),#json_merge["Assessments for the year:"],
+                "questionAnswer":table_3.table(result,sec_c.Assessments_for_the_year),
               },
               {
                 "questionNo": "19",
                 "question": "Provide details of any corrective action taken or underway to address safety-related incidents (if any) and on significant risks / concerns arising from assessments of health & safety practices and working conditions.",
-                "questionAnswer":principle_3.Provide_details_of_any_corrective(file_path),
+                "questionAnswer":json_merge["Provide details of any corrective action taken or underway to address safety-related incidents (if any) and on significant risks / concerns arising from assessments of health & safety practices and working conditions."]#principle_3.Provide_details_of_any_corrective(file_path),
               },
                 {
                 "questionNo": "20",
                 "question": "Does the entity extend any life insurance or any compensatory package in the event of death of (A) Employees (Y/N)",
-                "questionAnswer":principle_3.Does_the_entity_extend(file_path),
+                "questionAnswer":json_merge["Does the entity extend any life insurance or any compensatory package in the event of death of (A) Employees (Y/N)"]
               },
               {
                 "questionNo": "21",
                 "question": "Provide the measures undertaken by the entity to ensure that statutory dues have been deducted and deposited by the value chain partners",
-                "questionAnswer":principle_3.Provide_the_measures_undertaken(file_path),
+                "questionAnswer":json_merge["Provide the measures undertaken by the entity to ensure that statutory dues have been deducted and deposited by the value chain partners"]
               },
               {
                 "questionNo": "22",
                 "question": "Provide the number of employees / workers having suffered high consequence work-related injury / ill-health / fatalities (as reported in Q11 of Essential Indicators above), who have been are rehabilitated and placed in suitable employment or whose family members have been placed in suitable employment:",
-                "questionAnswer":principle_3.Provide_the_number_of_employees(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Provide_the_number_employees),
               },
               {
                 "questionNo": "23",
                 "question": "Does the entity provide transition assistance programs to facilitate continued employability and the management of career endings resulting from retirement or termination of employment? (Yes/ No)",
-                "questionAnswer":principle_3.Does_the_entity_provide_transition(file_path),
+                "questionAnswer":json_merge["Does the entity provide transition assistance programs to facilitate continued employability and the management of career endings resulting from retirement or termination of employment? (Yes/ No)"]
               },
               {
                 "questionNo": "24",
                 "question": "Details on assessment of value chain partners:",
-                "questionAnswer":principle_3.Details_on_assessment(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Details_on_assessment),
               },
               {
                 "questionNo": "25",
                 "question": "Provide details of any corrective actions taken or underway to address significant risks / concerns arising from assessments of health and safety practices and working conditions of value chain partners.",
-                "questionAnswer":principle_3.Provide_details_of_any_corrective(file_path),
+                "questionAnswer":json_merge["Provide details of any corrective actions taken or underway to address significant risks / concerns arising from assessments of health and safety practices and working conditions of value chain partners."]
               },
         ]
       },
                 ]
       }]}
 
-def parse_brsr_text_section_c4(file_path):
+def parse_brsr_text_section_c4(file_path,json_merge):
   print("sucessfully file sent",file_path)
+  result=table_3.llama_parse_function(file_path,4)
+  print("#####################",result)
+
+
+  
   return {
     "data":[
       {
@@ -880,27 +897,27 @@ def parse_brsr_text_section_c4(file_path):
               {
                 "questionNo": "1",
                 "question": "Describe the processes for identifying key stakeholder groups of the entity.",
-                "questionAnswer":principle_4.Describe_the_processes(file_path),
+                "questionAnswer":json_merge["Describe the processes for identifying key stakeholder groups of the entity."]
               },
               {
                 "questionNo": "2",
                 "question": "List stakeholder groups identified as key for your entity and the frequency of engagement with each stakeholder group.",
-                "questionAnswer":principle_4.List_stakeholder(file_path),
+                "questionAnswer":table_3.table(result,sec_c.List_stakeholder),
               },
               {
                 "questionNo": "3",
                 "question": "Provide the processes for consultation between stakeholders and the Board on economic, environmental, and social topics or if consultation is delegated, how is feedback from such consultations provided to the Board.",
-                "questionAnswer":principle_4.Provide_the_processes(file_path),#json_merge["Provide the processes for consultation between stakeholders and the Board on economic, environmental, and social topics or if consultation is delegated, how is feedback from such consultations provided to the Board."],
+                "questionAnswer":json_merge["Provide the processes for consultation between stakeholders and the Board on economic, environmental, and social topics or if consultation is delegated, how is feedback from such consultations provided to the Board."]#principle_4.Provide_the_processes(file_path),#json_merge["Provide the processes for consultation between stakeholders and the Board on economic, environmental, and social topics or if consultation is delegated, how is feedback from such consultations provided to the Board."],
               },
               {
                 "questionNo": "4",
                 "question": "Whether stakeholder consultation is used to support the identification and management of environmental, and social topics (Yes / No). If so, provide details of instances as to how the inputs received from stakeholders on these topics were incorporated into policies and activities of the entity",
-                "questionAnswer":principle_4.Whether_stakeholder_consultation(file_path),#json_merge["Whether stakeholder consultation is used to support the identification and management of environmental, and social topics (Yes / No). If so, provide details of instances as to how the inputs received from stakeholders on these topics were incorporated into policies and activities of the entity"],
+                "questionAnswer":json_merge["Whether stakeholder consultation is used to support the identification and management of environmental, and social topics (Yes / No). If so, provide details of instances as to how the inputs received from stakeholders on these topics were incorporated into policies and activities of the entity"]
               },
               {
                 "questionNo": "5",
                 "question": "Provide details of instances of engagement with, and actions taken to, address the concerns of vulnerable/ marginalized stakeholder groups.",
-                "questionAnswer":principle_4.Provide_details_of_instances(file_path),#json_merge["Provide details of instances of engagement with, and actions taken to, address the concerns of vulnerable/ marginalized stakeholder groups."],
+                "questionAnswer":json_merge["Provide details of instances of engagement with, and actions taken to, address the concerns of vulnerable/ marginalized stakeholder groups."]
               },
 
 
@@ -909,8 +926,11 @@ def parse_brsr_text_section_c4(file_path):
                 ]
       }]}
 
-def parse_brsr_text_section_c5(file_path):
+def parse_brsr_text_section_c5(file_path,json_merge):
   print("sucessfully file sent",file_path)
+  result=table_3.llama_parse_function(file_path,5)
+  print("#####################",result)
+
   return {
     "data":[
       {
@@ -924,87 +944,82 @@ def parse_brsr_text_section_c5(file_path):
               {
                 "questionNo": "1",
                 "question": "Employees and workers who have been provided training on human rights issues and policy(ies) of the entity, in the following format:",
-                "questionAnswer":principle_5.Employees_and_workers(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Employees_and_workers),
               },
               {
                 "questionNo": "2",
                 "question": "Details of minimum wages paid to employees and workers, in the following format:",
-                "questionAnswer":principle_5.Details_of_minimum(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Details_of_minimum),
               },
               {
                 "questionNo": "3",
                 "question": "Details of remuneration/salary/wages, in the following format:",
-                "questionAnswer":principle_5.Details_of_remuneration(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Details_of_remuneration),
               },
-              # {
-              #   "questionNo": "4",
-              #   "question": "Gross wages paid to females as % of total wages paid by the entity, in the following format:",
-              #   "questionAnswer":principle_5.Gross_wages_paid(file_path),#json_merge["Details of minimum wages paid to employees and workers, in the following format:"],
-              # },
               {
                 "questionNo": "4",
                 "question": "Do you have a focal point (Individual/ Committee) responsible for addressing human rights impacts or issues caused or contributed to by the business? (Yes/ No)",
-                "questionAnswer":principle_5.Do_you_have_a_focal_point(file_path),
+                "questionAnswer":json_merge["Do you have a focal point (Individual/ Committee) responsible for addressing human rights impacts or issues caused or contributed to by the business? (Yes/ No)"]#principle_5.Do_you_have_a_focal_point(file_path),
               },
               {
                 "questionNo": "5",
                 "question": "Describe the internal mechanisms in place to redress grievances related to human rights issues.",
-                "questionAnswer":principle_5.Describe_the_internal_mechanisms(file_path),
+                "questionAnswer":json_merge["Describe the internal mechanisms in place to redress grievances related to human rights issues."]#principle_5.Describe_the_internal_mechanisms(file_path),
               },
               {
                 "questionNo": "6",
                 "question": "Number of Complaints on the following made by employees and workers:",
-                "questionAnswer":principle_5.Number_of_Complaints(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Number_of_Complaints),
               },
               {
                 "questionNo": "7",
                 "question":"Complaints filed under the Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013, in the following format:",
-                "questionAnswer":principle_5.Complaints_filed_under(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Complaints_filed),
               },
               {
                 "questionNo": "8",
                 "question": "Mechanisms to prevent adverse consequences to the complainant in discrimination and harassment cases.",
-                "questionAnswer":principle_5.Mechanisms_prevent(file_path),
+                "questionAnswer":json_merge["Mechanisms to prevent adverse consequences to the complainant in discrimination and harassment cases."]#principle_5.Mechanisms_prevent(file_path),
               },
               {
                 "questionNo": "9",
                 "question": "Do human rights requirements form part of your business agreements and contracts? (Yes/ No)",
-                "questionAnswer":principle_5.Do_human_rights_requirements(file_path),
+                "questionAnswer":json_merge["Do human rights requirements form part of your business agreements and contracts? (Yes/ No)"]#principle_5.Do_human_rights_requirements(file_path),
               },
               {
                 "questionNo": "10",
                 "question": "Assessments for the year:",
-                "questionAnswer":principle_5.Assessments(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Assessments_for_the_year),
               },
               {
                 "questionNo": "11",
                 "question": "Provide details of any corrective actions taken or underway to address significant risks / concerns arising from the assessments at Question 10 above.",
-                "questionAnswer":principle_5.Provide_details_of_any(file_path),
+                "questionAnswer":json_merge["Provide details of any corrective actions taken or underway to address significant risks / concerns arising from the assessments at Question 10 above."]#principle_5.Provide_details_of_any(file_path),
               },
               {
                 "questionNo": "12",
                 "question": "Details of a business process being modified / introduced as a result of addressing human rights grievances/complaints.",
-                "questionAnswer":principle_5.Details_of_a_business_process(file_path),
+                "questionAnswer":json_merge["Details of a business process being modified / introduced as a result of addressing human rights grievances/complaints."]#principle_5.Details_of_a_business_process(file_path),
               },
               {
                 "questionNo": "13",
                 "question": "Details of the scope and coverage of any Human rights due-diligence conducted",
-                "questionAnswer":principle_5.Details_of_the_scope(file_path),
+                "questionAnswer":json_merge["Details of the scope and coverage of any Human rights due-diligence conducted"]#principle_5.Details_of_the_scope(file_path),
               },
               {
                 "questionNo": "14",
                 "question": "Is the premise/office of the entity accessible to differently abled visitors, as per the requirements of the Rights of Persons with Disabilities Act, 2016?",
-                "questionAnswer":principle_5.Is_the_premise(file_path),
+                "questionAnswer":json_merge["Is the premise/office of the entity accessible to differently abled visitors, as per the requirements of the Rights of Persons with Disabilities Act, 2016?"]#principle_5.Is_the_premise(file_path),
               },
               {
                 "questionNo": "15",
                 "question": "Details on assessment of value chain partners:",
-                "questionAnswer":principle_5.Details_on_assessment_value_chain(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Details_on_assessment),
               },
               {
                 "questionNo": "16",
                 "question": "Provide details of any corrective actions taken or underway to address significant risks / concerns arising from the assessments at Question 4 above.",
-                "questionAnswer":principle_5.Provide_details_of_any_corrective(file_path),
+                "questionAnswer":json_merge["Provide details of any corrective actions taken or underway to address significant risks / concerns arising from the assessments at Question 4 above."]#principle_5.Provide_details_of_any_corrective(file_path),
               },
 
         ]
@@ -1012,8 +1027,11 @@ def parse_brsr_text_section_c5(file_path):
                 ]
       }]}
 
-def parse_brsr_text_section_c6(file_path):
+def parse_brsr_text_section_c6(file_path,json_merge):
   print("sucessfully file sent",file_path)
+  result=table_3.llama_parse_function(file_path,6)
+  print("#####################",result)
+
   return {
     "data":[
       {
@@ -1027,119 +1045,119 @@ def parse_brsr_text_section_c6(file_path):
               {
                 "questionNo": "1",
                 "question": "Details of total energy consumption (in Joules or multiples) and energy intensity, in the following format:",
-                "questionAnswer":principle_6.Details_of_total_energy(file_path),#json_merge["Details of total energy consumption (in Joules or multiples) and energy intensity, in the following format:"],
+                "questionAnswer":table_3.table(result,sec_c.Details_of_total_energy),#json_merge["Details of total energy consumption (in Joules or multiples) and energy intensity, in the following format:"],
               },
               {
                 "questionNo": "2",
                 "question": "Does the entity have any sites / facilities identified as designated consumers (DCs) under the Performance, Achieve and Trade (PAT) Scheme of the Government of India? (Y/N) If yes, disclose whether targets set under the PAT scheme have been achieved. In case targets have not been achieved, provide the remedial action taken, if any.",
-                "questionAnswer":principle_6.Does_the_entity_have_any_sites(file_path),#json_merge["Does the entity have any sites / facilities identified as designated consumers (DCs) under the Performance, Achieve and Trade (PAT) Scheme of the Government of India? (Y/N) If yes, disclose whether targets set under the PAT scheme have been achieved. In case targets have not been achieved, provide the remedial action taken, if any."],
+                "questionAnswer":json_merge["Does the entity have any sites / facilities identified as designated consumers (DCs) under the Performance, Achieve and Trade (PAT) Scheme of the Government of India? (Y/N) If yes, disclose whether targets set under the PAT scheme have been achieved. In case targets have not been achieved, provide the remedial action taken, if any."]#principle_6.Does_the_entity_have_any_sites(file_path),#json_merge["Does the entity have any sites / facilities identified as designated consumers (DCs) under the Performance, Achieve and Trade (PAT) Scheme of the Government of India? (Y/N) If yes, disclose whether targets set under the PAT scheme have been achieved. In case targets have not been achieved, provide the remedial action taken, if any."],
               },
               {
                 "questionNo": "3",
                 "question": "Provide details of the following disclosures related to water, in the following format:",
-                "questionAnswer":principle_6.Provide_details_of_the_following(file_path),#json_merge["Provide details of the following disclosures related to water, in the following format:"],
+                "questionAnswer":table_3.table(result,sec_c.Provide_details_of_the_following),#json_merge["Provide details of the following disclosures related to water, in the following format:"],
               },
 
               {
                 "questionNo": "4",
                 "question": "Provide the following details related to water discharged:",
-                "questionAnswer":principle_6.Provide_the_following_details(file_path),#json_merge["Provide the following details related to water discharged:"],
+                "questionAnswer":table_3.table(result,sec_c.Provide_the_following),#json_merge["Provide the following details related to water discharged:"],
               },
 
               {
                 "questionNo": "5",
                 "question": "Has the entity implemented a mechanism for Zero Liquid Discharge? If yes, provide details of its coverage and implementation",
-                "questionAnswer":principle_6.Has_the_entity_implemented(file_path),#json_merge["Has the entity implemented a mechanism for Zero Liquid Discharge? If yes, provide details of its coverage and implementation"],
+                "questionAnswer":json_merge["Has the entity implemented a mechanism for Zero Liquid Discharge? If yes, provide details of its coverage and implementation"]#principle_6.Has_the_entity_implemented(file_path),#json_merge["Has the entity implemented a mechanism for Zero Liquid Discharge? If yes, provide details of its coverage and implementation"],
               },
 
               {
                 "questionNo": "6",
                 "question": "Please provide details of air emissions (other than GHG emissions) by the entity, in the following format:",
-                "questionAnswer":principle_6.Please_provide_details(file_path),#json_merge["Please provide details of air emissions (other than GHG emissions) by the entity, in the following format:"],
+                "questionAnswer":table_3.table(result,sec_c.Please_provide_details),#json_merge["Please provide details of air emissions (other than GHG emissions) by the entity, in the following format:"],
               },
 
               {
                 "questionNo": "7",
                 "question": "Provide details of greenhouse gas emissions (Scope 1 and Scope 2 emissions) & its intensity, in the following format:",
-                "questionAnswer":principle_6.Provide_details_of_greenhouse(file_path),#json_merge["Provide details of greenhouse gas emissions (Scope 1 and Scope 2 emissions) & its intensity, in the following format:"],
+                "questionAnswer":table_3.table(result,sec_c.Provide_details_of_greenhouse),#json_merge["Provide details of greenhouse gas emissions (Scope 1 and Scope 2 emissions) & its intensity, in the following format:"],
               },
 
               {
                 "questionNo": "8",
                 "question": "Does the entity have any project related to reducing Green House Gas emission? If Yes, then provide details.",
-                "questionAnswer":principle_6.Does_the_entity_have_any_project(file_path),#json_merge["Does the entity have any project related to reducing Green House Gas emission? If Yes, then provide details."],
+                "questionAnswer":json_merge["Does the entity have any project related to reducing Green House Gas emission? If Yes, then provide details."]#principle_6.Does_the_entity_have_any_project(file_path),#json_merge["Does the entity have any project related to reducing Green House Gas emission? If Yes, then provide details."],
               },
 
               {
                 "questionNo": "9",
                 "question": "Provide details related to waste management by the entity, in the following format:",
-                "questionAnswer":principle_6.Provide_details_related(file_path),#json_merge["Provide details related to waste management by the entity, in the following format:"],
+                "questionAnswer":table_3.table(result,sec_c.Provide_details_related),#json_merge["Provide details related to waste management by the entity, in the following format:"],
               },
 
               {
                 "questionNo": "10",
                 "question": "Briefly describe the waste management practices adopted in your establishments. Describe the strategy adopted by your company to reduce usage of hazardous and toxic chemicals in your products and processes and the practices adopted to manage such wastes.",
-                "questionAnswer":principle_6.Briefly_describe_the_waste(file_path),#json_merge["Briefly describe the waste management practices adopted in your establishments. Describe the strategy adopted by your company to reduce usage of hazardous and toxic chemicals in your products and processes and the practices adopted to manage such wastes."],
+                "questionAnswer":json_merge["Briefly describe the waste management practices adopted in your establishments. Describe the strategy adopted by your company to reduce usage of hazardous and toxic chemicals in your products and processes and the practices adopted to manage such wastes."]#principle_6.Briefly_describe_the_waste(file_path),#json_merge["Briefly describe the waste management practices adopted in your establishments. Describe the strategy adopted by your company to reduce usage of hazardous and toxic chemicals in your products and processes and the practices adopted to manage such wastes."],
               },
 
               {
                 "questionNo": "11",
                 "question": "If the entity has operations/offices in/around ecologically sensitive areas (such as national parks, wildlife sanctuaries, biosphere reserves, wetlands, biodiversity hotspots, forests, coastal regulation zones etc.) where environmental approvals / clearances are required, please specify details in the following format:",
-                "questionAnswer":principle_6.If_the_entity_has_operations(file_path),#json_merge["If the entity has operations/offices in/around ecologically sensitive areas (such as national parks, wildlife sanctuaries, biosphere reserves, wetlands, biodiversity hotspots, forests, coastal regulation zones etc.) where environmental approvals / clearances are required, please specify details in the following format:"],
+                "questionAnswer":table_3.table(result,sec_c.If_the_entity_has_operations),
               },
 
               {
                 "questionNo": "12",
                 "question": "Details of environmental impact assessments of projects undertaken by the entity based on applicable laws, in the current financial year:",
-                "questionAnswer":principle_6.Details_of_environmental(file_path),#json_merge["Details of environmental impact assessments of projects undertaken by the entity based on applicable laws, in the current financial year:"],
+                "questionAnswer":table_3.table(result,sec_c.Details_of_environmental),#json_merge["Details of environmental impact assessments of projects undertaken by the entity based on applicable laws, in the current financial year:"],
               },
 
               {
                 "questionNo": "13",
                 "question": "Is the entity compliant with the applicable environmental law/ regulations/ guidelines in India; such as the Water (Prevention and Control of Pollution) Act, Air (Prevention and Control of Pollution) Act, Environment protection act and rules thereunder (Y/N). If not, provide details of all such non-compliances, in the following format:",
-                "questionAnswer":principle_6.Is_the_entity_compliant(file_path),#json_merge["Is the entity compliant with the applicable environmental law/ regulations/ guidelines in India; such as the Water (Prevention and Control of Pollution) Act, Air (Prevention and Control of Pollution) Act, Environment protection act and rules thereunder (Y/N). If not, provide details of all such non-compliances, in the following format:"],
+                "questionAnswer":table_3.table(result,sec_c.Is_the_entity_compliant),#json_merge["Is the entity compliant with the applicable environmental law/ regulations/ guidelines in India; such as the Water (Prevention and Control of Pollution) Act, Air (Prevention and Control of Pollution) Act, Environment protection act and rules thereunder (Y/N). If not, provide details of all such non-compliances, in the following format:"],
               },
 
               {
                 "questionNo": "14",
                 "question": "Water withdrawal, consumption and discharge in areas of water stress (in kilolitres):",
-                "questionAnswer":principle_6.Water_withdrawal(file_path),#json_merge["Water withdrawal, consumption and discharge in areas of water stress (in kilolitres):"],
+                "questionAnswer":table_3.table(result,sec_c.Water_withdrawal),#json_merge["Water withdrawal, consumption and discharge in areas of water stress (in kilolitres):"],
               },
               
 
               {
                 "questionNo": "15",
                 "question": "Please provide details of total Scope 3 emissions & its intensity, in the following format",
-                "questionAnswer":principle_6.Please_provide_details(file_path),#json_merge["Please provide details of total Scope 3 emissions & its intensity, in the following format"],
+                "questionAnswer":table_3.table(result,sec_c.Please_provide_details),#json_merge["Please provide details of total Scope 3 emissions & its intensity, in the following format"],
               },
 
               {
                 "questionNo": "16",
                 "question": "With respect to the ecologically sensitive areas reported at Question 10 of Essential Indicators above, provide details of significant direct & indirect impact of the entity on biodiversity in such areas along-with prevention and remediation activities",
-                "questionAnswer":principle_6.With_respect_to_the_ecologically(file_path),#json_merge["With respect to the ecologically sensitive areas reported at Question 10 of Essential Indicators above, provide details of significant direct & indirect impact of the entity on biodiversity in such areas along-with prevention and remediation activities"],
+                "questionAnswer":json_merge["With respect to the ecologically sensitive areas reported at Question 10 of Essential Indicators above, provide details of significant direct & indirect impact of the entity on biodiversity in such areas along-with prevention and remediation activities"],
               },
 
               {
                 "questionNo": "17",
                 "question": "If the entity has undertaken any specific initiatives or used innovative technology or solutions to improve resource efficiency, or reduce impact due to emissions / effluent discharge / waste generated, please provide details of the same as well as outcome of such initiatives, as per the following format:",
-                "questionAnswer":principle_6.If_the_entity_has_undertaken(file_path),#json_merge["If the entity has undertaken any specific initiatives or used innovative technology or solutions to improve resource efficiency, or reduce impact due to emissions / effluent discharge / waste generated, please provide details of the same as well as outcome of such initiatives, as per the following format:"],
+                "questionAnswer":table_3.table(result,sec_c.If_the_entity_has_undertaken),#json_merge["If the entity has undertaken any specific initiatives or used innovative technology or solutions to improve resource efficiency, or reduce impact due to emissions / effluent discharge / waste generated, please provide details of the same as well as outcome of such initiatives, as per the following format:"],
               },
 
               {
                 "questionNo": "18",
                 "question": "Does the entity have a business continuity and disaster management plan? Give details in 100 words/ web link.",
-                "questionAnswer":principle_6.Does_the_entity_have_a_business(file_path),#json_merge["Does the entity have a business continuity and disaster management plan? Give details in 100 words/ web link."],
+                "questionAnswer":json_merge["Does the entity have a business continuity and disaster management plan? Give details in 100 words/ web link."]
               },
 
               {
                 "questionNo": "19",
                 "question": "Disclose any significant adverse impact to the environment, arising from the value chain of the entity. What mitigation or adaptation measures have been taken by the entity in this regard.",
-                "questionAnswer":principle_6.Disclose_any_significant(file_path),#json_merge["Disclose any significant adverse impact to the environment, arising from the value chain of the entity. What mitigation or adaptation measures have been taken by the entity in this regard."],
+                "questionAnswer":json_merge["Disclose any significant adverse impact to the environment, arising from the value chain of the entity. What mitigation or adaptation measures have been taken by the entity in this regard."]
               },
               {
                 "questionNo": "20",
                 "question": "Percentage of value chain partners (by value of business done with such partners) that were assessed for environmental impacts.",
-                "questionAnswer":principle_6.Percentage_of_value_chain(file_path),#json_merge["Percentage of value chain partners (by value of business done with such partners) that were assessed for environmental impacts."],
+                "questionAnswer":json_merge["Percentage of value chain partners (by value of business done with such partners) that were assessed for environmental impacts."],
               },
               {
                 "questionNo": "21",
@@ -1161,8 +1179,10 @@ def parse_brsr_text_section_c6(file_path):
                 ]
       }]}
 
-def parse_brsr_text_section_c7(file_path):
+def parse_brsr_text_section_c7(file_path,json_merge):
   print("sucessfully file sent",file_path)
+  result=table_3.llama_parse_function(file_path,7)
+  print("#####################",result)
   return {
     "data":[
       {
@@ -1176,31 +1196,34 @@ def parse_brsr_text_section_c7(file_path):
               {
                 "questionNo": "1",
                 "question": "Number of affiliations with trade and industry chambers/ associations.",
-                "questionAnswer":principle_7.Number_of_affiliations(file_path),
+                "questionAnswer":json_merge["Number of affiliations with trade and industry chambers/ associations."]#principle_7.Number_of_affiliations(file_path),
               },
               {
                 "questionNo": "2",
                 "question": "List the top 10 trade and industry chambers/ associations (determined based on the total members of such body) the entity is a member of/ affiliated to, in the following format",
-                "questionAnswer":principle_7.List_the_top_10_trade(file_path),
+                "questionAnswer":table_3.table(result,sec_c.List_the_top_10_trade),
               },
               
               {
                 "questionNo": "3",
                 "question": "Provide details of corrective action taken or underway on any issues related to anti-competitive conduct by the entity, based on adverse orders from regulatory authorities.",
-                "questionAnswer":principle_7.Provide_details_of_corrective_action(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Provide_details_of_corrective_action),
               },
               {
                 "questionNo": "4",
                 "question": "Details of public policy positions advocated by the entity:",
-                "questionAnswer":principle_7.Details_of_public_policy(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Details_of_public_policy),
               },
         ]
       },
                 ]
       }]}
 
-def parse_brsr_text_section_c8(file_path):
+def parse_brsr_text_section_c8(file_path,json_merge):
   print("sucessfully file sent",file_path)
+  result=table_3.llama_parse_function(file_path,8)
+  print("#####################",result)
+
   return {
     "data":[
       {
@@ -1214,83 +1237,85 @@ def parse_brsr_text_section_c8(file_path):
               {
                 "questionNo": "1",
                 "question": "Details of Social Impact Assessments (SIA) of projects undertaken by the entity based on applicable laws, in the current financial year.",
-                "questionAnswer":principle_8.Details_of_Social_Impact(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Details_of_Social),
               },
               {
                 "questionNo": "2",
                 "question": "Provide information on project(s) for which ongoing Rehabilitation and Resettlement (R&R) is being undertaken by your entity, in the following format",
-                "questionAnswer":principle_8.Provide_information_on_project(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Provide_information),
                 },
 
               {
                 "questionNo": "3",
                 "question": "Describe the mechanisms to receive and redress grievances of the community.",
-                "questionAnswer":principle_8.Describe_the_mechanisms_to_receive(file_path),
+                "questionAnswer":json_merge["Describe the mechanisms to receive and redress grievances of the community."]#principle_8.Describe_the_mechanisms_to_receive(file_path),
                 },
 
               {
                 "questionNo": "4",
                 "question": "Percentage of input material (inputs to total inputs by value) sourced from suppliers",
-                "questionAnswer":principle_8.Percentage_of_input_material(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Percentage_of_input),
                 },
 
               {
                 "questionNo": "5",
                 "question": "Job creation in smaller towns – Disclose wages paid to persons employed (including employees or workers employed on a permanent or non-permanent / on contract basis) in the following locations, as % of total wage cost",
-                "questionAnswer":principle_8.Job_creation_in_smaller_towns(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Job_creation),
                 },
 
               {
                 "questionNo": "6",
                 "question": "Provide details of actions taken to mitigate any negative social impacts identified in the Social Impact Assessments (Reference: Question 1 of Essential Indicators above):",
-                "questionAnswer":principle_8.Provide_details_of_actions_taken(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Provide_details_of_actions),
                 },
 
               {
                 "questionNo": "7",
                 "question": "Provide the following information on CSR projects undertaken by your entity in designated aspirational districts as identified by government bodies",
-                "questionAnswer":principle_8.Provide_the_following_information(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Provide_the_following_information),
               },
               {
                 "questionNo": "8",
                 "question": "Do you have a preferential procurement policy where you give preference to purchase from suppliers comprising marginalized /vulnerable groups? (Yes/No)",
-                "questionAnswer":principle_8.Do_you_have_a_preferential(file_path),
+                "questionAnswer":json_merge["Do you have a preferential procurement policy where you give preference to purchase from suppliers comprising marginalized /vulnerable groups? (Yes/No)"],#principle_8.Do_you_have_a_preferential(file_path),
               },
 
               {
                 "questionNo": "9",
                 "question": "From which marginalized /vulnerable groups do you procure?",
-                "questionAnswer":principle_8.From_which_marginalized(file_path),
+                "questionAnswer":json_merge["From which marginalized /vulnerable groups do you procure?"]#principle_8.From_which_marginalized(file_path),
               },
               {
                 "questionNo": "10",
                 "question": "What percentage of total procurement (by value) does it constitute?",
-                "questionAnswer":principle_8.What_percentage_of_total_procurement(file_path),
+                "questionAnswer":json_merge["What percentage of total procurement (by value) does it constitute?"]#principle_8.What_percentage_of_total_procurement(file_path),
               },
               {
                 "questionNo": "11",
                 "question": "Details of the benefits derived and shared from the intellectual properties owned or acquired by your entity (in the current financial year), based on traditional knowledge:",
-                "questionAnswer":principle_8.Details_of_the_benefits_derived(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Details_of_the_benefits),
               },
 
               {
                 "questionNo": "12",
                 "question": "Details of corrective actions taken or underway, based on any adverse order in intellectual property related disputes wherein usage of traditional knowledge is involved.",
-                "questionAnswer":principle_8.Details_of_corrective_actions_taken(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Details_of_corrective),
               },
 
               {
                 "questionNo": "13",
                 "question": "Details of beneficiaries of CSR Projects:",
-                "questionAnswer":principle_8.Details_of_beneficiaries(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Details_of_the_benefits),
               },
         ]
       },
                 ]
       }]}
 
-def parse_brsr_text_section_c9(file_path):
+def parse_brsr_text_section_c9(file_path,json_merge):
   print("sucessfully file sent",file_path)
+  result=table_3.llama_parse_function(file_path,9)
+  print("#####################",result)
   return {
     "data":[
       {
@@ -1304,73 +1329,69 @@ def parse_brsr_text_section_c9(file_path):
               {
                 "questionNo": "1",
                 "question": "Describe the mechanisms in place to receive and respond to consumer complaints and feedback.",
-                "questionAnswer":principle_9.Describe_the_mechanisms(file_path),
+                "questionAnswer":json_merge["Describe the mechanisms in place to receive and respond to consumer complaints and feedback."]#principle_9.Describe_the_mechanisms(file_path),
                 },
               {
                 "questionNo": "2",
                 "question": "Turnover of products and/ services as a percentage of turnover from all products/service that carry information about:",
-                "questionAnswer":principle_9.Turnover_products(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Turnover_of_products),
               },
               {
                 "questionNo": "3",
                 "question": "Number of consumer complaints in respect of the following:",
-                "questionAnswer":principle_9.Number_consumer(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Number_of_consumer),
               },
 
               {
                 "questionNo": "4",
                 "question": "Details of instances of product recalls on account of safety issues:",
-                "questionAnswer":principle_9.Details_of_instances_of_product(file_path),
+                "questionAnswer":table_3.table(result,sec_c.Details_of_instances),
               },
               {
                 "questionNo": "5",
                 "question": "Does the entity have a framework/policy on cyber security and risks related to data privacy? (Yes/No). If available, provide weblink of the policy.",
-                "questionAnswer":principle_9.Does_the_entity_have_a_framework(file_path),
+                "questionAnswer":json_merge["Does the entity have a framework/policy on cyber security and risks related to data privacy? (Yes/No). If available, provide weblink of the policy."]#principle_9.Does_the_entity_have_a_framework(file_path),
               },
 
               {
                 "questionNo": "6",
                 "question": "Provide details of any corrective actions taken or underway on issues relating to advertising, and delivery of essential services; cyber security and data privacy of customers; re-occurrence of instances of product recalls; penalty / action taken by regulatory authorities on safety of products / services.",
-                "questionAnswer":principle_9.Provide_details_of_any_corrective(file_path),
+                "questionAnswer":json_merge["Provide details of any corrective actions taken or underway on issues relating to advertising, and delivery of essential services; cyber security and data privacy of customers; re-occurrence of instances of product recalls; penalty / action taken by regulatory authorities on safety of products / services."]#principle_9.Provide_details_of_any_corrective(file_path),
               },
               {
                 "questionNo": "7",
                 "question": "Channels / platforms where information on products and services of the entity can be accessed (provide web link, if available).",
-                "questionAnswer":principle_9.Channels_platforms(file_path),
+                "questionAnswer":json_merge["Channels / platforms where information on products and services of the entity can be accessed (provide web link, if available)."]#principle_9.Channels_platforms(file_path),
               },
 
               {
                 "questionNo": "8",
                 "question": "Steps taken to inform and educate consumers about safe and responsible usage of products and/or services.",
-                "questionAnswer":principle_9.Steps_taken(file_path),
+                "questionAnswer":json_merge["Steps taken to inform and educate consumers about safe and responsible usage of products and/or services."]#principle_9.Steps_taken(file_path),
               },
 
               {
                 "questionNo": "9",
                 "question": "Mechanisms in place to inform consumers of any risk of disruption/discontinuation of essential services.",
-                "questionAnswer":principle_9.Mechanisms_place(file_path),
+                "questionAnswer":json_merge["Mechanisms in place to inform consumers of any risk of disruption/discontinuation of essential services."]#principle_9.Mechanisms_place(file_path),
               },
 
               {
                 "questionNo": "10",
                 "question": "Does the entity display product information on the product over and above what is mandated as per local laws? (Yes/No/Not Applicable) If yes, provide details in brief. Did your entity carry out any survey with regard to consumer satisfaction relating to the major products / services of the entity, significant locations of operation of the entity or the entity as a whole? (Yes/No)",
-                "questionAnswer":principle_9.Does_the_entity_display_product_information(file_path),
+                "questionAnswer":json_merge["Does the entity display product information on the product over and above what is mandated as per local laws? (Yes/No/Not Applicable) If yes, provide details in brief. Did your entity carry out any survey with regard to consumer satisfaction relating to the major products / services of the entity, significant locations of operation of the entity or the entity as a whole? (Yes/No)"]#principle_9.Does_the_entity_display_product_information(file_path),
               },
               {
                 "questionNo": "11",
                 "question": "Number of instances of data breaches along-with impact",
-                "questionAnswer":principle_9.Number_of_instances(file_path),
+                "questionAnswer":""#json_merge["Number of instances of data breaches along-with impact"]#principle_9.Number_of_instances(file_path),
               },
               {
                 "questionNo": "12",
                 "question": "Percentage of data breaches involving personally identifiable information of customers",
-                "questionAnswer":principle_9.Percentage_data_breaches(file_path),
+                "questionAnswer":""#json_merge["Percentage of data breaches involving personally identifiable information of customers"]#principle_9.Percentage_data_breaches(file_path),
               },
-              
-          ]  }
-
-                ]
-      }]}
+              ]}]}]}
 
 
 
@@ -1465,23 +1486,9 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
           "principle_9":parse_brsr_text_section_c9,
           }
         return principles[principlestr]
-      # def extractkeyfun(principlestr):
-      #   extractkeyfuns={
-      #     "principle_1":"KEYS_TO_EXTRACT_C1",
-      #     "principle_2":"KEYS_TO_EXTRACT_C2",
-      #     "principle_3":"KEYS_TO_EXTRACT_C3",
-      #     "principle_4":4,
-      #     "principle_5":5,
-      #     "principle_6":"",
-      #     "principle_7":"",
-      #     "principle_8":"",
-      #     "principle_9":"",
-      #     }
-      #   return extractkeyfuns[principlestr]      
 
+    
       principle_fun=principlefun(principleKey)         
-      # extractkey_fun=extractkeyfun(principleKey)
-      # print(extractkey_fun)         
       start_time = time.time()  # ⏱ Start time
       content = await file.read()
       temp_path = f"temp_{file.filename}"
@@ -1496,8 +1503,9 @@ async def extract_document(file: UploadFile = File(...),questionKey: str = Form(
               text = extract_text_from_docx(temp_path)
                     
           chunks = chunk_text(text)
-          results = [extract_fields_with_gemini_c(chunk,principleKey) for chunk in chunks[:5]]
-          
+          results = []
+
+          results = [extract_fields_with_gemini_c(chunks,principleKey)]
           merged = merge_results(results)
           res=principle_fun(temp_path,merged)
           return res          

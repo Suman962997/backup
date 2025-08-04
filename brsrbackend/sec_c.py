@@ -22,11 +22,6 @@ percentage_coverage ={
 }
 
 
-{'NGRBC Principle': 'Penalty/ Fine', 
- 'Name of the regulatory/ enforcement agencies/ judicial institutions': 'Nil', 
- 'Brief of the Case': 'Nil', 
- 'Has an appeal been preferred? (Yes/No)': 'No'} 
-
 Monetary ={
     "question":"Monetary",
     "columns":{
@@ -62,10 +57,6 @@ Of_the_instances_disclosed ={
     }    
 }
 
-{'': 'Directors', 
- 'FY 2023-2024': 'Nil', 
- 'FY 2022-2023': 'Nil'},
-
 Number_of_Directors ={
     "question":"Number of Directors/KMPs/employees/workers against whom disciplinary action was taken by any law enforcement agency for the charges of bribery/ corruption",
     "columns":{
@@ -76,10 +67,6 @@ Number_of_Directors ={
     }    
 }
 
-{'': 'Number of complaints received in relation to issues of Conflict of Interest of the Directors',
- 'FY 2023-2024': 'Nil', 
- 'Remarks': 'Nil',
- 'FY 2022-2023': 'Nil'}
 
 
 Details_of_complaints ={
@@ -93,9 +80,6 @@ Details_of_complaints ={
     }    
 }
 
-{'': 'Number of days of accounts payables',
- 'FY 2023-2024': '110.64',
- 'FY 2022-2023': '59.10'}
 
 Number_of_days ={
     "question":"Number of days of accounts payables ((Accounts payable *365) / Cost of goods/services procured) in the following format:",
@@ -106,11 +90,6 @@ Number_of_days ={
     }    
 }
 
-{'Parameter': 'Concentration of Purchases',
- 'Metrics': 'a. Purchases from trading houses as % of total purchases',
- '': '', 
- 'FY 2023-2024': 'Nil', 
- 'FY 2022-2023': 'Nil'}
 
 
 Provide_details_of_concentration ={
@@ -123,9 +102,6 @@ Provide_details_of_concentration ={
     }    
 }
 
-{'Total no of awareness programs held': '108',
- 'Topics / principles covered under the training': '1. Information Security and Risks 2. Social Engineering Attacks 3. Physical Security 4. Mobile Device Security 5. Incident Reporting 6. Business Continuity 7. ISMS and BCMS Policies and Procedures 8. Phishing 9. System Trainings 10. Human Rights 11. Facility Management 12. Fire Evacuation Drill 13. Building Security Procedures 14. Facility Management', 
- '% of value chain partners covered (by value of business done with such partners) under the awareness programmes': '100\\*'}
 
 
 Awareness_programmes ={
@@ -211,7 +187,7 @@ Reclaimed_products={
 
 ########################################PRINCIPLE3#####################################################################
 
-wel_being_of_employees={
+well_being_of_employees={
     "question":"Details of measures for the well-being of employees:",
     "columns":{
         "Category":["Category",""," "],
@@ -230,7 +206,7 @@ wel_being_of_employees={
     } 
 }
 
-being_of_workers={
+well_being_of_workers={
     "question":"Details of measures for the well-being of workers:",
     "columns":{        
         "Category",
@@ -346,6 +322,15 @@ Number_of_Complaints={
         "Pending resolution at the end of year",
         "Remarks"
     } 
+}
+
+Complaints_filed={
+    "question":"Complaints filed under the Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013, in the following format",
+    "columns":{  
+        "Category":["Category",""," "],
+        "FY 2024-25(Current Financial Year)":["FY 2024-25(Current Financial Year)","FY 2024-25","(Current Financial Year)"],
+        "FY 2023-24(Previous Financial Year)":["FY 2023-24(Previous Financial Year)","FY 2023-24","(Previous Financial Year)"]
+    }     
 }
 
 Assessments_for_the_year={
@@ -709,8 +694,6 @@ Job_creation={
 
     } 
 }
-
-
 
 Provide_details_of_actions={
     "question":"Provide details of actions taken to mitigate any negative social impacts identified in the Social Impact Assessments (Reference: Question 1 of Essential Indicators above)",
