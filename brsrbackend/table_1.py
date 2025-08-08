@@ -1,16 +1,12 @@
 import os
 import re
-import json
 from typing import List, Dict
-from fastapi import FastAPI
 from dotenv import load_dotenv
 from llama_parse import LlamaParse
-import uvicorn
 from difflib import SequenceMatcher
 import time
-import sec_a
 
-app = FastAPI()
+
 load_dotenv()
 
 def similarity(a: str, b: str) -> float:
@@ -25,7 +21,6 @@ def extract_text_from_pdf(pdf_path: str) -> str:
 
 
 def extract_tables_with_questions(text: str) -> List[Dict[str, str]]:
-    # print(text)
     tables_with_questions = []
     lines = text.splitlines()
 
@@ -99,136 +94,67 @@ def match_questions_to_tables(tables: List[Dict[str, str]], questions: List[str]
 
 
 
-def fuzzy_get(result: Dict[str, List[Dict[str, str]]], target_question: str, threshold: float = 0.5):
-    best_key = None
-    best_score = 0.0
-    for key in result.keys():
-        score = similarity(key, target_question)
-        if score > best_score:
-            best_score = score
-            best_key = key
-    if best_score >= threshold:
-        return result.get(best_key)
-    return None
+
 
 
 ##################################QUESTIONS#############################################
 
 
-def table(result: Dict[str, List[Dict[str, str]]],qdict:Dict):
-    question=qdict.get("question",None)
-    column=qdict.get("columns",None)
-    # print("result",result)
-    print("question",question)
-    print("column",column)
-    
-    table_json =result.get(question, None)
-    column =column
+def normalize(text: str) -> str:
+    """Lowercase, remove punctuation, extra whitespace."""
+    return re.sub(r'\s+', ' ', re.sub(r'[^\w\s]', '', text.lower())).strip()
 
-    if not table_json:
+def fuzzy_match(target: str, candidates: List[str], threshold: float = 0.85) -> str:
+    """Return best fuzzy match from candidates based on similarity threshold."""
+    target_norm = normalize(target)
+    best_match = ""
+    best_score = 0.0
+    for candidate in candidates:
+        score = SequenceMatcher(None, target_norm, normalize(candidate)).ratio()
+        if score > best_score and score >= threshold:
+            best_match = candidate
+            best_score = score
+    return best_match if best_match else None
+
+def table(result: Dict[str, List[Dict[str, str]]], qdict: Dict) -> List[Dict[str, str]]:
+    question = qdict.get("question", "")
+    column = qdict.get("columns", {})
+    # Normalize all keys in result to match against normalized question
+    normalized_result = {normalize(k): v for k, v in result.items()}
+    matched_question_key = fuzzy_match(question, list(result.keys()))
+
+    if not matched_question_key:
+        print("❌ No matching question found.")
+        return []
+
+    table_json = result[matched_question_key]
+    if not table_json or (len(table_json) == 1 and 'error' in table_json[0]):
+        print("⚠️ Table not found or contains error.")
         return []
 
     filtered_table = []
     for row in table_json:
         filtered_row = {}
+        row_keys = list(row.keys())
         for canonical_col, aliases in column.items():
+            matched_key = None
             for alias in aliases:
-                if alias in row:
-                    filtered_row[canonical_col] = row[alias]
+                matched_key = fuzzy_match(alias, row_keys)
+                if matched_key:
                     break
-            else:
-                filtered_row[canonical_col] = ""  # default if none found
+            filtered_row[canonical_col] = row.get(matched_key, "") if matched_key else ""
         filtered_table.append(filtered_row)
 
     return filtered_table
 
-# def Products_Services(result: Dict[str, List[Dict[str, str]]]):
-#     table_json = result.get("Products/Services sold by the entity (accounting for 90% of the entity’s Turnover)", None)
-
-#     column = {
-#     "Product/Service": ["Product/Service", "Product-Service"],
-#     "NIC Code":["NIC Code"],
-#     "% of total Turnover contributed":["% of total Turnover contributed"],
-#     }
-
-#     if not table_json:
-#         return []
-
-#     filtered_table = []
-#     for row in table_json:
-#         filtered_row = {}
-#         for canonical_col, aliases in column.items():
-#             for alias in aliases:
-#                 if alias in row:
-#                     filtered_row[canonical_col] = row[alias]
-#                     break
-#             else:
-#                 filtered_row[canonical_col] = ""  # default if none found
-#         filtered_table.append(filtered_row)
-
-#     return filtered_table
-
-# def Number_of_locations_where(result: Dict[str, List[Dict[str, str]]]):
-#     table_json = result.get("Number of locations where plants and/or operations/offices of the entity are situated", None)
-
-#     column = {
-#         "Location": ["Location", "Locations"],
-#         "No. of plants": ["No. of plants", "Number of plants"],
-#         "No. of offices": ["No. of offices", "Number of offices"],
-#         "Total": ["Total", "Total*"]
-#     }
-
-#     if not table_json:
-#         return []
-
-#     filtered_table = []
-#     for row in table_json:
-#         filtered_row = {}
-#         for canonical_col, aliases in column.items():
-#             for alias in aliases:
-#                 if alias in row:
-#                     filtered_row[canonical_col] = row[alias]
-#                     break
-#             else:
-#                 filtered_row[canonical_col] = ""  # default if none found
-#         filtered_table.append(filtered_row)
-
-#     return filtered_table
-
-# def Number_of_locations(result: Dict[str, List[Dict[str, str]]]):
-#     table_json = result.get("Number of locations", None)
-
-#     column = {
-#         "Location": ["Location", "Locations"],
-#         "Number": ["Total", "Total*","Number"]
-#     }
-
-#     if not table_json:
-#         return []
-
-#     filtered_table = []
-#     for row in table_json:
-#         filtered_row = {}
-#         for canonical_col, aliases in column.items():
-#             for alias in aliases:
-#                 if alias in row:
-#                     filtered_row[canonical_col] = row[alias]
-#                     break
-#             else:
-#                 filtered_row[canonical_col] = ""  # default if none found
-#         filtered_table.append(filtered_row)
-
-#     return filtered_table
 
 
-
-# @app.get("/llama_parse/")
 def llama_parse_function(pdf_path:str):
     start_time = time.time()  # ⏱ Start time 
     
     questions = [
-        "Details of business activities, products and services (accounting for 90% of the turnover)",
-        "Products/Services sold by the entity (accounting for 90% of the entity’s Turnover)",
+        "Details of business activities (accounting for 90% of the turnover)",
+        "Products / Services sold by the entity (accounting for 90% of the entity’s Turnover)",
         "Number of locations where plants and/or operations/offices of the entity are situated",
         "Number of locations",
         "Employees and workers (including differently abled):",
@@ -246,14 +172,6 @@ def llama_parse_function(pdf_path:str):
     tables = extract_tables_with_questions(text)
     results = match_questions_to_tables(tables, questions)
 
-    # print(Details_of_business(results))
-    # print('******************')
-    # print(Products_Services(results))
-    # print('******************')
-    # print(Number_of_locations_where(results))
-    # print('******************')
-    # print(Number_of_locations(results))
-    # print('******************')
 
     end_time = time.time()  # End time
     total_seconds = end_time - start_time
@@ -270,7 +188,3 @@ def llama_parse_function(pdf_path:str):
         
 
 
-
-
-# if __name__ == "__main__":
-#     uvicorn.run("table_1:app", host="0.0.0.0", port=2000, reload=False)

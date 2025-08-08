@@ -28,4 +28,3 @@ def create_pdf_model(table_name: str):
     }
     return type("PDFTable", (Base,), class_attrs)
 
-

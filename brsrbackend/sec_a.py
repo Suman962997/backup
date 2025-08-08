@@ -28,6 +28,9 @@ Number_of_locations_where={
 
     }
 
+{'National (No. of States)': '9', 'Number': ''},
+{'National (No. of States)': 'International (No. of Countries)', 'Number': 'Nil'}
+
 Number_of_locations={
     "question":"Number of locations",
     "columns":{
@@ -64,40 +67,46 @@ Differently_abled_Employees={
     
 }
 
+{'': '9.09%', 'Total (A)': '11', 'No. and percentage of Females': '1'}
+
 Participation_Inclusion={
     "question":"Participation/Inclusion/Representation of women",
     "columns":{
-        "Category":["Category","Particulars"," "],
-        "Total (A)":["Total (A)","Total","Total A"],
-        "No. and percentage of Females No. (B)":["No. and percentage of Females No. (B)","(B)","No. (B)"],
-        "No. and percentage of Females % (B / A)":["No. and percentage of Females % (B / A)","(B / A)","% (B / A)"],
+        "Category":["Category","Particulars","",''],
+        "Total (A)":["Total (A)","Total","Total A","Total"],
+        "No. and percentage of Females No. (B)":["No. and percentage of Females No. (B)","(B)","No. (B)","No. B"],
+        "No. and percentage of Females % (B / A)":["No. and percentage of Females % (B / A)","(B / A)","% (B / A)","% (B/A)"],
         }
     
 }
 
+{'': '5', 'FY 2022-23': '10', 'FY 2021-22': '11', 'FY 2020-21': '23'}
+
 Turnover_rate_for_permanent ={
     "question":"Turnover rate for permanent employees and workers (Disclose trends for the past 3 years)",
     "columns":{
-        "Category":["Category","Particulars",""],
-        "FY (2024-25) Male":["FY (2024-25) Male","Financial Year 2023-24\\*",""],
-        "FY (2024-25) Female":["FY (2024-25) Female","Financial Year 2022-23\\*\\*",""],
-        "FY (2024-25) Total":["FY (2024-25) Total","Financial Year 2021-22**",""],
-        "FY (2023-24) Male":["FY (2023-24) Male","(2023-24) Male","FY 2023-24",],
-        "FY (2023-24) Female":["FY (2023-24) Female","(2023-24) Female","FY 2023-24"],
-        "FY (2023-24) Total":["FY (2023-24) Total","(2023-24) Total","FY 2023-24"],
-        "FY (2022-23) Male":["FY (2022-23) Male","(2022-23) Male","FY 2023-24","FY 2022-23"],
-        "FY (2022-23) Female":["FY (2022-23) Female","(2022-23) Female","FY 2022-23"],
-        "FY (2022-23) Total":["FY (2022-23) Total","(2022-23) Total","FY 2022-23"], 
+        "Category":["Category",''],
+        "FY (2024-25) Male":["FY (2024-25) Male","Financial Year 2023-24\\*"],
+        "FY (2024-25) Female":["FY (2024-25) Female","Financial Year 2022-23\\*\\*"],
+        "FY (2024-25) Total":["FY (2024-25) Total","Financial Year 2021-22**"],
+        "FY (2023-24) Male":["FY (2023-24) Male","(2023-24) Male"],
+        "FY (2023-24) Female":["FY (2023-24) Female","(2023-24) Female"],
+        "FY (2023-24) Total":["FY (2023-24) Total","(2023-24) Total"],
+        "FY (2022-23) Male":["FY (2022-23) Male","(2022-23) Male"],
+        "FY (2022-23) Female":["FY (2022-23) Female","(2022-23) Female"],
+        "FY (2022-23) Total":["FY (2022-23) Total","(2022-23) Total"], 
     }
     
 }
 
-{'Sl No': '1', 
- 'Name of the holding / Subsidiary / associate companies / joint ventures (A)': 'Diageo PLC', 
- 'Indicate whether holding/ Subsidiary/ Associate/ Joint Venture': 'Ultimate Holding company', 
- '% of shares held by listed entity': '-', 
- 'Does the entity indicated at column A, participate in the Business Responsibility initiatives of the listed entity? (Yes/No)': 'No'}
 
+{'S. No.': '2',
+ 'Name of the holding / subsidiary / associate companies / joint ventures (A)': 'Elpis Components Distributors Private Limited',
+ 'Indicate whether holding/ Subsidiary/ Associate/ Joint Venture': 'Wholly owned subsidiary', 
+ '% of shares held by listed entity': '100%',
+ 'Does the entity indicated at column A, participate in the Responsibility initiatives of the listed entity? (Yes/No)': 'Yes, PPAP positively influences and encourages its group companies to adopt Business Responsibility (BR) initiatives.'}
+
+'Does the entity indicated at column A, participate in the Business Responsibility initiatives of the listed entity? (Yes/No)'
 
 Names_of_holding={
     "question":"Names of holding/subsidiary/associate companies/joint ventures",
@@ -105,39 +114,29 @@ Names_of_holding={
             "Name of the holding / subsidiary / associate companies / joint ventures (A)":["Name of the holding / subsidiary / associate companies / joint ventures (A)","Name of the holding"],
             "Indicate whether holding/ Subsidiary/ Associate/ Joint Venture":["Indicate whether holding/ Subsidiary/ Associate/ Joint Venture","Indicate whether holding"],
             "% of shares held by listed entity":["% of shares held by listed entity","held by listed entity"],
-            "Does the entity indicated at columns A, participate in the Business Responsibility initiatives of the listed entity? (Yes/ No):":["Does the entity indicated at columns A, participate in the Business Responsibility initiatives of the listed entity? (Yes/ No):","Does the entity indicated at columns A"]        
+            "Does the entity indicated at column A, participate in the Business Responsibility initiatives of the listed entity? (Yes/ No)":["Does the entity indicated at column A, participate in the Business Responsibility initiatives of the listed entity?"]        
     }
     
 }
 
-
-
-
-
-{'Stakeholder group from whom complaint is received': '', 
- 'Grievance Redressal Mechanism in Place (Yes/No)': '--',
- 'Current Financial Year': '--', 
- 'Previous Financial Year': '--'},
-
-
 Complaints_Grievances={
-    "question":"",
+    "question":"Complaints/Grievances on any of the principles (Principles 1 to 9) under the National Guidelines on Responsible Business Conduct:",
     "columns":{
         "Stakeholder group from whom complaint is received":["Stakeholder group from whom complaint is received","Stakeholder group","Stakeholder group from whom complaint is received"],
         "Grievance Redressal Mechanism in Place (Yes/No) (If Yes, then provide web-link for grievance redress policy)":["Grievance Redressal Mechanism in Place (Yes/No) (If Yes, then provide web-link for grievance redress policy)","Grievance Redressal Mechanism","Grievance Redressal Mechanism in Place (Yes/No)"],
-        "Number of complaints filed during the year(FY 2024-25)":["Number of complaints filed during the year(FY 2024-25)","during the year(FY 2024-25)",""],
-        "Number of complaints pending resolution at close of the year(FY 2024-25)":["Number of complaints pending resolution at close of the year(FY 2024-25)","FY 2024-25",""],
+        "Number of complaints filed during the year(FY 2024-25)":["Number of complaints filed during the year(FY 2024-25)","during the year(FY 2024-25)","Number of complaints filed during the year FY 2024-25"],
+        "Number of complaints pending resolution at close of the year(FY 2024-25)":["Number of complaints pending resolution at close of the year(FY 2024-25)","FY 2024-25","Number of complaints pending resolution at close of the year FY 2024-25"],
         "Remark(FY 2024-25)":["Remark(FY 2024-25)","Remark FY 2024-25","Current Financial Year"],
-        "Number of complaints filed during the year(FY 2023-24)":["Number of complaints filed during the year(FY 2023-24)","Number of complaints filed",""],
-        "Number of complaints pending resolution at close of the year(FY 2023-24)":["Number of complaints pending resolution at close of the year(FY 2023-24)","Number of complaints",""],
-        "Remark(FY 2023-24)":["Remark(FY 2023-24)","Remark FY 2023-24","Previous Financial Year"],
+        "Number of complaints filed during the year(FY 2023-24)":["Number of complaints filed during the year(FY 2023-24)","Number of complaints filed","Number of complaints filed during the year"],
+        "Number of complaints pending resolution at close of the year(FY 2023-24)":["Number of complaints pending resolution at close of the year(FY 2023-24)","Number of complaints","Number of complaints pending resolution at close of the year"],
+        "Remark(FY 2023-24)":["Remark(FY 2023-24)","Remark FY 2023-24","Remarks"],
 
     }
     
 }
 
 Please_indicate_material ={
-    "question":"",
+    "question":"Please indicate material responsible business conduct and sustainability issues pertaining to environmental and social matters that present a risk or an opportunity to your business, rationale for identifying the same, approach to adapt or mitigate the risk along-with its financial implications, as per the following format.",
     "columns":{
             "Material issue identified":["Material issue identified","Material issue"],
             "Indicate whether risk or opportunity (R/O)":["Indicate whether risk or opportunity (R/O)","Indicate whether"],

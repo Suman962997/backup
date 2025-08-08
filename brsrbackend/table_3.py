@@ -115,7 +115,8 @@ def fuzzy_match(target: str, candidates: List[str], threshold: float = 0.85) -> 
 def table(result: Dict[str, List[Dict[str, str]]], qdict: Dict) -> List[Dict[str, str]]:
     question = qdict.get("question", "")
     column = qdict.get("columns", {})
-
+    print("question",question)
+    print("column",column)
     # Normalize all keys in result to match against normalized question
     normalized_result = {normalize(k): v for k, v in result.items()}
     matched_question_key = fuzzy_match(question, list(result.keys()))
@@ -178,7 +179,6 @@ def llama_parse_function(pdf_path:str,section_key:int):
         "Details of measures for the well-being of employees:",
         "Details of measures for the well-being of workers:",
         "Details of retirement benefits, for Current and Previous FY",
-        "Accessibility of workplaces",
         "Return to work and Retention rates of permanent employees and workers that took parental leave.",
         "Is there a mechanism available to receive and redress grievances for the following categories of employees and worker? If yes, give details of the mechanism in brief",
         "Membership of employees and worker in association(s) or Unions recognised by the listed entity:",
@@ -265,7 +265,6 @@ def llama_parse_function(pdf_path:str,section_key:int):
 
 
     question=section_key_fun(section_key)
-    print("MIMIMIMI",question)
     text = extract_text_from_pdf(pdf_path)
     tables = extract_tables_with_questions(text)
     results = match_questions_to_tables(tables, question)

@@ -5,9 +5,10 @@ template={
 }
 
 # :["","",""]
+empty=['N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N'],
 
 Whether_your_entity={
-    "question":"Whether your entity’s policy/policies cover each principle and its core elements of the NGRBCs. (Yes/No)",
+    "question":"Whether your entity’s policy/policies cover each principle and its core elements of the NGRBCs",
     "columns":{   
             "P1":["P1","P 1","Principle 1"],
             "P2":["P2","P 2","Principle 2"],
@@ -22,7 +23,7 @@ Whether_your_entity={
 }
 
 Has_the_policy={
-    "question":"Has the policy been approved by the Board? (Yes/No)",
+    "question":"Has the policy been approved by the Board?",
     "columns":{        
             "P1":["P1","P 1","Principle 1"],
             "P2":["P2","P 2","Principle 2"],
@@ -37,7 +38,7 @@ Has_the_policy={
 }
 
 Whether_the_entity={
-    "question":"Whether the entity has translated the policy into procedures. (Yes / No)",
+    "question":"Whether the entity has translated the policy into procedures",
     "columns":{      
             "P1":["P1","P 1","Principle 1"],
             "P2":["P2","P 2","Principle 2"],
@@ -52,7 +53,7 @@ Whether_the_entity={
 }
 
 Do_the_enlisted={
-    "question":"Do the enlisted policies extend to your value chain partners? (Yes/No)",
+    "question":"Do the enlisted policies extend to your value chain partners?",
     "columns":{      
             "P1":["P1","P 1","Principle 1"],
             "P2":["P2","P 2","Principle 2"],

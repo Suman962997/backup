@@ -57,26 +57,33 @@ Of_the_instances_disclosed ={
     }    
 }
 
+{'': 'Directors', 
+ 'FY 2022': 'NIL',
+ 'FY 2021': 'NIL'},
+
 Number_of_Directors ={
     "question":"Number of Directors/KMPs/employees/workers against whom disciplinary action was taken by any law enforcement agency for the charges of bribery/ corruption",
     "columns":{
-        "catagory":["Catagory",""," "],
-        "FY 2023-2024":["FY 2023-2024","(FY 2023-2024)","Financial Year 2023-24 (Current Financial Year)"],
-        "FY 2022-2023":["FY 2022-2023","(FY 2022-2023)","Financial Year 2022-23 (Previous Financial Year)"]
+        "Cat":["Category",""," ",''],
+        "FY 2023-2024":["FY 2023-2024","(FY 2023-2024)","Financial Year 2023-24 (Current Financial Year)","FY 2024"],
+        "FY 2022-2023":["FY 2022-2023","(FY 2022-2023)","Financial Year 2022-23 (Previous Financial Year)","FY 2023"]
 
     }    
 }
 
+{'': 'Number of complaints received in relation to issues of Conflict of Interest of the Directors', 
+ 'FY 2022': 'NIL',
+ 'FY 2021': 'NIL'}
 
 
 Details_of_complaints ={
     "question":"Details of complaints with regard to conflict of interest",
     "columns":{
-        "catagory":["Catagory",""," ","Catagory"],
-        "FY 2023-2024 Number":["FY 2023-2024 Number","Financial Year 2023-24 (Current Financial Year) Number","FY 2023-2024","Financial Year 2023-24 Number"],
-        "FY 2023-2024 Remarks":["FY 2023-2024 Remarks","Financial Year 2023-24 (Current Financial Year) Remarks","Remarks","Financial Year 2023-24 Remarks"],
-        "FY 2022-2023 numbers":["FY 2022-2023 numbers","Financial Year 2022-23 (Previous Financial Year) numbers","FY 2022-2023","Financial Year 2022-23 Number"],
-        "FY 2022-2023 Remarks":["FY 2022-2023 Remarks","Financial Year 2022-23 (Previous Financial Year) Remarks","Remarks","Financial Year 2022-23 Remarks"]
+        "Category":["Category",""," ","Category"],
+        "FY 2023-2024 Number":["FY 2023-2024 Number","Financial Year 2023-24 (Current Financial Year) Number","FY 2023-2024","FY 2022"],
+        "FY 2023-2024 Remarks":["FY 2023-2024 Remarks","Financial Year 2023-24 (Current Financial Year) Remarks","Remarks","FY 2022"],
+        "FY 2022-2023 numbers":["FY 2022-2023 numbers","Financial Year 2022-23 (Previous Financial Year) numbers","FY 2022-2023","FY 2021"],
+        "FY 2022-2023 Remarks":["FY 2022-2023 Remarks","Financial Year 2022-23 (Previous Financial Year) Remarks","Remarks","FY 2021"]
     }    
 }
 
@@ -187,6 +194,15 @@ Reclaimed_products={
 
 ########################################PRINCIPLE3#####################################################################
 
+{'Category': '',
+ 'Total (A)': '',
+ '': '%', 
+ 'Health Insurance': 'Number',
+ 'Accident Insurance': 'Number',
+ 'Maternity Benefits': 'Number',
+ 'Paternity Benefits': 'Number', 
+ 'Day Care Benefits': 'Number'}
+
 well_being_of_employees={
     "question":"Details of measures for the well-being of employees:",
     "columns":{
@@ -206,121 +222,182 @@ well_being_of_employees={
     } 
 }
 
+{'Category': '',
+ 'Total (A)': '', 
+ '': '%', 
+ 'Health Insurance': 'Number', 
+ 'Accident Insurance': 'Number',
+ 'Maternity Benefits': 'Number', 
+ 'Paternity Benefits': 'Number', 
+ 'Day Care Benefits': 'Number'}
+
 well_being_of_workers={
     "question":"Details of measures for the well-being of workers:",
     "columns":{        
-        "Category",
-        "Total (A)",
-        "Health insurance (Number (B))",
-        "Health insurance (% (B / A))",
-        "Accident insurance (Number (C))",
-        "Accident insurance (% (C / A))",
-        "Maternity Benefits (Number (D))",
-        "Maternity Benefits (% (D / A))",
-        "Paternity Benefits (Number (E))",
-        "Paternity Benefits (% (E / A))",
-        "Day Care Facilities (Number (F))",
-        "Day Care Facilities (% (F / A))"
+        "Category":["Category","Category",""],
+        "Total (A)":["Total (A)","Total A","Total"],
+        "Health insurance (Number (B))":["Health insurance (Number (B))","(Number (B))","Number (B)"],
+        "Health insurance (% (B / A))":["Health insurance (% (B / A))","% (B / A)","% (B/A)"],
+        "Accident insurance (Number (C))":["Accident insurance (Number (C))","Number (C)","C"],
+        "Accident insurance (% (C / A))":["Accident insurance (% (C / A))","% (C / A)","% (C/A)"],
+        "Maternity Benefits (Number (D))":["Maternity Benefits (Number (D))","(Number (D))","Number (D)"],
+        "Maternity Benefits (% (D / A))":["Maternity Benefits (% (D / A))","(% (D / A))","% (D/A)"],
+        "Paternity Benefits (Number (E))":["Paternity Benefits (Number (E))","(Number (E))","Number (E)"],
+        "Paternity Benefits (% (E / A))":["Paternity Benefits (% (E / A))","% (E / A)","% (E/A)"],
+        "Day Care Facilities (Number (F))":["Day Care Facilities (Number (F))","(Number (F))","(F)"],
+        "Day Care Facilities (% (F / A))":["Day Care Facilities (% (F / A))","(% (F / A))","(% (F/A))"]
     } 
 }
+
+{'Benefits': '', 
+ 'FY 2023 – 24 (Current Financial Year)': 'No. of employees covered as a % of total employees (Y/N/N.A.)',
+ 'FY 2022 -23 (Previous Financial Year)': 'No. of workers covered as a % of total workers (Y/N/N.A.)', 
+ '': 'Deducted and deposited with the authority'}
+
 
 Details_of_retirement_benefits={
     "question":"Details of retirement benefits, for Current and Previous FY",
     "columns":{    
-        "Benefits",
-        "No. of employees covered as a % of total employees",
-        "No. of workers covered as a % of total workers",
-        "Deducted and deposited with the authority(Y/N/N.A.)",
-        "No. of employees covered as a % of total employees",
-        "No. of workers covered as a % of total worker",
-        "Deducted and deposited with the authority(Y/N/N.A.)"
+        "Benefits":["Benefits",""],
+        "No. of employees covered as a % of total employees":["FY 2023 – 24 (Current Financial Year) No. of employees covered as a % of total employees","No. of employees covered as a % of total employees"],
+        "No. of workers covered as a % of total workers":["FY 2023 – 24 No. of workers covered as a % of total workers","No. of workers covered as a % of total workers"],
+        "Deducted and deposited with the authority(Y/N/N.A.)":["FY 2023 – 24  Deducted and deposited with the authority(Y/N/N.A.)","Deducted and deposited with the authority(Y/N/N.A.)"],
+        "No. of employees covered as a % of total employees":["FY 2022 -23 No. of employees covered as a % of total employees","No. of employees covered as a % of total employees"],
+        "No. of workers covered as a % of total worker":["FY 2022 -23 No. of workers covered as a % of total worker","No. of workers covered as a % of total worker"],
+        "Deducted and deposited with the authority(Y/N/N.A.)":["FY 2022 -23 Deducted and deposited with the authority(Y/N/N.A.)","Deducted and deposited with the authority(Y/N/N.A.)"]
       
     } 
 }
 
+"Return to work and Retention rates of permanent employees and workers that took parental leave.': "
+{'Gender': 'Male', 
+ 'Permanent employees Return to work rate': '100%',
+ 'Retention rate': '-',
+ 'Permanent workers Return to work rate': '-'},
+
 Return_to_work={
     "question":"Return to work and Retention rates of permanent employees and workers that took parental leave.",
     "columns":{ 
-        "Gender",
-        "Return to work rate",
-        "Retention rate",
-        "Return to work rate",
-        "Retention rate"   
+        "Gender":["Gender","Cateogry"],
+        "Permanent employees Return to work rate":["Permanent employees Return to work rate","employees Return to work rate"],
+        "Permanent employees Retention rate":["Permanent employees Retention rate","employees Retention rate"],
+        "Permanent workers Return to work rate":["Permanent workers Return to work rate","workers Return to work rate"],
+        "Permanent workers Retention rate":["Permanent workers Retention rate","workers Retention rate"]   
        
     } 
 }
 
+
 Is_there_mechanism={
     "question":"Is there a mechanism available to receive and redress grievances for the following categories of employees and worker? If yes, give details of the mechanism in brief",
     "columns":{ 
-        "Particulars",
-        "Yes/No(If Yes, then give details of the mechanism in brief)"
+        "Particulars":["Particulars","Particular",""],
+        "Yes/No(If Yes, then give details of the mechanism in brief)":["Yes/No(If Yes, then give details of the mechanism in brief)","Yes/No (If yes, then give details of the mechanism in brief)","If Yes, then give details of the mechanism in brief"]
     } 
 }
+
+{'Category': '',
+ 'FY 2023 - 24 (Current Financial Year)': 'Total employees / workers in respective category (A)', 
+ 'FY 2022-23 (Previous Financial Year)': 'No. of employees / workers in respective category, who are part of association (s) or Union (B)',
+ '': '% (D/C)'},
 
 Membership_employees={
     "question":"Membership of employees and worker in association(s) or Unions recognised by the listed entity:",
     "columns":{
-        "category",
-        "FY 2024-25(Current Financial Year)-(Total employees / workers in respective category(A))",
-        "FY 2024-25(Current Financial Year)-(No. of employees / workers in respective category, who are part of association(s) or Union(B))",
-        "FY 2024-25(Current Financial Year)-(% (B / A))",
-        "FY 2023-24(Previous Financial Year)-(Total employees / workers in respective category(C))",
-        "FY 2023-24(Previous Financial Year)-(No. of employees / workers in respective category, who are part of association(s) or Union(D))",
-        "FY 2023-24(Previous Financial Year)-(% (D / C))"
+        "category":["Category","Category",""],
+        "FY 2024-25(Current Financial Year)-(Total employees / workers in respective category(A))":["FY 2024-25(Current Financial Year)-(Total employees / workers in respective category(A))","(Current Financial Year)-(Total employees / workers in respective category(A))","category(A)"],
+        "FY 2024-25(Current Financial Year)-(No. of employees / workers in respective category, who are part of association(s) or Union(B))":["FY 2024-25(Current Financial Year)-(No. of employees / workers in respective category, who are part of association(s) or Union(B))","(Current Financial Year)-(No. of employees / workers in respective category, who are part of association(s) or Union(B))","Union(B)"],
+        "FY 2024-25(Current Financial Year)-(% (B / A))":["FY 2024-25(Current Financial Year)-(% (B / A))","(Current Financial Year)-(% (B / A))","(% (B / A))"],
+        "FY 2023-24(Previous Financial Year)-(Total employees / workers in respective category(C))":["FY 2023-24(Previous Financial Year)-(Total employees / workers in respective category(C))","(Previous Financial Year)-(Total employees / workers in respective category(C))","category(C))"],
+        "FY 2023-24(Previous Financial Year)-(No. of employees / workers in respective category, who are part of association(s) or Union(D))":["FY 2023-24(Previous Financial Year)-(No. of employees / workers in respective category, who are part of association(s) or Union(D))","(Previous Financial Year)-(No. of employees / workers in respective category, who are part of association(s) or Union(D))","Union(D))"],
+        "FY 2023-24(Previous Financial Year)-(% (D / C))":["FY 2023-24(Previous Financial Year)-(% (D / C))","(Previous Financial Year)-(% (D / C))","% (D / C)"]
     } 
 }
+
+
+{'Category': 'Employees',
+ 'Total (A)': '12583',
+ 'On Health and safety measures No. (B)': '9689', 
+ '% (B/A)': '77%',
+ 'On Skill upgradation No. (C)': '345',
+ '% (C/A)': '3%',
+ 'Total (D)': '11360', 
+ 'On Health and safety measures No. (E)': '8555',
+ '% (E/D)': '75%',
+ 'On Skill upgradation No. (F)': '273',
+ '% (F/D)': '2.40%'}
+
+
+
 
 Details_of_training={
     "question":"Details of training given to employees and workers:",
     "columns":{  
-        "category",
-        "Total (A)",
-        "On Health and safety measures (No. (B))",
-        "On Health and safety measures (% (B / A))",
-        "On Skill upgradation (No. (C))",
-        "On Skill upgradation (% (C / A))",
-        "Total (D)",
-        "On Health and safety measures (No. (E))",
-        "On Health and safety measures (% (E / D))",
-        "On Skill upgradation (No. (F))",
-        "On Skill upgradation (% (F / D))"
+        "Category":["Category","Category",""],
+        "Total (A)":["Total (A)","Total A","Total"],
+        "On Health and safety measures (No. (B))":["On Health and safety measures (No. (B))","On Health and safety measures No. (B)","(B)"],
+        "On Health and safety measures (% (B / A))":["On Health and safety measures (% (B / A))","(% (B / A))","% (B/A)"],
+        "On Skill upgradation (No. (C))":["On Skill upgradation (No. (C))","(No. (C))","No. (C)"],
+        "On Skill upgradation (% (C / A))":["On Skill upgradation (% (C / A))","(% (C / A))","% (C/A)"],
+        "Total (D)":["Total (D)","Total D","Total"],
+        "On Health and safety measures (No. (E))":["On Health and safety measures (No. (E))","On Health and safety measures No. (E)","No. (E)"],
+        "On Health and safety measures (% (E / D))":["On Health and safety measures (% (E / D))","On Health and safety measures % (E / D)","% (E/D)"],
+        "On Skill upgradation (No. (F))":["On Skill upgradation (No. (F))","On Skill upgradation No. (F)","(F)"],
+        "On Skill upgradation (% (F / D))":["On Skill upgradation (% (F / D))","On Skill upgradation % (F / D)","% (F/D)"]
     } 
 }
+
+
+{'Category': 'Permanent Employees',
+ 'Total (A)': '6479',
+ 'No. (B)': '6479', 
+ '% (B/A)': '100%', 
+ 'Total (C)': '5417', 
+ 'No. (D)': '5417', 
+ '% (D/C)': '100%'}
 
 Details_of_performance={
     "question":"Details of performance and career development reviews of employees and workers:",
     "columns":{   
-    "category",
-    "FY 2024-25(Current Financial Year)-(Total (A))",
-    "FY 2024-25(Current Financial Year)-(No. (B))",
-    "FY 2024-25(Current Financial Year)-(% (B / A))",
-    "FY 2023-24(Previous Financial Year)-(Total (C))",
-    "FY 2023-24(Previous Financial Year)-(No. (D))",
-    "FY 2023-24(Previous Financial Year)-(% (D / C))"        
+    "category":["Category","Category",""],
+    "FY 2024-25(Current Financial Year)-(Total (A))":["FY 2024-25(Current Financial Year)-(Total (A))","(Current Financial Year)-(Total (A))","Total (A)"],
+    "FY 2024-25(Current Financial Year)-(No. (B))":["FY 2024-25(Current Financial Year)-(No. (B))","(Current Financial Year)-(No. (B))","No. (B)"],
+    "FY 2024-25(Current Financial Year)-(% (B / A))":["FY 2024-25(Current Financial Year)-(% (B / A))","(Current Financial Year)-(% (B / A))","% (B/A)"],
+    "FY 2023-24(Previous Financial Year)-(Total (C))":["FY 2023-24(Previous Financial Year)-(Total (C))","(Previous Financial Year)-(Total (C))","Total (C)"],
+    "FY 2023-24(Previous Financial Year)-(No. (D))":["FY 2023-24(Previous Financial Year)-(No. (D))","(Previous Financial Year)-(No. (D))","No. (D)"],
+    "FY 2023-24(Previous Financial Year)-(% (D / C))":["FY 2023-24(Previous Financial Year)-(% (D / C))","(Previous Financial Year)-(% (D / C))","% (D/C)"]        
     } 
 }
+
+{'Safety Incident/Number': 'Lost Time Injury Frequency Rate (LTIFR)', 
+ 'Category': 'Employees',
+ 'FY 2023-24 (Current Financial Year)': '0.55', 
+ 'FY 2022-23 (Previous Financial Year)': '0.33'},
 
 Details_of_safety={
     "question":"Details of safety related incidents, in the following format:",
     "columns":{ 
-        "Safety Incident/Number",
-        "Category",
-        "FY 2022",
-        "FY 2021"
+        "Safety Incident/Number":["Safety Incident/Number","Safety Incident/Number",""],
+        "Category":["Category","Category","Category"],
+        "FY 2022":["FY 2022-23 (Current Financial Year)","FY 2022-23 (Current Financial Year)","FY 2022-23 (Current Financial Year)"],
+        "FY 2021":["FY 2021-22 (Current Financial Year)","FY 2022-23 (Current Financial Year)","FY 2022-23 (Current Financial Year)"]
     } 
 }
+"FY 2023-24 (Current Financial Year) Filed during the year"
+
+{'FY 2023-24': 'Filed', '': '', 'FY 2022-23': 'Filed'}, 
+{'FY 2023-24': 'Sexual Harassment', '': '', 'FY 2022-23': '-'}
 
 Number_of_Complaints={
     "question":"Number of Complaints on the following made by employees and workers:",
     "columns":{  
-        "Category",
-        "Filed during the year",
-        "Pending resolution at the end of year",
-        "Remarks",
-        "Filed during the year",
-        "Pending resolution at the end of year",
-        "Remarks"
+        "Category":["Category","Category",""],
+        "FY 2023-24 (Current Financial Year) Filed during the year":["FY 2023-24 (Current Financial Year) Filed during the year","FY 2023-24 (Current Financial Year) Filed during the year","(Current Financial Year) Filed during the year"],
+        "FY 2023-24 (Current Financial Year) Pending resolution at the end of year":["FY 2023-24 (Current Financial Year) Pending resolution at the end of year","FY 2023-24 Pending resolution at the end of year","(Current Financial Year) Pending resolution at the end of year"],
+        "FY 2023-24 (Current Financial Year) Remarks":["FY 2023-24 (Current Financial Year) Remarks","(Current Financial Year) Remarks","(Current Financial Year) Remarks"],
+        "FY 2022-23 (Previous Financial Year) Filed during the year":["FY 2022-23 (Previous Financial Year) Filed during the year","(Previous Financial Year) Filed during the year","(Previous Financial Year) Filed during the year"],
+        "FY 2022-23 (Previous Financial Year) Pending resolution at the end of year":["FY 2022-23 (Previous Financial Year) Pending resolution at the end of year","(Previous Financial Year) Pending resolution at the end of year","(Previous Financial Year) Pending resolution at the end of year"],
+        "FY 2022-23 (Previous Financial Year) Remarks":["FY 2022-23 (Previous Financial Year) Remarks","(Previous Financial Year) Remarks","(Previous Financial Year) Remarks"]
     } 
 }
 
@@ -336,19 +413,19 @@ Complaints_filed={
 Assessments_for_the_year={
     "question":"Assessments for the year:",
     "columns":{
-        "Category",
-        "% of your plants and offices that were assessed (by entity or statutory authorities or third parties"
+        "Category":["Category","Category",""],
+        "% of your plants and offices that were assessed (by entity or statutory authorities or third parties":["% of your plants and offices that were assessed (by entity or statutory authorities or third parties","% of your plants and offices that were assessed (by entity or statutory authorities or third parties)","(by entity or statutory authorities or third parties)"]
     } 
 }
 
 Provide_the_number_employees={
     "question":"Provide the number of employees / workers having suffered high consequence work-related injury / ill-health / fatalities (as reported in Q11 of Essential Indicators above), who have been are rehabilitated and placed in suitable employment or whose family members have been placed in suitable employment:",
     "columns":{        
-        "Category",
-        "Total no. of affected employees/ workers (FY 2024-25(Current Financial Year))",
-        "Total no. of affected employees/ workers (FY 2023-24(Previous Financial Year))",
-        "No. of employees/workers that are rehabilitated and placed in suitable employment or whose family members have been placed in suitable employment (FY 2024-25(Current Financial Year))",
-        "No. of employees/workers that are rehabilitated and placed in suitable employment or whose family members have been placed in suitable employment (FY 2023-24(Previous Financial Year))"
+        "Category":["Category","Category",""],
+        "Total no. of affected employees/ workers (FY 2024-25(Current Financial Year))":["Total no. of affected employees/ workers (FY 2024-25(Current Financial Year))","of affected employees/ workers (FY 2024-25(Current Financial Year))","(FY 2024-25(Current Financial Year))"],
+        "Total no. of affected employees/ workers (FY 2023-24(Previous Financial Year))":["Total no. of affected employees/ workers (FY 2023-24(Previous Financial Year))","of affected employees/ workers (FY 2023-24(Previous Financial Year))","(FY 2023-24(Previous Financial Year))"],
+        "No. of employees/workers that are rehabilitated and placed in suitable employment or whose family members have been placed in suitable employment (FY 2024-25(Current Financial Year))":["No. of employees/workers that are rehabilitated and placed in suitable employment or whose family members have been placed in suitable employment (FY 2024-25(Current Financial Year))","No. of employees/workers that are rehabilitated and placed in suitable employment or whose family members have been placed in suitable employment (FY 2024-25(Current Financial Year))",""],
+        "No. of employees/workers that are rehabilitated and placed in suitable employment or whose family members have been placed in suitable employment (FY 2023-24(Previous Financial Year))":["","",""]
      
     } 
 }
@@ -356,8 +433,8 @@ Provide_the_number_employees={
 Details_on_assessment={
     "question":"Details on assessment of value chain partners:",
     "columns":{ 
-        "Category",
-        "% of value chain partners (by value of business done with such partners) that were assessed",
+        "Category":["Category","Category",""],
+        "% of value chain partners (by value of business done with such partners) that were assessed":["% of value chain partners (by value of business done with such partners) that were assessed","% of value chain partners (by value of business done with such partners) that were assessed","(by value of business done with such partners)"],
     } 
 }
 
