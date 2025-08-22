@@ -237,7 +237,7 @@ def parse_brsr_text_section_a(file_path,json_merge):
               {
                 "questionNo": "1",
                 "question": "Corporate Identity Number (CIN) of the Listed Entity",
-                "questionAnswer":  json_merge["Corporate Identity Number (CIN) of the Listed Entity"]
+                "questionAnswer":json_merge["Corporate Identity Number (CIN) of the Listed Entity"]
               },
               {
                 "questionNo": "2",
